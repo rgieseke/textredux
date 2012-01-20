@@ -134,6 +134,10 @@ keys = nil
 -- automatically be cleared whenever the user closes the buffer.
 data = nil
 
+--- The target buffer, if any.
+-- This holds a reference to the target buffer, when present.
+target = nil
+
 ---
 -- @section end
 
