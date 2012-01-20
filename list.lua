@@ -54,10 +54,8 @@ header_style = style.list_header
 -- individually for each list as well. Values can either be explicit styles,
 -- defined using @{_M.textui.style}, or functions which returns explicit styles.
 -- In the latter case, the function will be invoked with the corresponding
--- item and column index.
---
--- The default styles contains styles for up to three columns, after which
--- the default style will be used.
+-- item and column index. The default styles contains styles for up to three
+-- columns, after which the default style will be used.
 column_styles = nil
 
 -- I fought LDoc, but LDoc won. Define the field separately here to avoid it
@@ -72,12 +70,17 @@ column_styles =  {
 -- If the number of items are greater than this, this will be indicated visually
 -- at the end of the list. It's possible to override this for a specific list
 -- by assigning another value to the instance itself.
-max_shown_items = 200
+max_shown_items = 100
 
 --- Whether searches are case insensitive or not.
 -- It's possible to override this for a specific list by assigning another value
--- to the instance itself.
+-- to the instance itself. The default value is `true`.
 search_case_insensitive = true
+
+--- Whether fuzzy searching should be in addition to explicit matches.
+-- It's possible to override this for a specific list by assigning another value
+-- to the instance itself. The default value is `true`.
+search_fuzzy = true
 
 --- List instance fields.
 -- These can be set only for a list instance, and not globally for the module.
@@ -100,26 +103,25 @@ on_selection = nil
 
 --- @section end
 
----
--- Creates a new list
+--- Creates a new list.
 -- @p title The list title
+-- @return The new list instance
 function new(title)
   if not title then error('no title specified', 2) end
 
   local _column_styles = {}
-  setmetatable(_column_styles, {__index = list.column_styles})
+  setmetatable(_column_styles, { __index = list.column_styles })
   local l = {
     title = title,
     items = {},
     column_styles = _column_styles
   }
-  setmetatable(l, {__index = list})
+  setmetatable(l, { __index = list })
   l:_create_buffer()
   return l
 end
 
----
--- Shows the list
+--- Shows the list.
 function list:show()
   if not type(self) == 'table' then error('incorrect argument #1, needs list', 2) end
 
@@ -129,8 +131,7 @@ function list:show()
   self.buffer:show()
 end
 
----
--- Closes the list
+--- Closes the list.
 function list:close()
   self.buffer:delete()
 end
@@ -141,12 +142,13 @@ end
 
 -- begin private section
 
--- Updates the state associated with items, i.e. matching state and
--- column widths
+-- Updates the state associated with items, e.g. column widths, maximum line
+-- length and matching data.
 function list:_update_items_data()
   local lines = {}
   local column_widths = {}
   local max_line_length = 0
+
   for i, header in ipairs(self.headers or {}) do
     column_widths[1] = #tostring(header)
   end
@@ -168,7 +170,7 @@ function list:_update_items_data()
   self._max_line_length = max_line_length
 end
 
-local function _fuzzy_search_pattern(search)
+local function fuzzy_search_pattern(search)
   local pattern = ''
   for i = 1, #search do
     pattern = pattern .. search:sub(i, i) .. '.-'
@@ -176,35 +178,44 @@ local function _fuzzy_search_pattern(search)
   return pattern
 end
 
--- matches search against line and returns a numeric score
--- if it maches, where lower is better
--- @param line the line to match
--- @param searches the search groups to match
--- @param fuzzy_score_penalty the score penalty to add for fuzzy matches
-local function _match(line, searches, fuzzy_score_penalty)
-  local score = 0
-
-  for _, search in ipairs(searches) do
-    local index = line:find(search, 1, true)
-    if not index then
-      local pattern = _fuzzy_search_pattern(search)
-      index = line:find(pattern)
-      if index then index = index + fuzzy_score_penalty end
-    end
-
-    if index then
-      score = score + index
-    else
-      return nil
+--- Creates matches for the specified search
+-- @param search_string The search string
+-- @param fuzzy_search Whether fuzzy matches should be allowed
+-- @param fuzzy_score_penalty The score penalty to add for fuzzy matches
+-- @return A table of matcher functions, each taking a line as parameter and
+-- returning a score (or nil for no match).
+local function matchers_for_search(search_string, fuzzy_search, fuzzy_score_penalty)
+  local groups = {}
+  for part in search_string:gmatch('%S+') do groups[#groups + 1] = part end
+  local matchers = {}
+  for _, search in ipairs(groups) do
+    local fuzzy_pattern = fuzzy_search and fuzzy_search_pattern(search)
+    matchers[#matchers + 1] = function(line)
+      local index = line:find(search, 1, true)
+      if not index and fuzzy_search then
+        index = line:find(fuzzy_pattern)
+        if index then index = index + fuzzy_score_penalty end
+      end
+      return index
     end
   end
-  return score
+  return matchers
 end
 
-local function _search_groups(search)
-  local groups = {}
-  for part in search:gmatch('%S+') do groups[#groups + 1] = part end
-  return groups
+-- Applies search matchers on a line.
+-- @param line The line to match
+-- @param matchers The search matchers to apply
+-- @return A numeric score if the line matches or nil otherwise. For scoring,
+-- lower is better.
+local function match(line, matchers)
+  local score = 0
+
+  for _, matcher in ipairs(matchers) do
+    local matcher_score = matcher(line)
+    if not matcher_score then return nil end
+    score = score + matcher_score
+  end
+  return score
 end
 
 function list:_match_items()
@@ -225,12 +236,12 @@ function list:_match_items()
   data.matching_items = data.cache.items[search] or {}
   if #data.matching_items > 0 then return end
 
-  local search_groups = _search_groups(search)
+  local matchers = matchers_for_search(search, self.search_fuzzy, self._max_line_length)
   local lines = data.cache.lines[string.sub(search, 1, -2)] or self._lines
   local matching_lines = {}
   local matches = {}
   for i, line in ipairs(lines) do
-    local score = _match(line.text, search_groups, self._max_line_length)
+    local score = match(line.text, matchers)
     if score then
       matches[#matches + 1] = { index = line.index, score = score }
       matching_lines[#matching_lines + 1] = line
@@ -239,12 +250,12 @@ function list:_match_items()
   data.cache.lines[search] = matching_lines
 
   table.sort(matches, function(a ,b) return a.score < b.score end)
-  local ordered_matches = {}
+  local matching_items = {}
   for _, match in ipairs(matches) do
-    ordered_matches[#ordered_matches + 1] = self.items[match.index]
+    matching_items[#matching_items + 1] = self.items[match.index]
   end
-  data.cache.items[search] = ordered_matches
-  data.matching_items = ordered_matches
+  data.cache.items[search] = matching_items
+  data.matching_items = matching_items
 end
 
 function list:_column_style(item, column)
