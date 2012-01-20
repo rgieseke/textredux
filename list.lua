@@ -328,6 +328,7 @@ function list:_refresh(buffer)
     end
   end
   buffer:goto_line(items_start_line)
+  buffer:home()
 end
 
 function list:_show_more(current_max)
