@@ -1,0 +1,34 @@
+--[[--
+Very basic example on how to use the list class.
+
+For the purpose of this example the `F6' key will be set to show the
+example buffer. Provided that TextUI is installed, you can copy this to
+your .textadept/init.lua, and press `F6` to try it out.
+
+@author Nils Nordman <nino at nordman.org>
+@copyright 2012
+@license MIT (see LICENSE)
+]]
+
+require 'textadept'
+require 'textui'
+
+local function on_selection(list, item)
+  gui.statusbar_text = 'You selected ' .. item
+end
+
+local function show_simple_list()
+  -- create the list, passing along the title
+  local list = _M.textui.list.new('Simple list')
+
+  -- specify the items to select from
+  list.items = { 'one', 'two', 'three' }
+
+  -- set the callback for when the user selects an item
+  list.on_selection = on_selection
+
+  -- and show the list
+  list:show()
+end
+
+keys['f6'] = show_simple_list
