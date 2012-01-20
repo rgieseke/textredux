@@ -67,10 +67,22 @@ column_styles =  {
 }
 
 --- The maximum numbers of items to display in the list.
--- If the number of items are greater than this, this will be indicated visually
--- at the end of the list. It's possible to override this for a specific list
--- by assigning another value to the instance itself.
-max_shown_items = 100
+-- The default value is `nil`, in which case the list will show only as many
+-- items as can be shown in the view. When there are more items than can be
+-- shown. this will be indicated visually at the end of the list. The user can
+-- then chose to show more interactively.
+--
+-- Please be aware that this is perhaps the biggest factor when it comes to
+-- list performance, and that setting this to any large value will significantly
+-- slow things down. It might be prudent to override this in case you know that
+-- a specific type of list typically always contains less than, say 200 items or
+-- so, but in the general case it's best left untouched.
+--
+-- It's possible to override this for a specific list by assigning another value
+-- to the instance itself.
+--
+-- It's advised
+max_shown_items = nil
 
 --- Whether searches are case insensitive or not.
 -- It's possible to override this for a specific list by assigning another value
@@ -110,7 +122,7 @@ function new(title)
   if not title then error('no title specified', 2) end
 
   local _column_styles = {}
-  setmetatable(_column_styles, { __index = list.column_styles })
+  setmetatable(_column_styles, { __index = column_styles })
   local l = {
     title = title,
     items = {},
@@ -123,8 +135,6 @@ end
 
 --- Shows the list.
 function list:show()
-  if not type(self) == 'table' then error('incorrect argument #1, needs list', 2) end
-
   self:_update_items_data()
   self.buffer.data = {}
   self.buffer:set_title(self.title)
@@ -296,10 +306,15 @@ function list:_refresh(buffer)
     end
     buffer:add_text('\n')
   end
-  local item_listing_start = buffer.current_pos
+  local items_start_line = buffer:line_from_position(buffer.current_pos)
+  local max_shown_items = self.max_shown_items or buffer.lines_on_screen - items_start_line - 1
   for i, item in ipairs(matching_items) do
-    if i > self.max_shown_items then
-      buffer:add_text(string.format("[...] (%d more items not shown)\n", #matching_items - self.max_shown_items), style.comment)
+    if i > max_shown_items then
+      local message = string.format(
+        "[..] (%d more items not shown, select to show more)",
+        #matching_items - max_shown_items
+      )
+      buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
       break
     end
     local columns = type(item) == 'table' and item or { item }
@@ -312,7 +327,15 @@ function list:_refresh(buffer)
       buffer:add_hotspot(line_start, buffer.current_pos, {self.on_selection, self, item})
     end
   end
-  buffer:goto_pos(item_listing_start)
+  buffer:goto_line(items_start_line)
+end
+
+function list:_show_more(current_max)
+  local buffer = self.buffer
+  self.max_shown_items = current_max * 2
+  local current_pos = buffer.current_pos
+  buffer:refresh()
+  buffer:goto_pos(current_pos)
 end
 
 function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
