@@ -113,6 +113,9 @@ items = nil
 -- selected.
 on_selection = nil
 
+--- The underlying @{_M.textui.buffer} used by the list
+buffer = nil
+
 --- @section end
 
 --- Creates a new list.
