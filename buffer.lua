@@ -122,9 +122,10 @@ on_keypress = nil
 --   This means that you should not use either of the above in a table command,
 --   unless you enjoy the occasional segfault.
 --
--- In short, only explicit simple mappings are supported. Key commands take
--- preference over any @{on_keypress} callback, i.e. that callback will never
--- be called if a key command matches.
+-- In short, only explicit simple mappings are supported. Defining a key command
+-- for a certain key means that key presses are never propagated any further for
+-- that particular key. Key commands take preference over any @{on_keypress}
+-- callback, so any such callback will never be called if a key command matches.
 -- @see on_keypress
 keys = nil
 
@@ -380,9 +381,7 @@ local function invoke_command(command, buffer)
     f = command[1]
     args = { table.unpack(command, 2) }
   end
-  local status, result = xpcall(f, emit_error, table.unpack(args))
-  if status then return result end
-  return true -- the intended return is unknown - we will halt propagation
+  xpcall(f, emit_error, table.unpack(args))
 end
 
 -- event hooks
@@ -452,8 +451,8 @@ local function _on_keypress(...)
 
   local command = tui_buf.keys[key_seq]
   if command then
-    local result = invoke_command(command, tui_buf)
-    if result then return result end
+    invoke_command(command, tui_buf)
+    return true
   end
   return tui_buf:_call_hook('on_keypress', key_seq, ...)
 end
