@@ -156,10 +156,6 @@ function list:close()
   self.buffer:delete()
 end
 
-function list:is_own_buffer(buffer)
-  return buffer == self.buffer.target
-end
-
 -- begin private section
 
 -- Updates the state associated with items, e.g. column widths, maximum line
