@@ -116,6 +116,13 @@ on_selection = nil
 --- The underlying @{_M.textui.buffer} used by the list
 buffer = nil
 
+---
+-- A table of key commands for the buffer.
+-- This functions almost exactly the same as @{_M.textui.buffer.keys}. The one
+-- difference is that for function values, the parameter passed will be a
+-- reference to the list instead of a buffer reference.
+keys = nil
+
 --- @section end
 
 --- Creates a new list.
@@ -365,6 +372,16 @@ function list:_create_buffer()
   buffer.on_refresh = function(...) self:_refresh(...) end
   buffer.on_keypress = function(...) return self:_on_keypress(...) end
   self.buffer = buffer
+
+  local key_wrapper = function(t, k, v)
+    if type(v) == 'function' then
+      buffer.keys[k] = function() v(self) end
+    else
+      buffer.keys[k] = v
+    end
+  end
+
+  self.keys = setmetatable({}, { __index = buffer.keys, __newindex = key_wrapper })
   return buffer
 end
 
