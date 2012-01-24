@@ -102,6 +102,8 @@ on_refresh = nil
 -- addition after that receive all the parameters from the the standard TextAdept
 -- KEYPRESS event (which you can read more about
 -- [here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
+-- The return value determines whether the key press should be propagated, just
+-- the same as for the standard TextAdept event.
 -- @see keys
 on_keypress = nil
 
