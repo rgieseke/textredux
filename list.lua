@@ -156,6 +156,19 @@ function list:close()
   self.buffer:delete()
 end
 
+--- Returns the currently selected item if any, or nil otherwise.
+function list:get_current_selection()
+  local buffer = self.buffer
+  if buffer:is_showing() then
+    local data = buffer.data
+    local current_line = buffer:line_from_position(buffer.current_pos)
+    if current_line >= data.items_start_line and current_line <= data.items_end_line then
+      return data.matching_items[current_line - data.items_start_line + 1]
+    end
+  end
+  return nil
+end
+
 -- begin private section
 
 -- Updates the state associated with items, e.g. column widths, maximum line
@@ -312,17 +325,10 @@ function list:_refresh(buffer)
     end
     buffer:add_text('\n')
   end
-  local items_start_line = buffer:line_from_position(buffer.current_pos)
-  local max_shown_items = self.max_shown_items or buffer.lines_on_screen - items_start_line - 1
+  data.items_start_line = buffer:line_from_position(buffer.current_pos)
+  local max_shown_items = self.max_shown_items or buffer.lines_on_screen - data.items_start_line - 1
   for i, item in ipairs(matching_items) do
-    if i > max_shown_items then
-      local message = string.format(
-        "[..] (%d more items not shown, select to show more)",
-        #matching_items - max_shown_items
-      )
-      buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
-      break
-    end
+    if i > max_shown_items then break end
     local columns = type(item) == 'table' and item or { item }
     local line_start = buffer.current_pos
     for j, field in ipairs(columns) do
@@ -333,7 +339,18 @@ function list:_refresh(buffer)
       buffer:add_hotspot(line_start, buffer.current_pos, {self.on_selection, self, item})
     end
   end
-  buffer:goto_line(items_start_line)
+
+  data.items_end_line = buffer:line_from_position(buffer.current_pos)
+  if #matching_items > max_shown_items then
+    local message = string.format(
+      "[..] (%d more items not shown, select to show more)",
+      #matching_items - max_shown_items
+    )
+    buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
+  end
+
+
+  buffer:goto_line(data.items_start_line)
   buffer:home()
 end
 
