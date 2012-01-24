@@ -179,6 +179,18 @@ function list:get_current_selection()
   return nil
 end
 
+--- Returns the current user search if any, or nil otherwise.
+function list:get_current_search()
+  local search = self.buffer.data.search
+  return search and #search > 0 and search or nil
+end
+
+--- Sets the current user search.
+-- @param search The search string to use
+function list:set_current_search(search)
+  self.buffer.data.search = search
+end
+
 -- begin private section
 
 -- Updates the state associated with items, e.g. column widths, maximum line
