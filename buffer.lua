@@ -193,6 +193,7 @@ end
 -- After the refresh is complete, the @{read_only} state is reset to
 -- whatever it was before the refresh, and a save point is set.
 function buffer:refresh()
+  if not self:is_attached() then error("Can't refresh: not attached", 2) end
   self.target.read_only = false
   self.hotspots = {}
   self:clear_all()
