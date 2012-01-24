@@ -24,7 +24,11 @@ local function show_action_list()
   -- assign a closure to f4, which prints the list title to the statusbar
   list.keys.f4 = function(list)
     gui.statusbar_text = 'Command from ' .. list.title
-    return true
+  end
+
+  -- print the currently selected item when f5 is pressed
+  list.keys.f5 = function(list)
+    gui.statusbar_text = 'Currently selected: ' .. tostring(list:get_current_selection())
   end
 
   list:show()
