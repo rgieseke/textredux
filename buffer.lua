@@ -411,7 +411,9 @@ end
 local function _on_buffer_deleted()
   local ta_buffers = _G._BUFFERS
   for i, tui_buf in ipairs(tui_buffers) do
+    _G.print('checking whether ' .. tui_buf.title .. ' is deleted')
     if tui_buf:is_attached() and not ta_buffers[tui_buf.target] then
+      _G.print(tui_buf.title .. ' is deleted')
       tui_buf:_on_target_deleted()
       break
     end
