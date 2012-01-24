@@ -123,6 +123,16 @@ buffer = nil
 -- reference to the list instead of a buffer reference.
 keys = nil
 
+--- Callback invoked whenever the list receives a keypress.
+-- This functions almost exactly the sames as @{_M.textui.buffer.on_keypress}.
+-- The one difference is that for function values, the first parameter passed
+-- will be a reference to the list instead of a buffer reference.
+--
+-- Please note that by overriding this it's possible to block any key presses
+-- from ever reaching the list itself.
+-- @see keys
+on_keypress = nil
+
 --- @section end
 
 --- Creates a new list.
@@ -363,6 +373,11 @@ function list:_show_more(current_max)
 end
 
 function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
+  if self.on_keypress then
+    local result = self.on_keypress(self, key, code, shift, ctl, alt, meta)
+    if result then return result end
+  end
+
   if ctl or alt or meta or not key then return end
 
   local search = buffer.data.search or ''
