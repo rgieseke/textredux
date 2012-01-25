@@ -133,6 +133,12 @@ keys = nil
 -- @see keys
 on_keypress = nil
 
+--- A general purpose table that can be used for storing state associated
+-- with the list. Just like @{_M.textui.buffer.data}, the `data` table is
+-- special in the way that it will automatically be cleared whenever the user
+-- closes the buffer associated with the list.
+data = nil
+
 --- @section end
 
 --- Creates a new list.
@@ -146,7 +152,8 @@ function new(title)
   local l = {
     title = title,
     items = {},
-    column_styles = _column_styles
+    column_styles = _column_styles,
+    data = {}
   }
   setmetatable(l, { __index = list })
   l:_create_buffer()
@@ -411,6 +418,7 @@ function list:_create_buffer()
   local buffer = textui_buffer.new(self.title)
   buffer.on_refresh = function(...) self:_refresh(...) end
   buffer.on_keypress = function(...) return self:_on_keypress(...) end
+  buffer.on_deleted = function() self.data = {} end
   self.buffer = buffer
 
   local key_wrapper = function(t, k, v)
