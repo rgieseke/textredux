@@ -51,8 +51,8 @@ Please see the examples for more hands on instructions.
 local key = require('textui.key')
 
 local _G = _G
-local error, setmetatable, ipairs, tostring, error, rawget, rawset, type, xpcall =
-      error, setmetatable, ipairs, tostring, error, rawget, rawset, type, xpcall
+local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall =
+      error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall
 local new_buffer, events, table = new_buffer, events, table
 local tui_style = require('textui.style')
 local constants = _SCINTILLA.constants
@@ -63,7 +63,7 @@ local _ENV = buffer
 if setfenv then setfenv(1, _ENV) end
 
 local tui_buffers = {}
-setmetatable(tui_buffers, { __mode = 'v' })
+setmetatable(tui_buffers, { __mode = 'k' })
 local default_style = tui_style.default
 
 ---
@@ -166,7 +166,7 @@ function new(title)
     },
   }
   setmetatable(buf, {__index = __index, __newindex = __newindex})
-  tui_buffers[#tui_buffers + 1] = buf
+  tui_buffers[buf] = true
   return buf
 end
 
@@ -410,10 +410,8 @@ end
 
 local function _on_buffer_deleted()
   local ta_buffers = _G._BUFFERS
-  for i, tui_buf in ipairs(tui_buffers) do
-    _G.print('checking whether ' .. tui_buf.title .. ' is deleted')
+  for tui_buf, _ in pairs(tui_buffers) do
     if tui_buf:is_attached() and not ta_buffers[tui_buf.target] then
-      _G.print(tui_buf.title .. ' is deleted')
       tui_buf:_on_target_deleted()
       break
     end
@@ -441,7 +439,7 @@ end
 -- and it's annoying to have empty non-functioning buffers upon start
 local function _on_quit()
   local buffers = {}
-  for _, tui_buf in ipairs(tui_buffers) do buffers[#buffers + 1] = tui_buf end
+  for tui_buf,_ in pairs(tui_buffers) do buffers[#buffers + 1] = tui_buf end
   for _, tui_buf in ipairs(buffers) do
     tui_buf:close()
   end
