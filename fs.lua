@@ -267,18 +267,20 @@ function open(directory)
   chdir(list, directory)
 end
 
---- Opens a list of files in the specified directory, according to the given
--- parameters. This works similarily to
--- [TextAdept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
--- The main differences are:
--- - it does not support opening multiple paths at once, which also makes the
---   TextAdept parameter `exclusive` pointless.
--- - filter can a function as well as a table
--- @param directory The directory to open, in UTF-8 encoding
--- @param filter The filter to apply, same as for TextAdept, and also defaults
--- to snapopen.FILTER if not specified.
--- @param depth The number of directory levels to scan. Same as for TextAdept,
--- and also defaults to snapopen.DEFAULT_DEPTH if not specified.
+--[[-
+Opens a list of files in the specified directory, according to the given
+parameters. This works similarily to
+[TextAdept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
+The main differences are:
+- it does not support opening multiple paths at once, which also makes the
+  TextAdept parameter `exclusive` pointless.
+- filter can a function as well as a table
+@param directory The directory to open, in UTF-8 encoding
+@param filter The filter to apply, same as for TextAdept, and also defaults
+to snapopen.FILTER if not specified.
+@param depth The number of directory levels to scan. Same as for TextAdept,
+and also defaults to snapopen.DEFAULT_DEPTH if not specified.
+]]
 function snapopen(directory, filter, depth)
   if not directory then error('directory not specified', 2) end
   if not depth then depth = ta_snapopen.DEFAULT_DEPTH end
