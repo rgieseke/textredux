@@ -233,6 +233,13 @@ function buffer:is_showing()
 end
 
 ---
+-- Checks whether the buffer is currently active, i.e. the current buffer.
+-- @return true if the buffer is active and false otherwise
+function buffer:is_active()
+  return self.target and self.target == _G.buffer
+end
+
+---
 -- Adds a hotspot for the given text range.
 -- Hotspots allows you to specify the behaviour for when the user selects
 -- certain text. Besides using this function directly, it's also possible and
