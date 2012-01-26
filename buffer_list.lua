@@ -51,16 +51,22 @@ end
 local function close_buffer()
   local item = list:get_current_selection()
   if item then
+    local name = item[2]
+    gui.statusbar_text = 'Closing ' .. name .. '..'
     local current_pos = buffer.current_pos
+    local current_search = list:get_current_search()
     view:goto_buffer(_BUFFERS[item.buffer])
-    buffer:close()
+    local closed = buffer:close()
     list.items = get_buffer_items()
     list:show()
-    -- try to go back to the same position. this doesn't work when there is a
-    -- search, but it's better than nothing for now
-    buffer.goto_pos(math.min(current_pos, buffer.length))
-    buffer.home()
-    gui.statusbar_text = 'Closed ' .. item[2]
+    if closed then
+      list:set_current_search(current_search)
+      buffer.goto_pos(math.min(current_pos, buffer.length))
+      buffer.home()
+      gui.statusbar_text = 'Closed ' .. name
+    else
+      gui.statusbar_text = ''
+    end
   end
 end
 
