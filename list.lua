@@ -196,6 +196,7 @@ end
 -- @param search The search string to use
 function list:set_current_search(search)
   self.buffer.data.search = search
+  if self.buffer:is_active() then self.buffer:refresh() end
 end
 
 -- begin private section
@@ -328,7 +329,8 @@ local function add_column_text(buffer, text, column_width, style)
   buffer:add_text(string_rep(' ', padding))
 end
 
-function list:_refresh(buffer)
+function list:_refresh()
+  local buffer = self.buffer
   local data = buffer.data
   self:_match_items()
   local matching_items = data.matching_items
