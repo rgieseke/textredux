@@ -31,10 +31,9 @@ local function get_buffer_items()
   local items = {}
   for _, buffer in ipairs(buffer_source()) do
     if list.buffer.target ~= buffer then
-      local modified = buffer.dirty and '*' or ' '
+      local modified = buffer.dirty and '*' or ''
       items[#items + 1] = {
-        modified,
-        buffer_title(buffer),
+        buffer_title(buffer) .. modified,
         buffer_directory(buffer),
         buffer = buffer
       }
@@ -78,6 +77,7 @@ function M.show(buffers)
 
   if not list then
     list = tui_list.new('Buffer listing')
+    list.headers = { 'Name', 'Directory' }
     list.on_selection = on_selection
     list.keys.cd = close_buffer
   end
