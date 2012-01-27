@@ -323,10 +323,10 @@ function list:_column_style(item, column)
   return type(style) == 'function' and style(item, column) or style
 end
 
-local function add_column_text(buffer, text, column_width, style)
+local function add_column_text(buffer, text, pad_to, style)
   buffer:add_text(text, style)
-  local padding = (column_width + 1) - #text
-  buffer:add_text(string_rep(' ', padding))
+  local padding = (pad_to + 1) - #text
+  if padding then buffer:add_text(string_rep(' ', padding)) end
 end
 
 function list:_refresh()
@@ -349,13 +349,19 @@ function list:_refresh()
 
   -- item listing
   local column_widths = self._column_widths
+  local nr_columns = #column_widths
+
+  -- headers
   local headers = self.headers
   if headers then
     for i, header in ipairs(self.headers or {}) do
-      add_column_text(buffer, header, column_widths[i], self.header_style)
+      local pad_to = i == nr_columns and 0 or column_widths[i]
+      add_column_text(buffer, header, pad_to, self.header_style)
     end
     buffer:add_text('\n')
   end
+
+  -- items
   data.items_start_line = buffer:line_from_position(buffer.current_pos)
   local max_shown_items = self.max_shown_items or buffer.lines_on_screen - data.items_start_line - 1
   for i, item in ipairs(matching_items) do
@@ -363,7 +369,8 @@ function list:_refresh()
     local columns = type(item) == 'table' and item or { item }
     local line_start = buffer.current_pos
     for j, field in ipairs(columns) do
-      add_column_text(buffer, tostring(field), column_widths[j], self:_column_style(columns, j))
+      local pad_to = j == nr_columns and 0 or column_widths[j]
+      add_column_text(buffer, tostring(field), pad_to, self:_column_style(columns, j))
     end
     buffer:add_text('\n')
     if self.on_selection then
