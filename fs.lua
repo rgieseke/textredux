@@ -15,7 +15,7 @@ local list = require('textui.list')
 local style = require('textui.style')
 local lfs = require('lfs')
 
-local _G, table, io = _G, table, io
+local _G, table, io, gui = _G, table, io, gui
 local ipairs, error, type, assert =
       ipairs, error, type, assert
 local string_match, string_sub = string.match, string.sub
@@ -172,7 +172,7 @@ local function file(path, name, parent)
   return file
 end
 
-local function find_files(directory, filter, depth)
+local function find_files(directory, filter, depth, max_files)
   if not directory then error('Missing argument #1 (directory)', 2) end
   if not depth then error('Missing argument #3 (depth)', 2) end
 
@@ -192,13 +192,14 @@ local function find_files(directory, filter, depth)
           if file.mode == 'directory' and entry ~= '..' and entry ~= '.' then
             table.insert(directories, 1, file)
           else
+            if max_files and #files == max_files then return files, false end
             files[#files + 1] = file
           end
         end
       end
     end
   end
-  return files
+  return files, true
 end
 
 local function sort_items(items)
@@ -216,12 +217,19 @@ end
 
 local function chdir(list, directory)
   directory = normalize_path(directory)
-  local items = find_files(directory, list.data.filter, list.data.depth)
-  if list.data.depth == 1 then sort_items(items) end
+  local data = list.data
+  local items, complete = find_files(directory, data.filter, data.depth, data.max_files)
+  if data.depth == 1 then sort_items(items) end
   list.title = directory
   list.items = items
-  list.data.directory = directory
+  data.directory = directory
   list:show()
+  if not complete then
+    local status = 'Number of entries limited to ' .. data.max_files .. ' as per snapopen.MAX'
+    gui.statusbar_text = status
+  else
+    gui.statusbar_text = ''
+  end
 end
 
 local function select_item(list, item)
@@ -259,14 +267,16 @@ local function get_file_style(item, index)
   return file_styles[item.mode] or style.default
 end
 
-local function create_list(directory, filter, depth)
+local function create_list(directory, filter, depth, max_files)
   local list = list.new(directory)
+  local data = list.data
   list.on_selection = select_item
   list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
-  list.data.directory = directory
-  list.data.filter = filter
-  list.data.depth = depth
+  data.directory = directory
+  data.filter = filter
+  data.depth = depth
+  data.max_files = max_files
   return list
 end
 
@@ -301,7 +311,7 @@ function snapopen(directory, filter, depth)
   filter.folders = filter.folders or {}
   filter.folders[#filter.folders + 1] = '%.%.?$'
 
-  local list = create_list(directory, filter, depth)
+  local list = create_list(directory, filter, depth, ta_snapopen.MAX)
   chdir(list, directory)
 end
 
