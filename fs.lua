@@ -114,31 +114,43 @@ function normalize_dir_path(directory)
   return string_sub(path, -1) == separator and path or path .. separator
 end
 
-local function parse_patterns(patterns)
+local function parse_filters(patterns)
   local filters = {}
   for _, pattern in ipairs(patterns) do
     local negated = string_match(pattern, '^!(.+)')
-    filters[#filters + 1] = {
-      pattern = negated or pattern,
-      negated = negated ~= nil
-    }
+    local filter_pattern = negated or pattern
+
+    filters[#filters + 1] = function(path)
+      if string_match(path, filter_pattern) then
+        if not negated then return true end
+      elseif negated then return true
+      else return false end
+    end
   end
   return filters
 end
+
+local function add_extensions_filter(filters, extensions)
+  if extensions and #extensions > 0 then
+    local exts = {}
+    for _, ext in ipairs(extensions) do exts[ext] = true end
+    filters[#filters + 1] = function(path)
+      return exts[string_match(path, '%.(%a+)$')] ~= nil
+    end
+  end
+end
+
 ---
 -- Given the patterns, returns a function returning true if
 -- the path should be filtered, and false otherwise
-local function create_filter(patterns)
-  local filters = parse_patterns(patterns)
-  filters.directory = parse_patterns(patterns.folders or {})
+local function create_filter(filter)
+  local filters = parse_filters(filter)
+  add_extensions_filter(filters, filter.extensions)
+  filters.directory = parse_filters(filter.folders or {})
   return function(file)
     local filters = filters[file.mode] or filters
     for _, filter in ipairs(filters) do
-      if string_match(file.path, filter.pattern) then
-        if not filter.negated then return true end
-      elseif filter.negated then
-        return true
-      end
+      if filter(file.path) then return true end
     end
     return false
   end
