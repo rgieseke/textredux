@@ -112,11 +112,16 @@ items = nil
 -- The handler will be passed the following parameters:
 --
 -- - `list`: the list itself
--- - `item`: the item selected, or nil if user pressed enter for a search
--- string with no matching items. The search string can be retrieved using
--- @{list:get_current_search}. The callback will not be called unless there is
--- either a matching item or a search string present.
+-- - `item`: the item selected
 on_selection = nil
+
+--- The handler/callback to call when the user has typed in text which doesn't
+-- match any item, and presses <enter>. The handler will be passed the following
+-- parameters:
+--
+-- - `list`: the list itself
+-- - `search`: the current search of the list
+on_new_selection = nil
 
 --- The underlying @{_M.textui.buffer} used by the list
 buffer = nil
@@ -416,8 +421,8 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
   local search = buffer.data.search or ''
 
   if key == '\n' then
-    if #search > 1 and self.on_selection then
-      self.on_selection(self, nil)
+    if #search > 1 and self.on_new_selection then
+      self.on_new_selection(self, search)
       return true
     end
   elseif #key == 1 and not string.match(key, '^%c$') then
