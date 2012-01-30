@@ -224,6 +224,9 @@ local function chdir(list, directory)
   list.items = items
   data.directory = directory
   list:show()
+  if #items > 1 and items[1].rel_path:match('^%.%..?$') then
+    list.buffer:line_down()
+  end
   if not complete then
     local status = 'Number of entries limited to ' .. data.max_files .. ' as per snapopen.MAX'
     gui.statusbar_text = status
