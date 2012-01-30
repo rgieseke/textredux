@@ -157,7 +157,7 @@ local function create_filter(filter)
 end
 
 local function file(path, name, parent)
-  local file = assert(fs_attributes(path))
+  local file = assert(fs_attributes(path:iconv(_CHARSET, 'UTF-8')))
   local suffix = file.mode == 'directory' and separator or ''
   file.path = path
   file.hidden = name and string_sub(name, 1, 1) == '.'
@@ -185,8 +185,8 @@ local function find_files(directory, filter, depth, max_files)
     local dir = table.remove(directories)
     if dir.depth > 1 then files[#files + 1] = dir end
     if dir.depth <= depth then
-      for entry in lfs.dir(dir.path) do
-        entry = entry:iconv(_CHARSET, 'UTF-8')
+      for entry in lfs.dir(dir.path:iconv(_CHARSET, 'UTF-8')) do
+        entry = entry:iconv('UTF-8', _CHARSET)
         local file = file(dir.path .. separator .. entry, entry, dir)
         if not filter(file) then
           if file.mode == 'directory' and entry ~= '..' and entry ~= '.' then
