@@ -235,28 +235,23 @@ local function chdir(list, directory)
   end
 end
 
-local function select_item(list, item)
-  local path, mode
-
-  if item then
-    path, mode = item.path, item.mode
-    if mode == 'link' then mode = lfs.attributes(path, 'mode') end
-  else
-    local name = list:get_current_search()
-    path = split_path(list.data.directory)
-    path[#path + 1] = name
-    path = join_path(path)
-    local fs_path = path:iconv(_CHARSET, 'UTF-8')
-    if not fs_attributes(fs_path) then
-      local file, error = io.open(fs_path, 'wb')
-      if not file then
-        gui.statusbar_text = 'Could not create ' .. name .. ': ' .. error
-        return
-      end
-      file:close()
-    end
+local function open_new_file(list, name)
+  local path = split_path(list.data.directory)
+  path[#path + 1] = name
+  path = join_path(path)
+  local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
+  if not file then
+    gui.statusbar_text = 'Could not create ' .. name .. ': ' .. error
+    return
   end
+  file:close()
+  list:close()
+  io.open_file(path)
+end
 
+local function open_item(list, item)
+  local path, mode = item.path, item.mode
+  if mode == 'link' then mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode') end
   if mode == 'directory' then
     chdir(list, path)
   else
@@ -289,7 +284,8 @@ end
 local function create_list(directory, filter, depth, max_files)
   local list = list.new(directory)
   local data = list.data
-  list.on_selection = select_item
+  list.on_selection = open_item
+  list.on_new_selection = open_new_file
   list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
   data.directory = directory
