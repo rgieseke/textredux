@@ -43,6 +43,7 @@ local function get_buffer_items()
 end
 
 local function on_selection(list, item)
+  if not item then return end
   list:close()
   view:goto_buffer(_BUFFERS[item.buffer])
 end
