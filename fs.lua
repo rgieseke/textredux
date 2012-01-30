@@ -236,14 +236,30 @@ local function chdir(list, directory)
 end
 
 local function select_item(list, item)
-  local path, mode = item.path, item.mode
-  if mode == 'link' then
-    mode = lfs.attributes(path, 'mode')
+  local path, mode
+
+  if item then
+    path, mode = item.path, item.mode
+    if mode == 'link' then mode = lfs.attributes(path, 'mode') end
+  else
+    local name = list:get_current_search()
+    path = split_path(list.data.directory)
+    path[#path + 1] = name
+    path = join_path(path)
+    local fs_path = path:iconv(_CHARSET, 'UTF-8')
+    if not fs_attributes(fs_path) then
+      local file, error = io.open(fs_path, 'wb')
+      if not file then
+        gui.statusbar_text = 'Could not create ' .. name .. ': ' .. error
+        return
+      end
+      file:close()
+    end
   end
 
   if mode == 'directory' then
     chdir(list, path)
-  elseif mode == 'file' then
+  else
     list:close()
     io.open_file(path)
   end
