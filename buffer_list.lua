@@ -50,7 +50,7 @@ end
 local function close_buffer()
   local item = list:get_current_selection()
   if item then
-    local name = item[2]
+    local name = item[1]
     gui.statusbar_text = 'Closing ' .. name .. '..'
     local current_pos = buffer.current_pos
     local current_search = list:get_current_search()
