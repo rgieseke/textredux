@@ -260,12 +260,14 @@ local function matchers_for_search(search_string, fuzzy_search, fuzzy_score_pena
   for _, search in ipairs(groups) do
     local fuzzy_pattern = fuzzy_search and fuzzy_search_pattern(search)
     matchers[#matchers + 1] = function(line)
-      local index = line:find(search, 1, true)
-      if not index and fuzzy_search then
-        index = line:find(fuzzy_pattern)
-        if index then index = index + fuzzy_score_penalty end
+      local score = line:find(search, 1, true)
+      if not score and fuzzy_search then
+        local start_pos, end_pos = line:find(fuzzy_pattern)
+        if start_pos then
+          score = (end_pos - start_pos) + fuzzy_score_penalty
+        end
       end
-      return index
+      return score and (score + #line) or nil
     end
   end
   return matchers
