@@ -239,10 +239,15 @@ function list:_update_items_data()
   self._max_line_length = max_line_length
 end
 
+local pattern_escapes = {}
+for c in string.gmatch('^$()%.[]*+-?', '.') do pattern_escapes[c] = '%' .. c end
+
 local function fuzzy_search_pattern(search)
   local pattern = ''
   for i = 1, #search do
-    pattern = pattern .. search:sub(i, i) .. '.-'
+    local c = search:sub(i, i)
+    c = pattern_escapes[c] or c
+    pattern = pattern .. c .. '.-'
   end
   return pattern
 end
@@ -418,7 +423,7 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
     if result then return result end
   end
 
-  if ctl or alt or meta or not key then return end
+  if not key then return end
 
   local search = buffer.data.search or ''
 
