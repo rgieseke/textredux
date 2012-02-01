@@ -219,7 +219,7 @@ function list:_update_items_data()
   local max_line_length = 0
 
   for i, header in ipairs(self.headers or {}) do
-    column_widths[1] = #tostring(header)
+    column_widths[i] = #tostring(header)
   end
   for i, item in ipairs(self.items) do
     if type(item) ~= 'table' then item = {item} end
