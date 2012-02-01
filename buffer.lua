@@ -8,28 +8,36 @@ module to ensure that styling works, etc.
 How it works
 ------------
 
-As was previously stated, a TextUI buffer wraps a
-[TextAdept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html).
-The TextAdept buffer (the target) is created automatically if necessary when
-@{buffer:show} is invoked. When the target buffer exists, a TextUI buffer will
+When you work with a TextUI buffer, it will nearly always seem just like an ordinary
+[TextAdept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html)
+(but with benefits, such as support for custom styling and easy callbacks, etc.).
+But where an TextAdept buffer is volatile, and might cease to exists at any
+time (due to it being closed by a user for example) a TextUI buffer is persistent.
+
+When we say that a TextUI buffer "wraps" an TextAdept buffer, there's more to it
+than just adding additional methods to the TextAdept buffer class. A TextUI
+buffer will always exist, but the corresponding TextAdept buffer, named `target`
+hereafter, may not. When the target buffer exists, a TextUI buffer will
 expose all the functions and attributes of the TextAdept buffer, making it
 possible to use the TextUI buffer in just the same way as you would a TextAdept
 buffer (i.e. invoking any of the ordinary buffer methods, setting attributes,
-etc.). When the target buffer does not exist, for instance as the result of the
-user closing it, any such invokation will raise an error. You can check whether
-the target exists by using the @{buffer:is_attached} function. While this might
-seem cumbersome, in practice it's not, since you'll typically interact with the
-buffer as part of a refresh, key press, etc., where the target buffer will
-always exist.
+etc.). The TextUI buffer takes care of creating the target buffer automatically
+if needed whenever you invoke @{buffer:show}. When the target buffer does not
+exist, for instance as the result of the user closing it, any attempt to invoke
+any of the ordinary buffer methods will raise an error. You can check explicitly
+whether the target exists by using the @{buffer:is_attached} function. This is
+not however something you will have to worry much about in practice, since you'll
+typically interact with the buffer as part of a refresh, key press, etc., where
+the target buffer will always exist.
 
-The benefits of this is that it's not necessary to worry about whether the
-actual TextAdept buffer actually exists or not, as this will be handled
-automatically.
+In short, you don't have to worry about creating buffers, detecting whether the
+buffer was closed, etc., as long as you remember to invoke @{buffer:show} and
+perform your work within the callbacks.
 
 How to use
 ----------
 
-In short, you create a new TextUI buffer by calling @{new}, passing the buffer
+You create a new TextUI buffer by calling @{new}, passing the buffer
 title. You specify an @{on_refresh} handler for the buffer, which is responsible
 for actually inserting the content in the buffer, along with any custom styles
 and hotspot handlers. You specify any custom key bindings using either @{keys}

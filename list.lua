@@ -1,20 +1,20 @@
 --[[--
 The list class provides a versatile and extensible text based item listing for
 TextAdept, featuring advanced search capabilities and styling. It's a convinient
-way of presenting lists to the user for simple selection, but can also just
-as well be used to construct more elaborate list based interfaces.
+way of presenting lists to the user for simple selection, but is equally well
+suited for creating advanced list based interfaces.
 
 Features at a glance
 --------------------
 
-- Support for multi-column table items, in addition to supporting the the simpler
+- Support for multi-column table items, in addition to supporting the simpler
   case of just listing strings.
 - Fully customizable styling. You can either specify individual styles for
   different columns, or specify styles for each item dynamically using a callback.
   If you do neither, you will automatically get sane defaults.
-- Type to narrow searching. The list class supports both exact matching and fuzzy
-  matching, and will present best matches first. It also supports searching for
-  multiple search strings (any text separated by whitespace is considered to
+- Powerful search capabilities. The list class supports both exact matching and
+  fuzzy matching, and will present best matches first. It also supports searching
+  for multiple search strings (any text separated by whitespace is considered to
   be multiple search strings). Searches are done against all columns.
 
 How to use
@@ -80,8 +80,6 @@ column_styles =  {
 --
 -- It's possible to override this for a specific list by assigning another value
 -- to the instance itself.
---
--- It's advised
 max_shown_items = nil
 
 --- Whether searches are case insensitive or not.
