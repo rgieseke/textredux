@@ -51,8 +51,8 @@ Please see the examples for more hands on instructions.
 local key = require('textui.key')
 
 local _G = _G
-local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall =
-      error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall
+local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
+      error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select
 local new_buffer, events, table = new_buffer, events, table
 local tui_style = require('textui.style')
 local constants = _SCINTILLA.constants
@@ -66,12 +66,12 @@ local tui_buffers = {}
 setmetatable(tui_buffers, { __mode = 'k' })
 local default_style = tui_style.default
 
----
--- Whether the buffer should be marked as read only. The default is true
--- but can be changed on a buffer to buffer basis. Any call to @{buffer:refresh}
--- will automatically take care of setting the buffer to write mode before
--- invoking the @{on_refresh} handler, and will restore the @{read_only} state
--- afterwards.
+--[[- Whether the buffer should be marked as read only.
+The default is true but can be changed on a buffer to buffer basis. Any call to
+@{buffer:refresh} will automatically take care of setting the buffer to write
+mode before invoking the @{on_refresh} handler, and will restore the @{read_only}
+state afterwards.
+]]
 read_only = true
 
 --- Instance fields. These can be set only for an buffer instance, and not
@@ -83,52 +83,51 @@ read_only = true
 -- The callback has the following with the following parameters: `buffer`
 on_deleted = nil
 
----
--- Callback invoked whenever the buffer should refresh.
---
--- This should set for each buffer. It is this callback that is responsible
--- for actually inserting any content into the buffer. Before this callback
--- is invoked, any previous buffer content will be cleared.
--- The callback will be invoked with the buffer as the sole parameter.
--- @see buffer:refresh
+--[[- Callback invoked whenever the buffer should refresh.
+This should set for each buffer. It is this callback that is responsible
+for actually inserting any content into the buffer. Before this callback
+is invoked, any previous buffer content will be cleared.
+The callback will be invoked with the buffer as the sole parameter.
+@see buffer:refresh
+]]
 on_refresh = nil
 
----
--- Callback invoked whenever the buffer receives a keypress.
--- Please note that if there is any key command defined in @{keys} matching
--- the keypress, that key command will be invoked and this callback will never
--- be called. The callback will receive as its first two parameters the buffer
--- object and the "translated key" (same format as for @{keys}), and will in
--- addition after that receive all the parameters from the the standard TextAdept
--- KEYPRESS event (which you can read more about
--- [here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
--- The return value determines whether the key press should be propagated, just
--- the same as for the standard TextAdept event.
--- @see keys
+--[[- Callback invoked whenever the buffer receives a keypress.
+Please note that if there is any key command defined in @{keys} matching
+the keypress, that key command will be invoked and this callback will never
+be called. The callback will receive as its first two parameters the buffer
+object and the "translated key" (same format as for @{keys}), and will in
+addition after that receive all the parameters from the the standard TextAdept
+KEYPRESS event (which you can read more about
+[here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
+The return value determines whether the key press should be propagated, just
+the same as for the standard TextAdept event.
+@see keys
+]]
 on_keypress = nil
 
----
--- A table of key commands for the buffer.
--- This is similar to `_M.textadept.keys` works, but allows you to specify key
--- commands specifically for one buffer. The format for specifying keys
--- is the same as for
--- [_M.textadept.keys](http://caladbolg.net/luadoc/textadept/modules/keys.html),
--- and the values assigned can also be either functions or tables.
--- There are differences compared to `_M.textadept.keys` however:
---
--- - It's not possible to specify language specific key bindings. This is
--- obviously not applicable for a textui buffer.
--- - It's not possible to specify keychain sequences.
--- - For function values, the buffer instance is passed as the first argument.
--- - For table values, buffer or view references will not be magically fixed.
---   This means that you should not use either of the above in a table command,
---   unless you enjoy the occasional segfault.
---
--- In short, only explicit simple mappings are supported. Defining a key command
--- for a certain key means that key presses are never propagated any further for
--- that particular key. Key commands take preference over any @{on_keypress}
--- callback, so any such callback will never be called if a key command matches.
--- @see on_keypress
+--[[- A table of key commands for the buffer.
+This is similar to `_M.textadept.keys` works, but allows you to specify key
+commands specifically for one buffer. The format for specifying keys
+is the same as for
+[_M.textadept.keys](http://caladbolg.net/luadoc/textadept/modules/keys.html),
+and the values assigned can also be either functions or tables.
+There are differences compared to `_M.textadept.keys` however:
+
+- It's not possible to specify language specific key bindings. This is
+obviously not applicable for a textui buffer.
+- It's not possible to specify keychain sequences.
+- For function values, the buffer instance is passed as the first argument.
+- For table values, buffer or view references will not be magically fixed.
+  This means that you should not use either of the above in a table command,
+  unless you enjoy the occasional segfault.
+
+In short, only explicit simple mappings are supported. Defining a key command
+for a certain key means that key presses are never propagated any further for
+that particular key. Key commands take preference over any @{on_keypress}
+callback, so any such callback will never be called if a key command matches.
+@see on_keypress
+]]
 keys = nil
 
 ---
@@ -239,21 +238,28 @@ function buffer:is_active()
   return self.target and self.target == _G.buffer
 end
 
----
--- Adds a hotspot for the given text range.
--- Hotspots allows you to specify the behaviour for when the user selects
--- certain text. Besides using this function directly, it's also possible and
--- in many cases more convinient to add an hotspot when using any of the text
--- insertion functions (@{buffer:add_text}, @{buffer:append_text},
--- @{buffer:insert_text}). Note that the range given is interpreted as being
--- half closed, i.e. `[start_pos, end_pos)`.
---
--- *NB*: Please note that all hotspots are cleared as part of a refresh.
--- @param start_pos The start position
--- @param end_pos The end position. The end position itself is not part of the
--- hotspot.
--- @param command The command to execute. Similarily to @{keys}, command can be
--- either a function or a table.
+--[[- Adds a hotspot for the given text range.
+Hotspots allows you to specify the behaviour for when the user selects
+certain text. Besides using this function directly, it's also possible and
+in many cases more convinient to add an hotspot when using any of the text
+insertion functions (@{buffer:add_text}, @{buffer:append_text},
+@{buffer:insert_text}). Note that the range given is interpreted as being
+half closed, i.e. `[start_pos, end_pos)`.
+
+*NB*: Please note that all hotspots are cleared as part of a refresh.
+@param start_pos The start position
+@param end_pos The end position. The end position itself is not part of the
+hotspot.
+@param command The command to execute. Similarily to @{keys}, command can be
+either a function or a table. When the command is a function, it will be passed
+the following parameters:
+
+- buffer: The buffer instance
+- shift: True if the Shift key was held down.
+- ctrl: True if the Control/Command key was held down.
+- alt: True if the Alt/option key was held down.
+- meta: True if the Control key on Mac OSX was held down.
+]]
 function buffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
   local target = self.target
@@ -272,14 +278,14 @@ end
 
 -- add styling and hotspot support to buffer text insertion functions
 
----
--- Override for
--- [buffer:add_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.add_text)
--- which accepts optional style and command parameters.
--- @param text The text to add.
--- @param style The style to use for the text, as defined using @{_M.textui.style}.
--- @param command The command to run if the user "selects" this text. See
--- @{buffer:add_hotspot} for more information.
+--[[- Override for
+[buffer:add_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.add_text)
+which accepts optional style and command parameters.
+@param text The text to add.
+@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param command The command to run if the user "selects" this text. See
+@{buffer:add_hotspot} for more information.
+]]
 function buffer:add_text(text, style, command)
   text = tostring(text)
   local insert_pos = self.target.current_pos
@@ -288,14 +294,14 @@ function buffer:add_text(text, style, command)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
 end
 
----
--- Override for
--- [buffer:append_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.append_text)
--- which accepts optional style and command parameters.
--- @param text The text to append.
--- @param style The style to use for the text, as defined using @{_M.textui.style}.
--- @param command The command to run if the user "selects" this text. See
--- @{buffer:add_hotspot} for more information.
+--[[- Override for
+[buffer:append_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.append_text)
+which accepts optional style and command parameters.
+@param text The text to append.
+@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param command The command to run if the user "selects" this text. See
+@{buffer:add_hotspot} for more information.
+]]
 function buffer:append_text(text, style, command)
   local insert_pos = self.target.length
   text = tostring(text)
@@ -304,15 +310,15 @@ function buffer:append_text(text, style, command)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
 end
 
----
--- Override for
--- [buffer:insert_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.insert_text)
--- which accepts optional style and command parameters.
--- @param pos The position to insert text at or `-1` for the current position.
--- @param text The text to insert.
--- @param style The style to use for the text, as defined using @{_M.textui.style}.
--- @param command The command to run if the user "selects" this text. See
--- @{buffer:add_hotspot} for more information.
+--[[- Override for
+[buffer:insert_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.insert_text)
+which accepts optional style and command parameters.
+@param pos The position to insert text at or `-1` for the current position.
+@param text The text to insert.
+@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param command The command to run if the user "selects" this text. See
+@{buffer:add_hotspot} for more information.
+]]
 function buffer:insert_text(pos, text, style, command)
   text = tostring(text)
   self.target:insert_text(pos, text)
@@ -320,12 +326,13 @@ function buffer:insert_text(pos, text, style, command)
   if command then self:add_hotspot(pos, pos + #text, command) end
 end
 
----
--- Override for
--- [buffer:new_line](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.new_line).
--- A TextUI buffer will always have eol mode set to LF, so it's also possible,
--- and arguably easier, to just insert a newline using the `\n` escape via any
--- of the other text insertion functions.
+--[[-
+Override for
+[buffer:new_line](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.new_line).
+A TextUI buffer will always have eol mode set to LF, so it's also possible,
+and arguably easier, to just insert a newline using the `\n` escape via any
+of the other text insertion functions.
+]]
 function buffer:newline()
   self:add_text('\n', tui_style.whitespace)
 end
@@ -384,9 +391,9 @@ function __newindex(tui_buf, k, v)
   end
 end
 
-local function invoke_command(command, buffer)
+local function invoke_command(command, buffer, shift, ctl, alt, meta)
   local f = command
-  local args = { buffer }
+  local args = { buffer, shift, ctl, alt, meta }
   if type(command) == 'table' then
     f = command[1]
     args = { table.unpack(command, 2) }
@@ -401,7 +408,7 @@ function buffer:_on_target_deleted()
   self:_call_hook('on_deleted')
 end
 
-function buffer:_on_user_select()
+function buffer:_on_user_select(...)
   local target = self.target
   local cur_pos = target.current_pos
   local cur_line = target:line_from_position(cur_pos)
@@ -409,7 +416,7 @@ function buffer:_on_user_select()
   if not spots then return end
   for _, spot in ipairs(spots) do
     if cur_pos >= spot.start_pos and cur_pos < spot.end_pos then
-      invoke_command(spot.command, self)
+      invoke_command(spot.command, self, ...)
       return true
     end
   end
@@ -452,19 +459,19 @@ local function _on_quit()
   end
 end
 
-local function _on_keypress(...)
+local function _on_keypress(code, shift, ctl, alt, meta)
   local tui_buf = _G.buffer._textui
   if not tui_buf then return end
-  local key_seq = key.translate(...)
+  local key = key.translate(code, shift, ctl, alt, meta)
 
-  if key_seq == '\n' and tui_buf:_on_user_select() then return true end
+  if key and key:match('\n') and tui_buf:_on_user_select(shift, ctl, alt, meta) then return true end
 
-  local command = tui_buf.keys[key_seq]
+  local command = tui_buf.keys[key]
   if command then
-    invoke_command(command, tui_buf)
+    invoke_command(command, tui_buf, shift, ctl, alt, meta)
     return true
   end
-  return tui_buf:_call_hook('on_keypress', key_seq, ...)
+  return tui_buf:_call_hook('on_keypress', key, shift, ctl, alt, meta)
 end
 
 events.connect(events.BUFFER_DELETED, _on_buffer_deleted)
