@@ -61,8 +61,8 @@ column_styles = nil
 -- I fought LDoc, but LDoc won. Define the field separately here to avoid it
 -- being poorly documented as a table
 column_styles =  {
-  style.keyword,
   style.string,
+  style.comment,
   style.operator,
 }
 
