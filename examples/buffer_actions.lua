@@ -21,8 +21,13 @@ style.action_style = { back = '#6e6e6e', fore = '#00FFFF' }
 
 local function on_refresh(buffer)
   buffer:add_text('Function command: ')
-  buffer:add_text('Switch buffer', style.action_style, function(buffer)
-    gui.switch_buffer()
+  buffer:add_text('Show modifiers', style.action_style, function(buffer, shift, ctl, alt, meta)
+    local modifiers = ''
+    if shift then modifiers = modifiers .. ' shift' end
+    if ctl then modifiers = modifiers .. ' control' end
+    if alt then modifiers = modifiers .. ' alt' end
+    if meta then modifiers = modifiers .. ' meta' end
+    gui.statusbar_text = "Selected with modifiers: " .. modifiers
   end)
 
   buffer:add_text('\nTable command: ')
