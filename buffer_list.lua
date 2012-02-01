@@ -80,6 +80,7 @@ function M.show(buffers)
     list.headers = { 'Name', 'Directory' }
     list.on_selection = on_selection
     list.keys.cd = close_buffer
+    list.keys.esc = function() list:close() end
   end
   list.items = get_buffer_items()
   list:show()
