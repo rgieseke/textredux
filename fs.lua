@@ -317,7 +317,7 @@ end
 -- @param directory The directory to open, in UTF-8 encoding
 function open(directory)
   directory = directory or get_initial_directory(directory)
-  local filter = function(file) return file.rel_path == '.' .. separator end
+  local filter = { folders = { separator .. '%.$' } }
   local list = create_list(directory, filter, 1)
   chdir(list, directory)
 end
