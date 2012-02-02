@@ -281,6 +281,19 @@ local function get_file_style(item, index)
   return file_styles[item.mode] or style.default
 end
 
+local function toggle_snap(list)
+  local data = list.data
+  local depth = data.depth
+
+  if data.prev_depth then
+    data.depth = data.prev_depth
+  else
+    data.depth = data.depth == 1 and ta_snapopen.DEFAULT_DEPTH or 1
+  end
+  data.prev_depth = depth
+  chdir(list, data.directory)
+end
+
 local function create_list(directory, filter, depth, max_files)
   local list = list.new(directory)
   local data = list.data
@@ -288,6 +301,8 @@ local function create_list(directory, filter, depth, max_files)
   list.on_new_selection = open_new_file
   list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
+  list.keys.esc = function() list:close() end
+  list.keys.cs = toggle_snap
   data.directory = directory
   data.filter = filter
   data.depth = depth
