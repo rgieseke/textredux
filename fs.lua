@@ -114,18 +114,21 @@ function normalize_dir_path(directory)
   return string_sub(path, -1) == separator and path or path .. separator
 end
 
-local function parse_filters(patterns)
+local function parse_filters(filter)
   local filters = {}
-  for _, pattern in ipairs(patterns) do
-    local negated = string_match(pattern, '^!(.+)')
-    local filter_pattern = negated or pattern
+  for _, restriction in ipairs(filter) do
+    if type(restriction) == 'string' then
+      local negated = restriction:match('^!(.+)')
+      local filter_pattern = negated or restriction
 
-    filters[#filters + 1] = function(path)
-      if string_match(path, filter_pattern) then
-        if not negated then return true end
-      elseif negated then return true
-      else return false end
+      restriction = function(path)
+        if path:match(filter_pattern) then
+          if not negated then return true end
+        elseif negated then return true
+        else return false end
+      end
     end
+    filters[#filters + 1] = restriction
   end
   return filters
 end

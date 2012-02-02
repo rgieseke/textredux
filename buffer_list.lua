@@ -79,6 +79,7 @@ function M.show(buffers)
     list = tui_list.new('Buffer listing')
     list.headers = { 'Name', 'Directory' }
     list.on_selection = on_selection
+    list.keys.esc = function() list:close() end
     list.keys.cd = close_buffer
     list.keys.esc = function() list:close() end
   end
