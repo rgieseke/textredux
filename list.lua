@@ -33,6 +33,7 @@ Please see the various list examples for more hands on instructions.
 
 local style = require 'textui.style'
 local textui_buffer = require 'textui.buffer'
+local util_matcher = require 'textui.util.matcher'
 
 local _G, textui, string, table, keys, math = _G, _M.textui, string, table, keys, math
 local ipairs, error, type, setmetatable, select, tostring =
@@ -103,7 +104,7 @@ headers = nil
 
 --- A table of items to display in the list.
 -- Each table item can either be a table itself, in which case the list will
--- be muli column, or a string in which case the list be single column.
+-- be multi column, or a string in which case the list be single column.
 items = nil
 
 --- The handler/callback to call when the user has selected an item.
@@ -125,7 +126,7 @@ on_new_selection = nil
 buffer = nil
 
 ---
--- A table of key commands for the buffer.
+-- A table of key commands for the list.
 -- This functions almost exactly the same as @{_M.textui.buffer.keys}. The one
 -- difference is that for function values, the parameter passed will be a
 -- reference to the list instead of a buffer reference.
@@ -161,7 +162,7 @@ function new(title)
     title = title,
     items = {},
     column_styles = _column_styles,
-    data = {}
+    data = {},
   }
   setmetatable(l, { __index = list })
   l:_create_buffer()
@@ -170,8 +171,14 @@ end
 
 --- Shows the list.
 function list:show()
-  self:_update_items_data()
-  self.buffer.data = {}
+  self:_calculate_column_widths()
+  self.buffer.data = {
+    matcher = util_matcher.new(
+                self.items,
+                self.search_case_insensitive,
+                self.search_fuzzy
+              )
+  }
   self.buffer:set_title(self.title)
   self.buffer:show()
 end
@@ -209,12 +216,9 @@ end
 
 -- begin private section
 
--- Updates the state associated with items, e.g. column widths, maximum line
--- length and matching data.
-function list:_update_items_data()
-  local lines = {}
+-- Calculates the column widths for the current items.
+function list:_calculate_column_widths()
   local column_widths = {}
-  local max_line_length = 0
 
   for i, header in ipairs(self.headers or {}) do
     column_widths[i] = #tostring(header)
@@ -224,112 +228,8 @@ function list:_update_items_data()
     for j, field in ipairs(item) do
       column_widths[j] = math.max(column_widths[j] or 0, #tostring(field))
     end
-    local text = table.concat(item, ' ')
-    if self.search_case_insensitive then text = text:lower() end
-    max_line_length = math.max(max_line_length, #text)
-    lines[#lines + 1] = {
-      text = text,
-      index = i
-    }
   end
-  self._lines = lines
   self._column_widths = column_widths
-  self._max_line_length = max_line_length
-end
-
-local pattern_escapes = {}
-for c in string.gmatch('^$()%.[]*+-?', '.') do pattern_escapes[c] = '%' .. c end
-
-local function fuzzy_search_pattern(search)
-  local pattern = ''
-  for i = 1, #search do
-    local c = search:sub(i, i)
-    c = pattern_escapes[c] or c
-    pattern = pattern .. c .. '.-'
-  end
-  return pattern
-end
-
---- Creates matches for the specified search
--- @param search_string The search string
--- @param fuzzy_search Whether fuzzy matches should be allowed
--- @param fuzzy_score_penalty The score penalty to add for fuzzy matches
--- @return A table of matcher functions, each taking a line as parameter and
--- returning a score (or nil for no match).
-local function matchers_for_search(search_string, fuzzy_search, fuzzy_score_penalty)
-  local groups = {}
-  for part in search_string:gmatch('%S+') do groups[#groups + 1] = part end
-  local matchers = {}
-  for _, search in ipairs(groups) do
-    local fuzzy_pattern = fuzzy_search and fuzzy_search_pattern(search)
-    matchers[#matchers + 1] = function(line)
-      local score = line:find(search, 1, true)
-      if not score and fuzzy_search then
-        local start_pos, end_pos = line:find(fuzzy_pattern)
-        if start_pos then
-          score = (end_pos - start_pos) + fuzzy_score_penalty
-        end
-      end
-      return score and (score + #line) or nil
-    end
-  end
-  return matchers
-end
-
--- Applies search matchers on a line.
--- @param line The line to match
--- @param matchers The search matchers to apply
--- @return A numeric score if the line matches or nil otherwise. For scoring,
--- lower is better.
-local function match(line, matchers)
-  local score = 0
-
-  for _, matcher in ipairs(matchers) do
-    local matcher_score = matcher(line)
-    if not matcher_score then return nil end
-    score = score + matcher_score
-  end
-  return score
-end
-
-function list:_match_items()
-  local data = self.buffer.data
-  local search = data.search
-
-  if not search or #search == 0 then
-    data.matching_items = self.items
-    return
-  end
-
-  if self.search_case_insensitive then search = search:lower() end
-
-  data.cache = data.cache or {
-    lines = {},
-    items = {}
-  }
-  data.matching_items = data.cache.items[search] or {}
-  if #data.matching_items > 0 then return end
-
-  local matchers = matchers_for_search(search, self.search_fuzzy, self._max_line_length)
-  local lines = data.cache.lines[string.sub(search, 1, -2)] or self._lines
-  local matching_lines = {}
-  local matches = {}
-  for i, line in ipairs(lines) do
-    local score = match(line.text, matchers)
-    if score then
-      matches[#matches + 1] = { index = line.index, score = score }
-      matching_lines[#matching_lines + 1] = line
-    end
-  end
-  data.cache.lines[search] = matching_lines
-
-  table.sort(matches, function(a ,b) return a.score < b.score end)
-  local matching_items = {}
-  for _, match in ipairs(matches) do
-    matching_items[#matching_items + 1] = self.items[match.index]
-  end
-  data.cache.items[search] = matching_items
-  data.matching_items = matching_items
 end
 
 function list:_column_style(item, column)
@@ -347,8 +247,7 @@ end
 function list:_refresh()
   local buffer = self.buffer
   local data = buffer.data
-  self:_match_items()
-  local matching_items = data.matching_items
+  local matching_items = data.matcher:match(data.search)
 
   -- header
   buffer:add_text(self.title .. ' : ')
@@ -402,7 +301,6 @@ function list:_refresh()
     buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
   end
 
-
   buffer:goto_line(data.items_start_line)
   buffer:home()
 end
@@ -422,7 +320,6 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
   end
 
   if not key then return end
-
   local search = buffer.data.search or ''
 
   if key == '\n' then
