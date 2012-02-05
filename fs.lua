@@ -238,29 +238,16 @@ local function chdir(list, directory)
   end
 end
 
-local function open_new_file(list, name)
-  local path = split_path(list.data.directory)
-  path[#path + 1] = name
-  path = join_path(path)
-  local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
-  if not file then
-    gui.statusbar_text = 'Could not create ' .. name .. ': ' .. error
-    return
+local function open_selected_file(path, exists)
+  if not exists then
+    local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
+    if not file then
+      gui.statusbar_text = 'Could not create ' .. path .. ': ' .. error
+      return
+    end
+    file:close()
   end
-  file:close()
-  list:close()
   io.open_file(path)
-end
-
-local function open_item(list, item)
-  local path, mode = item.path, item.mode
-  if mode == 'link' then mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode') end
-  if mode == 'directory' then
-    chdir(list, path)
-  else
-    list:close()
-    io.open_file(path)
-  end
 end
 
 function on_keypress(list, key, code, shift, ctl, alt, meta)
@@ -300,8 +287,6 @@ end
 local function create_list(directory, filter, depth, max_files)
   local list = list.new(directory)
   local data = list.data
-  list.on_selection = open_item
-  list.on_new_selection = open_new_file
   list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
   list.keys.esc = function() list:close() end
@@ -313,13 +298,57 @@ local function create_list(directory, filter, depth, max_files)
   return list
 end
 
+--[[- Opens a file browser and lets the user choose a file.
+@param on_selection The function to invoke when the user has choosen a file. The function
+will be called with two parameters: The full path of the choosen file (UTF-8 encoded),
+and a boolean indicating whether the file exists or not.
+@param start_directory The initial directory to open, in UTF-8 encoding. If nil,
+the initial directory is determined automatically (preferred choice is to
+open the directory containing the current file).
+@param filter The filter to apply, if any. The structure and semantics are the
+same as for TextAdept's
+[snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
+@param depth The number of directory levels to display in the list. Defaults to
+1 if not specified, which results in a "normal" directory listing.
+@param max_files The maximum number of files to scan and display in the list.
+Defaults to 10000 if not specified.
+]]
+function select_file(on_selection, start_directory, filter, depth, max_files)
+  start_directory = start_directory or get_initial_directory()
+  if not filter then filter = {}
+  elseif type(filter) == 'string' then filter = { filter } end
+
+  filter.folders = filter.folders or {}
+  filter.folders[#filter.folders + 1] = separator .. '%.$'
+
+  local list = create_list(start_directory, filter, depth or 1, max_files or 10000)
+
+  list.on_selection = function(list, item)
+    local path, mode = item.path, item.mode
+      if mode == 'link' then mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode') end
+      if mode == 'directory' then
+        chdir(list, path)
+      else
+        list:close()
+        on_selection(path, true)
+      end
+  end
+
+  list.on_new_selection = function (list, name)
+    local path = split_path(list.data.directory)
+    path[#path + 1] = name
+    list:close()
+    on_selection(join_path(path), false)
+  end
+
+  chdir(list, start_directory)
+end
+
 --- Opens the specified directory for browsing.
 -- @param directory The directory to open, in UTF-8 encoding
 function open(directory)
-  directory = directory or get_initial_directory(directory)
   local filter = { folders = { separator .. '%.$' } }
-  local list = create_list(directory, filter, 1)
-  chdir(list, directory)
+  select_file(open_selected_file, directory, filter, 1)
 end
 
 --[[-
@@ -344,8 +373,7 @@ function snapopen(directory, filter, depth)
   filter.folders = filter.folders or {}
   filter.folders[#filter.folders + 1] = '%.%.?$'
 
-  local list = create_list(directory, filter, depth, ta_snapopen.MAX)
-  chdir(list, directory)
+  select_file(open_selected_file, directory, filter, depth, ta_snapopen.MAX)
 end
 
 return M
