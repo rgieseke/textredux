@@ -407,22 +407,41 @@ Opens a list of files in the specified directory, according to the given
 parameters. This works similarily to
 [TextAdept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
 The main differences are:
+
 - it does not support opening multiple paths at once, which also makes the
   TextAdept parameter `exclusive` pointless.
-- filter can a function as well as a table
+- filter can contain functions as well as patterns (and can be a function as well).
+  Functions will be passed a file object which is the same as the return from
+  [lfs.attributes](http://keplerproject.github.com/luafilesystem/manual.html#attributes),
+  with the following additions:
+
+    - `rel_path`: The path of the file relative to the currently displayed directory.
+
 @param directory The directory to open, in UTF-8 encoding
-@param filter The filter to apply, same as for TextAdept, and also defaults
+@param filter The filter to apply. The format and semantics are the same as for
+TextAdept.
+@param exclude_FILTER Same as for TextAdept: unless if not true then
+snapopen.FILTER will be automatically added to the filter.
 to snapopen.FILTER if not specified.
 @param depth The number of directory levels to scan. Same as for TextAdept,
 and also defaults to snapopen.DEFAULT_DEPTH if not specified.
 ]]
-function snapopen(directory, filter, depth)
+function snapopen(directory, filter, exclude_FILTER, depth)
   if not directory then error('directory not specified', 2) end
   if not depth then depth = ta_snapopen.DEFAULT_DEPTH end
-  filter = filter or ta_snapopen.FILTER or {} -- todo, remove last or
+  filter = filter or {}
   if type(filter) == 'string' then filter = { filter } end
   filter.folders = filter.folders or {}
   filter.folders[#filter.folders + 1] = updir_pattern
+
+  if not exclude_FILTER then
+    for _, key in ipairs({ 'folders', 'extensions' }) do
+      filter[key] = filter[key] or {}
+      for _, pattern in ipairs(ta_snapopen.FILTER[key]) do
+        filter[key][#filter[key] + 1] = pattern
+      end
+    end
+  end
 
   select_file(open_selected_file, directory, filter, depth, ta_snapopen.MAX)
 end
