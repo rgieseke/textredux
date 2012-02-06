@@ -247,11 +247,11 @@ end
 function list:_refresh()
   local buffer = self.buffer
   local data = buffer.data
-  local matching_items = data.matcher:match(data.search)
+  data.matching_items = data.matcher:match(data.search)
 
   -- header
   buffer:add_text(self.title .. ' : ')
-  buffer:add_text(#matching_items, style.number)
+  buffer:add_text(#data.matching_items, style.number)
   buffer:add_text('/')
   buffer:add_text(#self.items, style.number)
   buffer:add_text(' items')
@@ -278,7 +278,7 @@ function list:_refresh()
   -- items
   data.items_start_line = buffer:line_from_position(buffer.current_pos)
   local max_shown_items = self.max_shown_items or buffer.lines_on_screen - data.items_start_line - 1
-  for i, item in ipairs(matching_items) do
+  for i, item in ipairs(data.matching_items) do
     if i > max_shown_items then break end
     local columns = type(item) == 'table' and item or { item }
     local line_start = buffer.current_pos
@@ -293,10 +293,10 @@ function list:_refresh()
   end
 
   data.items_end_line = buffer:line_from_position(buffer.current_pos)
-  if #matching_items > max_shown_items then
+  if #data.matching_items > max_shown_items then
     local message = string.format(
       "[..] (%d more items not shown, select to show more)",
-      #matching_items - max_shown_items
+      #data.matching_items - max_shown_items
     )
     buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
   end
