@@ -25,6 +25,7 @@ local ta_snapopen = _M.textadept.snapopen
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
 local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
 local separator = WIN32 and '\\' or '/'
+local updir_pattern = '%.%.?$'
 
 local M = {}
 local _ENV = M
@@ -281,6 +282,21 @@ local function toggle_snap(list)
   else
     data.depth = data.depth == 1 and ta_snapopen.DEFAULT_DEPTH or 1
   end
+
+  local filter = data.filter
+  if data.depth == 1 then -- remove updir filter
+    if type(filter.folders) == 'table' then
+      for i, restriction in ipairs(filter.folders) do
+        if restriction == updir_pattern then
+          table.remove(filter.folders, i)
+          break
+        end
+      end
+    end
+  else -- add updir filter
+    filter.folders = filter.folders or {}
+    filter.folders[#filter.folders + 1] = updir_pattern
+  end
   data.prev_depth = depth
   chdir(list, data.directory)
 end
@@ -406,7 +422,7 @@ function snapopen(directory, filter, depth)
   filter = filter or ta_snapopen.FILTER or {} -- todo, remove last or
   if type(filter) == 'string' then filter = { filter } end
   filter.folders = filter.folders or {}
-  filter.folders[#filter.folders + 1] = '%.%.?$'
+  filter.folders[#filter.folders + 1] = updir_pattern
 
   select_file(open_selected_file, directory, filter, depth, ta_snapopen.MAX)
 end
