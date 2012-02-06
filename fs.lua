@@ -238,7 +238,7 @@ local function chdir(list, directory)
   end
 end
 
-local function open_selected_file(path, exists)
+local function open_selected_file(path, exists, list)
   if not exists then
     local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
     if not file then
@@ -247,6 +247,7 @@ local function open_selected_file(path, exists)
     end
     file:close()
   end
+  list:close()
   io.open_file(path)
 end
 
@@ -300,8 +301,10 @@ end
 
 --[[- Opens a file browser and lets the user choose a file.
 @param on_selection The function to invoke when the user has choosen a file. The function
-will be called with two parameters: The full path of the choosen file (UTF-8 encoded),
-and a boolean indicating whether the file exists or not.
+will be called with three parameters: The full path of the choosen file (UTF-8 encoded),
+a boolean indicating whether the file exists or not, and a reference to the TextUI
+list used by browser. The list will not be closed automatically, so close it
+explicitly using `list:close()` if desired.
 @param start_directory The initial directory to open, in UTF-8 encoding. If nil,
 the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
@@ -329,26 +332,58 @@ function select_file(on_selection, start_directory, filter, depth, max_files)
       if mode == 'directory' then
         chdir(list, path)
       else
-        list:close()
-        on_selection(path, true)
+        on_selection(path, true, list)
       end
   end
 
-  list.on_new_selection = function (list, name)
+  list.on_new_selection = function(list, name)
     local path = split_path(list.data.directory)
     path[#path + 1] = name
-    list:close()
-    on_selection(join_path(path), false)
+    on_selection(join_path(path), false, list)
   end
 
   chdir(list, start_directory)
 end
 
 --- Opens the specified directory for browsing.
--- @param directory The directory to open, in UTF-8 encoding
-function open(directory)
+-- @param start_directory The directory to open, in UTF-8 encoding
+function open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
-  select_file(open_selected_file, directory, filter, 1)
+  select_file(open_selected_file, start_directory, filter, 1)
+end
+
+--- Saves the current buffer under a new name.
+-- Open a browser and lets the user select a name.
+function save_buffer_as()
+  local buffer = _G.buffer
+  local confirm_path
+
+  local function set_file_name(path, exists, list)
+    if not exists or path == confirm_path then
+      list:close()
+      _G.view:goto_buffer(_G._BUFFERS[buffer], false)
+      buffer:save_as(path)
+      gui.statusbar_text = ''
+    else
+      gui.statusbar_text = 'File exists (' .. path .. '): Press enter to overwrite.'
+      confirm_path = path
+    end
+  end
+  local filter = { folders = { separator .. '%.$' } }
+  select_file(set_file_name, nil, filter, 1)
+  gui.statusbar_text = 'Save file: select file name to save as..'
+
+end
+
+--- Saves the current buffer.
+-- Prompts the users for a filename if it's a new, previously unsaved buffer.
+function save_buffer()
+  local buffer = _G.buffer
+  if buffer.filename then
+    buffer:save()
+  else
+    save_buffer_as()
+  end
 end
 
 --[[-
