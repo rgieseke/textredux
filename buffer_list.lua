@@ -19,7 +19,7 @@ end
 
 local function buffer_title(buffer)
   local title = (buffer.filename or ''):match('[\\/]([^/\\]+)$')
-  return title or buffer.filename or buffer._type or L['untitled']
+  return title or buffer.filename or buffer._type or L['Untitled']
 end
 
 local function buffer_directory(buffer)
