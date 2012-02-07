@@ -150,17 +150,23 @@ data = nil
 
 --- @section end
 
---- Creates a new list.
--- @p title The list title
--- @return The new list instance
-function new(title)
+--[[- Creates a new list.
+@param title The list title
+@param items The list items, see @{items}. Not required, items can be set later
+using the @{items} field.
+@param on_selection The on selection handler, see @{on_selection}. Not required,
+this can be specified later using the @{on_selection} field.
+@return The new list instance
+]]
+function new(title, items, on_selection)
   if not title then error('no title specified', 2) end
 
   local _column_styles = {}
   setmetatable(_column_styles, { __index = column_styles })
   local l = {
     title = title,
-    items = {},
+    items = items or {},
+    on_selection = on_selection,
     column_styles = _column_styles,
     data = {},
   }
