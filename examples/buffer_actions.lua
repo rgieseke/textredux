@@ -14,7 +14,7 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-require 'textui'
+_M.textui = require 'textui'
 
 local style = _M.textui.style
 style.action_style = { back = '#6e6e6e', fore = '#00FFFF' }

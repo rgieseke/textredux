@@ -14,7 +14,7 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-require 'textui'
+_M.textui = require 'textui'
 
 local style = _M.textui.style
 

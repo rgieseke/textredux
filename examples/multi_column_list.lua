@@ -14,7 +14,7 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-require 'textui'
+_M.textui = require 'textui'
 
 local function on_selection(list, item)
   -- we will get back exactly what we specified, so the below code will print

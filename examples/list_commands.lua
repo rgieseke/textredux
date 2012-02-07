@@ -12,7 +12,7 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-require 'textui'
+_M.textui = require 'textui'
 
 local function show_action_list()
   local list = _M.textui.list.new('Action list')
