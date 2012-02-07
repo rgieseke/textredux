@@ -11,21 +11,17 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-require 'textui'
-
-local function on_selection(list, item)
-  gui.statusbar_text = 'You selected ' .. item
-end
+_M.textui = require 'textui'
 
 local function show_simple_list()
-  -- create the list, passing along the title
-  local list = _M.textui.list.new('Simple list')
-
-  -- specify the items to select from
-  list.items = { 'one', 'two', 'three' }
-
-  -- set the callback for when the user selects an item
-  list.on_selection = on_selection
+  -- create the list
+  local list = _M.textui.list.new(
+    'Simple list', -- list title
+    { 'one', 'two', 'three' }, -- list items
+    function (list, item) -- on selection callback
+      gui.statusbar_text = 'You selected ' .. item
+    end
+  )
 
   -- and show the list
   list:show()
