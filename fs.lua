@@ -31,28 +31,22 @@ local M = {}
 local _ENV = M
 if setfenv then setfenv(1, _ENV) end
 
----
--- The style used for directory entries.
+--- The style used for directory entries.
 style.tafs_directory = style.keyword
 
----
--- The style used for ordinary file entries.
+--- The style used for ordinary file entries.
 style.tafs_file = style.string
 
----
--- The style used for link entries.
+---  The style used for link entries.
 style.tafs_link = style.operator
 
----
--- The style used for socket entries.
+--- The style used for socket entries.
 style.tafs_socket = style.error
 
----
--- The style used for pipe entries.
+--- The style used for pipe entries.
 style.tafs_pipe = style.error
 
----
--- The style used for pipe entries.
+--- The style used for pipe entries.
 style.tafs_device = style.error
 
 local file_styles = {
