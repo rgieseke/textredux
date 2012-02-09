@@ -35,6 +35,7 @@ end
 
 local replacements = {}
 
+-- Take over filteredlist for the below functions
 for _, target in ipairs({
   {gui, 'select_theme'},
   {ta.mime_types, 'select_lexer'},
@@ -48,6 +49,10 @@ for _, target in ipairs({
   target[1][target[2]] = wrap
   replacements[func] = wrap
 end
+
+-- Take over buffer list
+replacements[gui.switch_buffer] = _M.textile.buffer_list.show
+gui.switch_buffer = _M.textile.buffer_list.show
 
 patch_keys(replacements)
 patch_menu(replacements)
