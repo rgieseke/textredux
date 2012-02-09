@@ -85,6 +85,7 @@ function M.show(buffers)
   end
   list.items = get_buffer_items()
   list:show()
+  gui.statusbar_text = '[Enter] = open, [Ctrl+d] = close selected buffer'
 end
 
 return M
