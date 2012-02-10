@@ -61,6 +61,24 @@ local function snapopen_compat(utf8_paths, filter, exclude_PATHS, exclude_FILTER
   fs.snapopen(directory, filter, exclude_FILTER, depth)
 end
 
+local io_open_file = io.open_file
+local function open_file_compat(utf8_filenames)
+  if utf8_filenames then return io_open_file(utf8_filenames) end
+  fs.open_file()
+end
+
+local buffer_save_as = buffer.save_as
+local save_as_compat
+function save_as_compat(buffer, utf8_filename)
+  if utf8_filename then return buffer_save_as(buffer, utf8_filename) end
+  -- temporarily restore the original save_as, since fs.save_buffer_as uses it
+  -- in its implementation
+  _G.buffer.save_as = buffer_save_as
+  local status, ret = pcall(fs.save_buffer_as)
+  _G.buffer.save_as = save_as_compat
+  if not status then events.emit(events.ERROR, ret) end
+end
+
 local replacements = {}
 
 -- Take over filteredlist for the below functions
@@ -85,5 +103,12 @@ gui.switch_buffer = _M.textile.buffer_list.show
 replacements[ta.snapopen.open] = snapopen_compat
 ta.snapopen.open = snapopen_compat
 
+-- Take over open and save_as
+replacements[io.open_file] = open_file_compat
+io.open_file = open_file_compat
+replacements[buffer.save_as] = save_as_compat
+events.connect(events.BUFFER_NEW, function() buffer.save_as = save_as_compat end)
+
+-- Finalize by patching keys and menu
 patch_keys(replacements)
 patch_menu(replacements)
