@@ -1,6 +1,6 @@
 _M.textile = require 'textile'
 
-local fl = require 'textile.takeover.filteredlist'
+local fl = require 'textile.hijack.filteredlist'
 local fs = _M.textile.fs
 
 local ta = _M.textadept
@@ -81,7 +81,7 @@ end
 
 local replacements = {}
 
--- Take over filteredlist for the below functions
+-- Hijack filteredlist for the below functions
 for _, target in ipairs({
   { gui,           'select_theme' },
   { ta.mime_types, 'select_lexer' },
@@ -95,15 +95,15 @@ for _, target in ipairs({
   replacements[func] = wrap
 end
 
--- Take over buffer list
+-- Hijack buffer list
 replacements[gui.switch_buffer] = _M.textile.buffer_list.show
 gui.switch_buffer = _M.textile.buffer_list.show
 
--- Take over snapopen
+-- Hijack snapopen
 replacements[ta.snapopen.open] = snapopen_compat
 ta.snapopen.open = snapopen_compat
 
--- Take over open and save_as
+-- Hijack open file and save_as
 replacements[io.open_file] = open_file_compat
 io.open_file = open_file_compat
 replacements[buffer.save_as] = save_as_compat
