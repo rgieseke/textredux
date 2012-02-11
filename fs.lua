@@ -64,31 +64,31 @@ local _ENV = M
 if setfenv then setfenv(1, _ENV) end
 
 --- The style used for directory entries.
-style.tafs_directory = style.keyword
+style.textile_fs_directory = style.keyword
 
 --- The style used for ordinary file entries.
-style.tafs_file = style.string
+style.textile_fs_file = style.string
 
 ---  The style used for link entries.
-style.tafs_link = style.operator
+style.textile_fs_link = style.operator
 
 --- The style used for socket entries.
-style.tafs_socket = style.error
+style.textile_fs_socket = style.error
 
 --- The style used for pipe entries.
-style.tafs_pipe = style.error
+style.textile_fs_pipe = style.error
 
 --- The style used for pipe entries.
-style.tafs_device = style.error
+style.textile_fs_device = style.error
 
 local file_styles = {
-  directory = style.tafs_directory,
-  file = style.tafs_file,
-  link = style.tafs_link,
-  socket = style.tafs_socket,
-  ['named pipe'] = style.tafs_pipe,
-  ['char device'] = style.tafs_device,
-  ['block device'] = style.tafs_device,
+  directory = style.textile_fs_directory,
+  file = style.textile_fs_file,
+  link = style.textile_fs_link,
+  socket = style.textile_fs_socket,
+  ['named pipe'] = style.textile_fs_pipe,
+  ['char device'] = style.textile_fs_device,
+  ['block device'] = style.textile_fs_device,
   other = style.default
 }
 
