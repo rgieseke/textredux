@@ -1,9 +1,41 @@
 --[[--
 textile.fs provides a text based file browser for TextAdept.
 
-It features conventional directory browsing, as well as snapopen functionality,
-and allows you to quickly get to the files you want by offering advanced
-narrow to search functionality.
+It features traditional directory browsing, snapopen functionality, completely
+keyboard driven interaction, and provides powerful narrow to search functionality.
+
+Some tips on using the file browser
+-----------------------------------
+
+*Switching between traditional browsing and snapopen*
+
+As said above the file browser allows both traditional browsing as well as
+snapopen functionality. But it also allows you to seamlessly switch between
+the two modes (by default, `Ctrl + s` is assigned for this).
+
+*Quickly moving up one directory level*
+
+In traditional browsing mode, you can always select `..` to move up one directory
+level. But a quicker way of doing the same is to press `<backspace>` when you
+have an empty search. This also works when in snapopen mode.
+
+*Opening a sub directory in snapopen mode*
+
+In contrast with TextAdept snapopen, you will in snapopen mode also see sub
+directories in the listing. This is by design - you can select a sub directory
+to snapopen that directory.
+
+*Changing the styles used for different file types*
+
+If you don't like the default styles (colors, etc.) used by the file browser,
+you can easily change these by customizing any of the `style_<foo>` entries using
+the TextUI style module. As an example, to make directory entries underlined
+you would do something like the following:
+
+    _M.textui.style.textile_fs_directory = { underline = true }
+
+Please see the documentation for the TextUI style module for instructions on how
+to define styles.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
@@ -411,7 +443,7 @@ The main differences are:
 
     - `rel_path`: The path of the file relative to the currently displayed directory.
 
-@param directory The directory to open, in UTF-8 encoding
+@param directory The directory to open, in UTF-8 encoding.
 @param filter The filter to apply. The format and semantics are the same as for
 TextAdept.
 @param exclude_FILTER Same as for TextAdept: unless if not true then

@@ -1,11 +1,15 @@
 --[[--
+The buffer list module provides a text based replacement for the standard
+TextAdept buffer list. Two differences compared to the stock one is the ability
+to close a buffer directly from the buffer list (bound to `Ctrl + d` by default),
+and the option of specifying the buffers to list via a provided function.
+
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
 @module _M.textile.buffer_list
 ]]
 local tui_list = require 'textui.list'
-local keys = keys
 local L = _L
 
 local M = {}
@@ -71,7 +75,7 @@ end
 
 --- Shows a list of the specified buffers, or _G.BUFFERS it not specified.
 -- @param buffers Either nil, in which case all buffers within _G.BUFFERS
--- are displayed, or a function returning a table of buffers.
+-- are displayed, or a function returning a table of buffers to display.
 function M.show(buffers)
   buffer_source = buffers or function() return _BUFFERS end
 

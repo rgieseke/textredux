@@ -1,3 +1,24 @@
+--[[--
+The hijack module provides the easiest, and most invasive, way of getting
+Textile functionality for TextAdept. It's a one-stop setup in the way that you
+don't really have to configure anything else to use Textile's functionality -
+the hijack module inserts Textile functionality anywhere it can and will
+automatically integrate with your existing key bindings as well as with the menu.
+
+How to use
+----------
+
+After installing the textile module (as well as it's dependency, the TextUI
+module) into your .textadept/modules directory, simple add the following to
+your .textadept/init.lua file:
+
+    require 'textile.hijack'
+
+@author Nils Nordman <nino at nordman.org>
+@copyright 2012
+@license MIT (see LICENSE)
+@module _M.textile.hijack
+]]
 _M.textile = require 'textile'
 
 local fl = require 'textile.hijack.filteredlist'
