@@ -7,7 +7,7 @@ and the option of specifying the buffers to list via a provided function.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textile.buffer_list
+@module _M.textredux.buffer_list
 ]]
 local tui_list = require 'textui.list'
 local L = _L

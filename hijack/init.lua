@@ -1,28 +1,28 @@
 --[[--
 The hijack module provides the easiest, and most invasive, way of getting
-Textile functionality for TextAdept. It's a one-stop setup in the way that you
-don't really have to configure anything else to use Textile's functionality -
-the hijack module inserts Textile functionality anywhere it can and will
+TextRedux functionality for TextAdept. It's a one-stop setup in the way that you
+don't really have to configure anything else to use TextRedux's functionality -
+the hijack module inserts TextRedux functionality anywhere it can and will
 automatically integrate with your existing key bindings as well as with the menu.
 
 How to use
 ----------
 
-After installing the textile module (as well as it's dependency, the TextUI
+After installing the textredux module (as well as it's dependency, the TextUI
 module) into your .textadept/modules directory, simple add the following to
 your .textadept/init.lua file:
 
-    require 'textile.hijack'
+    require 'textredux.hijack'
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
 @license MIT (see LICENSE)
-@module _M.textile.hijack
+@module _M.textredux.hijack
 ]]
-_M.textile = require 'textile'
+_M.textredux = require 'textredux'
 
-local fl = require 'textile.hijack.filteredlist'
-local fs = _M.textile.fs
+local fl = require 'textredux.hijack.filteredlist'
+local fs = _M.textredux.fs
 
 local ta = _M.textadept
 local menu = ta.menu
@@ -117,8 +117,8 @@ for _, target in ipairs({
 end
 
 -- Hijack buffer list
-replacements[gui.switch_buffer] = _M.textile.buffer_list.show
-gui.switch_buffer = _M.textile.buffer_list.show
+replacements[gui.switch_buffer] = _M.textredux.buffer_list.show
+gui.switch_buffer = _M.textredux.buffer_list.show
 
 -- Hijack snapopen
 replacements[ta.snapopen.open] = snapopen_compat

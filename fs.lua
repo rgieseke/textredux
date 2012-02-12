@@ -1,5 +1,5 @@
 --[[--
-textile.fs provides a text based file browser for TextAdept.
+textredux.fs provides a text based file browser for TextAdept.
 
 It features traditional directory browsing, snapopen functionality, completely
 keyboard driven interaction, and provides powerful narrow to search functionality.
@@ -32,7 +32,7 @@ you can easily change these by customizing any of the `style_<foo>` entries usin
 the TextUI style module. As an example, to make directory entries underlined
 you would do something like the following:
 
-    _M.textui.style.textile_fs_directory = { underline = true }
+    _M.textui.style.textredux_fs_directory = { underline = true }
 
 Please see the documentation for the TextUI style module for instructions on how
 to define styles.
@@ -40,7 +40,7 @@ to define styles.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textile.fs
+@module _M.textredux.fs
 ]]
 
 local list = require('textui.list')
@@ -64,31 +64,31 @@ local _ENV = M
 if setfenv then setfenv(1, _ENV) end
 
 --- The style used for directory entries.
-style.textile_fs_directory = style.keyword
+style.textredux_fs_directory = style.keyword
 
 --- The style used for ordinary file entries.
-style.textile_fs_file = style.string
+style.textredux_fs_file = style.string
 
 ---  The style used for link entries.
-style.textile_fs_link = style.operator
+style.textredux_fs_link = style.operator
 
 --- The style used for socket entries.
-style.textile_fs_socket = style.error
+style.textredux_fs_socket = style.error
 
 --- The style used for pipe entries.
-style.textile_fs_pipe = style.error
+style.textredux_fs_pipe = style.error
 
 --- The style used for pipe entries.
-style.textile_fs_device = style.error
+style.textredux_fs_device = style.error
 
 local file_styles = {
-  directory = style.textile_fs_directory,
-  file = style.textile_fs_file,
-  link = style.textile_fs_link,
-  socket = style.textile_fs_socket,
-  ['named pipe'] = style.textile_fs_pipe,
-  ['char device'] = style.textile_fs_device,
-  ['block device'] = style.textile_fs_device,
+  directory = style.textredux_fs_directory,
+  file = style.textredux_fs_file,
+  link = style.textredux_fs_link,
+  socket = style.textredux_fs_socket,
+  ['named pipe'] = style.textredux_fs_pipe,
+  ['char device'] = style.textredux_fs_device,
+  ['block device'] = style.textredux_fs_device,
   other = style.default
 }
 
