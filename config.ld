@@ -1,6 +1,6 @@
 -- ldoc configuration file
-title = 'Textile docs'
-project = 'Textile'
+title = 'TextRedux docs'
+project = 'TextRedux'
 format = 'markdown'
 
 description = [[

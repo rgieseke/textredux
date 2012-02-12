@@ -20,7 +20,7 @@ How to use it
 
 TextRedux depends on the TextUI module, and thus you need to install that along
 with the TextRedux module itself. Download and install both modules in your
-`.textadept/modules/' directory.
+`.textadept/modules/` directory.
 
 Having installed it, there are two ways you can use TextRedux.
 
