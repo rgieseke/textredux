@@ -53,6 +53,9 @@ Regardless of the approach chosen, the
 [LDoc documentation](http://nilnor.github.com/textredux/docs/) contains more
 in-depth documentation for the various modules, including customization tips.
 
+Also, make sure to take a brief look at the [visual tour](tour.html) for some
+quick tips on using TextRedux.
+
 ## Code
 
 TextRedux is released under the MIT license (see the LICENSE file in the source
