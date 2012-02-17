@@ -1,0 +1,102 @@
+body {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: #2d2d2d;
+  font-family: Arial Bold, Gadget, sans-serif;
+}
+
+img { border: 0; }
+a:link { text-decoration: none; }
+a:hover { color: lightblue; }
+a:active { color: lightblue }
+
+li {
+  padding: 5px;
+}
+
+.header {
+  background-color: #00004d;
+  padding: 10px;
+  vertical-align: top;
+  border-bottom: 1px solid black;
+  padding: 0 0 0 1em;
+
+  border-radius: 30px 30px 0 0;
+  -moz-border-radius: 30px 30px 0 0;
+  background-color: none;
+}
+
+.header .title {
+  color: darkgoldenrod;
+  margin: 0;
+  font-size: 4em;
+  font-family: 'Bowlby One SC', cursive;
+}
+
+.header p {
+  color: darkgray;
+  margin: 0px;
+  padding: 0;
+  margin-top: -20px;
+}
+
+.header .gh-banner { float: right; }
+
+.nav {
+  background-color: #dadada;
+  background-color: navy;
+  padding: 5px;
+}
+
+.nav a {
+  color: grey;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 5px;
+}
+
+.nav ul { margin: 0; display: inline; padding: 0; }
+.nav ul li { display: inline; list-style: none; padding-right: 5px; }
+
+.container {
+  max-width: 800px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.main {
+  background-color: black;
+  padding: 20px;
+  font-size: normal;
+  color: #aaaaaa;
+}
+
+.main h2 {
+  padding: 5px;
+  font-size: larger;
+  margin-bottom: 10px;
+  background-color: #2d2d2d;
+  background-color: #00004d;
+  color: grey;
+  font-weight: bold;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+}
+
+.main pre {
+  background-color: #2d2d2d;
+  color: #009900;
+  font-size: large;
+  padding: 5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+.footer {
+  text-align: center;
+  color: grey;
+  font-size: small;
+}
