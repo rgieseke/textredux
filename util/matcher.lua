@@ -51,7 +51,7 @@ end
 
 -- Matches search against the candidates.
 -- @param search The search string to match
--- @return A table of matching candidates, order by relevance.
+-- @return A table of matching candidates, ordered by relevance.
 function matcher:match(search)
   if not search or #search == 0 then return self.candidates end
   local cache = self.cache
@@ -118,8 +118,6 @@ end
 
 --- Creates matches for the specified search
 -- @param search_string The search string
--- @param fuzzy_search Whether fuzzy matches should be allowed
--- @param fuzzy_score_penalty The score penalty to add for fuzzy matches
 -- @return A table of matcher functions, each taking a line as parameter and
 -- returning a score (or nil for no match).
 function matcher:_matchers_for_search(search_string)
