@@ -57,12 +57,12 @@ Please see the examples for more hands on instructions.
 ]]
 
 local key = require('textui.key')
+local tui_style = require('textui.style')
 
 local _G = _G
 local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
       error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select
 local new_buffer, events, table = new_buffer, events, table
-local tui_style = require('textui.style')
 local constants = _SCINTILLA.constants
 local huge = math.huge
 
@@ -70,9 +70,10 @@ local buffer = {}
 local _ENV = buffer
 if setfenv then setfenv(1, _ENV) end
 
-local tui_buffers = {}
-setmetatable(tui_buffers, { __mode = 'k' })
 local default_style = tui_style.default
+local __newindex, __index
+local tui_buffers = setmetatable({}, { __mode = 'k' })
+local origin_buffers  = setmetatable({}, { __mode = 'kv' })
 
 --[[- Whether the buffer should be marked as read only.
 The default is true but can be changed on a buffer to buffer basis. Any call to
@@ -151,8 +152,6 @@ target = nil
 ---
 -- @section end
 
-local __newindex, __index
-
 ---
 -- Creates and returns a new textui buffer. The buffer will not be attached
 -- upon the return.
@@ -183,8 +182,12 @@ end
 -- it is automatically created. Upon the return, the buffer is showing
 -- and set as the global buffer.
 function buffer:show()
+  local origin_buffer = _G.buffer
   if not self:is_attached() then self:_create_target() end
   _G.view:goto_buffer(_G._BUFFERS[self.target], false)
+  if origin_buffer ~= _G.buffer then
+    origin_buffers[self] = origin_buffer
+  end
 end
 
 ---
@@ -409,10 +412,21 @@ local function invoke_command(command, buffer, shift, ctl, alt, meta)
   xpcall(f, emit_error, table.unpack(args))
 end
 
+function buffer:_restore_origin_buffer()
+  local origin_buffer = origin_buffers[self]
+  if origin_buffer then
+    local buf_index = _G._BUFFERS[origin_buffer]
+    if buf_index and origin_buffer ~= _G.buffer then
+      _G.view:goto_buffer(buf_index, false)
+    end
+  end
+end
+
 -- event hooks
 function buffer:_on_target_deleted()
   self.target = nil
   self.data = {}
+  self:_restore_origin_buffer()
   self:_call_hook('on_deleted')
 end
 
