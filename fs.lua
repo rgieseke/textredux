@@ -48,8 +48,8 @@ local style = require('textui.style')
 local lfs = require('lfs')
 
 local _G, table, io, gui = _G, table, io, gui
-local ipairs, error, type, assert =
-      ipairs, error, type, assert
+local ipairs, error, type, assert, pcall =
+      ipairs, error, type, assert, pcall
 local string_match, string_sub = string.match, string.sub
 
 local _CHARSET, WIN32 = _CHARSET, WIN32
@@ -187,7 +187,8 @@ local function create_filter(filter)
 end
 
 local function file(path, name, parent)
-  local file = assert(fs_attributes(path:iconv(_CHARSET, 'UTF-8')))
+  local file, error = fs_attributes(path:iconv(_CHARSET, 'UTF-8'))
+  if error then file = { mode = 'error' } end
   local suffix = file.mode == 'directory' and separator or ''
   file.path = path
   file.hidden = name and string_sub(name, 1, 1) == '.'
@@ -215,15 +216,18 @@ local function find_files(directory, filter, depth, max_files)
     local dir = table.remove(directories)
     if dir.depth > 1 then files[#files + 1] = dir end
     if dir.depth <= depth then
-      for entry in lfs.dir(dir.path:iconv(_CHARSET, 'UTF-8')) do
-        entry = entry:iconv('UTF-8', _CHARSET)
-        local file = file(dir.path .. separator .. entry, entry, dir)
-        if not filter(file) then
-          if file.mode == 'directory' and entry ~= '..' and entry ~= '.' then
-            table.insert(directories, 1, file)
-          else
-            if max_files and #files == max_files then return files, false end
-            files[#files + 1] = file
+      local status, entries = pcall(lfs.dir, dir.path:iconv(_CHARSET, 'UTF-8'))
+      if status then
+        for entry in entries do
+          entry = entry:iconv('UTF-8', _CHARSET)
+          local file = file(dir.path .. separator .. entry, entry, dir)
+          if not filter(file) then
+            if file.mode == 'directory' and entry ~= '..' and entry ~= '.' then
+              table.insert(directories, 1, file)
+            else
+              if max_files and #files == max_files then return files, false end
+              files[#files + 1] = file
+            end
           end
         end
       end
@@ -442,6 +446,7 @@ The main differences are:
   with the following additions:
 
     - `rel_path`: The path of the file relative to the currently displayed directory.
+    - `hidden`: Whether the path denotes a hidden file.
 
 @param directory The directory to open, in UTF-8 encoding.
 @param filter The filter to apply. The format and semantics are the same as for
