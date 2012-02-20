@@ -50,7 +50,7 @@ As the name suggest, TextRedux has now hijacked your environment. All your regul
 key bindings, as well as the menu etc. should now use TextRedux where applicable.
 
 Regardless of the approach chosen, the
-[LDoc documentation](http://nilnor.github.com/textredux/docs/) contains more
+[module documentation](http://nilnor.github.com/textredux/docs/) contains more
 in-depth documentation for the various modules, including customization tips.
 
 Also, make sure to take a brief look at the [visual tour](tour.html) for some
