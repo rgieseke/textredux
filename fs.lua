@@ -109,7 +109,9 @@ end
 function dirname(path)
   local parts = split_path(path)
   table.remove(parts)
-  return join_path(parts)
+  local dir = join_path(parts)
+  if #dir == 0 then return path end -- win32 root
+  return dir
 end
 
 function basename(path)
