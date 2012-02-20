@@ -397,7 +397,7 @@ end
 -- @param start_directory The directory to open, in UTF-8 encoding
 function open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
-  select_file(open_selected_file, start_directory, filter, 1)
+  select_file(open_selected_file, start_directory, filter, 1, ta_snapopen.MAX)
 end
 
 --- Saves the current buffer under a new name.
