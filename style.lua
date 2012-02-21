@@ -63,7 +63,7 @@ You define a new style by assigning the style to the style module, like so:
     style.foo_header = { italic = true, fore = '#680000' }
 
 As has been previously said, it's often a good idea to base your custom styles
-on an existing default style. Similarily to defining a lexer style in TextAdept
+on an existing default style. Similarily to defining a lexer style in Textadept
 you can achieve this by concatenating styles:
 
     style.foo_header = style.string .. { underline = true }

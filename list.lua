@@ -1,6 +1,6 @@
 --[[--
 The list class provides a versatile and extensible text based item listing for
-TextAdept, featuring advanced search capabilities and styling. It's a convinient
+Textadept, featuring advanced search capabilities and styling. It's a convinient
 way of presenting lists to the user for simple selection, but is equally well
 suited for creating advanced list based interfaces.
 
@@ -160,7 +160,6 @@ this can be specified later using the @{on_selection} field.
 ]]
 function new(title, items, on_selection)
   if not title then error('no title specified', 2) end
-
   local _column_styles = {}
   setmetatable(_column_styles, { __index = column_styles })
   local l = {

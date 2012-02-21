@@ -1,6 +1,6 @@
 --[[
-Handles translation of key presses to TextAdept key strings. Hopefully this
-can be removed in the future if TextAdept can be modified to export the
+Handles translation of key presses to Textadept key strings. Hopefully this
+can be removed in the future if Textadept can be modified to export the
 translation functionality.
 
 This code is almost lifted verbatim from _M.textadept.keys, which has the

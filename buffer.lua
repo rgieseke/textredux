@@ -1,25 +1,25 @@
 --[[--
-The buffer class wraps a TextAdept buffer, and extends it with support for
+The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
 care of the details needed for making a text based interface work, such as
-mapping TextAdept events to the correct buffers, working with the @{_M.textui.style}
+mapping Textadept events to the correct buffers, working with the @{_M.textui.style}
 module to ensure that styling works, etc.
 
 How it works
 ------------
 
 When you work with a TextUI buffer, it will nearly always seem just like an ordinary
-[TextAdept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html)
+[Textadept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html)
 (but with benefits, such as support for custom styling and easy callbacks, etc.).
-But where an TextAdept buffer is volatile, and might cease to exists at any
+But where an Textadept buffer is volatile, and might cease to exists at any
 time (due to it being closed by a user for example) a TextUI buffer is persistent.
 
-When we say that a TextUI buffer "wraps" an TextAdept buffer, there's more to it
-than just adding additional methods to the TextAdept buffer class. A TextUI
-buffer will always exist, but the corresponding TextAdept buffer, named `target`
+When we say that a TextUI buffer "wraps" an Textadept buffer, there's more to it
+than just adding additional methods to the Textadept buffer class. A TextUI
+buffer will always exist, but the corresponding Textadept buffer, named `target`
 hereafter, may not. When the target buffer exists, a TextUI buffer will
-expose all the functions and attributes of the TextAdept buffer, making it
-possible to use the TextUI buffer in just the same way as you would a TextAdept
+expose all the functions and attributes of the Textadept buffer, making it
+possible to use the TextUI buffer in just the same way as you would a Textadept
 buffer (i.e. invoking any of the ordinary buffer methods, setting attributes,
 etc.). The TextUI buffer takes care of creating the target buffer automatically
 if needed whenever you invoke @{buffer:show}. When the target buffer does not
@@ -106,11 +106,11 @@ Please note that if there is any key command defined in @{keys} matching
 the keypress, that key command will be invoked and this callback will never
 be called. The callback will receive as its first two parameters the buffer
 object and the "translated key" (same format as for @{keys}), and will in
-addition after that receive all the parameters from the the standard TextAdept
+addition after that receive all the parameters from the the standard Textadept
 KEYPRESS event (which you can read more about
 [here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
 The return value determines whether the key press should be propagated, just
-the same as for the standard TextAdept event.
+the same as for the standard Textadept event.
 @see keys
 ]]
 on_keypress = nil
@@ -156,7 +156,7 @@ target = nil
 -- Creates and returns a new textui buffer. The buffer will not be attached
 -- upon the return.
 -- @param title The title of the buffer. This will be displayed as the buffer's
--- title in the TextAdept top bar.
+-- title in the Textadept top bar.
 function new(title)
   local buf = {
     title = title,
