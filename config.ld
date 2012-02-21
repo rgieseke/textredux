@@ -5,7 +5,7 @@ format = 'markdown'
 style = true
 
 description = [[
-A module offering rich text based interfaces for TextAdept.
+A module offering rich text based interfaces for Textadept.
 ]]
 
 alias("p","param")
