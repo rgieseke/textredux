@@ -1,7 +1,7 @@
 --[[-
 
 The TextRedux module offers a set of text based replacement interfaces for
-TextAdept.
+Textadept.
 
 It currently contains the following modules:
 
@@ -10,7 +10,7 @@ open file, save file as well as snapopen functionality.
 - @{_M.textredux.buffer_list}. A text based buffer list replacement, which in
 addition to being text based also offers an easy way to close buffers directly
 from the list.
-- @{_M.textredux.hijack}. Hijacks TextAdept, replacing as much functionality as it
+- @{_M.textredux.hijack}. Hijacks Textadept, replacing as much functionality as it
 can with text based counterparts. In addition to injecting the above modules in
 the menu and key bindings, it also replaces the traditional filtered list with
 a TextUI list for a number of operations.
