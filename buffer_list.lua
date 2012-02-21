@@ -1,6 +1,6 @@
 --[[--
 The buffer list module provides a text based replacement for the standard
-TextAdept buffer list. Two differences compared to the stock one is the ability
+Textadept buffer list. Two differences compared to the stock one is the ability
 to close a buffer directly from the buffer list (bound to `Ctrl + d` by default),
 and the option of specifying the buffers to list via a provided function.
 
@@ -83,7 +83,6 @@ function M.show(buffers)
     list = tui_list.new('Buffer listing')
     list.headers = { 'Name', 'Directory' }
     list.on_selection = on_selection
-    list.keys.esc = function() list:close() end
     list.keys.cd = close_buffer
     list.keys.esc = function() list:close() end
   end

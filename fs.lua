@@ -1,5 +1,5 @@
 --[[--
-textredux.fs provides a text based file browser for TextAdept.
+textredux.fs provides a text based file browser for Textadept.
 
 It features traditional directory browsing, snapopen functionality, completely
 keyboard driven interaction, and provides powerful narrow to search functionality.
@@ -21,7 +21,7 @@ have an empty search. This also works when in snapopen mode.
 
 *Opening a sub directory in snapopen mode*
 
-In contrast with TextAdept snapopen, you will in snapopen mode also see sub
+In contrast with Textadept snapopen, you will in snapopen mode also see sub
 directories in the listing. This is by design - you can select a sub directory
 to snapopen that directory.
 
@@ -357,7 +357,7 @@ explicitly using `list:close()` if desired.
 the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
 @param filter The filter to apply, if any. The structure and semantics are the
-same as for TextAdept's
+same as for Textadept's
 [snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
 @param depth The number of directory levels to display in the list. Defaults to
 1 if not specified, which results in a "normal" directory listing.
@@ -437,11 +437,11 @@ end
 --[[-
 Opens a list of files in the specified directory, according to the given
 parameters. This works similarily to
-[TextAdept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
+[Textadept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
 The main differences are:
 
 - it does not support opening multiple paths at once, which also makes the
-  TextAdept parameter `exclusive` pointless.
+  Textadept parameter `exclusive` pointless.
 - filter can contain functions as well as patterns (and can be a function as well).
   Functions will be passed a file object which is the same as the return from
   [lfs.attributes](http://keplerproject.github.com/luafilesystem/manual.html#attributes),
@@ -452,11 +452,11 @@ The main differences are:
 
 @param directory The directory to open, in UTF-8 encoding.
 @param filter The filter to apply. The format and semantics are the same as for
-TextAdept.
-@param exclude_FILTER Same as for TextAdept: unless if not true then
+Textadept.
+@param exclude_FILTER Same as for Textadept: unless if not true then
 snapopen.FILTER will be automatically added to the filter.
 to snapopen.FILTER if not specified.
-@param depth The number of directory levels to scan. Same as for TextAdept,
+@param depth The number of directory levels to scan. Same as for Textadept,
 and also defaults to snapopen.DEFAULT_DEPTH if not specified.
 ]]
 function snapopen(directory, filter, exclude_FILTER, depth)
