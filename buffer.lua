@@ -220,7 +220,10 @@ end
 function buffer:set_title(title)
   self.title = title
   if self:is_attached() then
-    self.target._type = '[' .. title .. ']'
+    -- there's currently an issue with how TA handles the titlebar update -
+    -- it can't handle trailing slashes so work around that for now
+    if title:match('[/\\]$') then title = title .. '\0' end
+    self.target._type = title
   end
 end
 
@@ -357,12 +360,12 @@ end
 function buffer:_create_target()
   local target = new_buffer()
   target._textui = self
-  target._type = '[' .. self.title .. ']'
   target:set_lexer_language(constants.SCLEX_CONTAINER)
   target.eol_mode = constants.SC_EOL_LF
   target:set_save_point()
   target.undo_collection = false
   self.target = target
+  self:set_title(self.title)
 end
 
 function buffer:_call_hook(hook, ...)
