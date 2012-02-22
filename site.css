@@ -7,9 +7,10 @@ body {
 }
 
 img { border: 0; }
-a:link { text-decoration: none; }
-a:hover { color: lightblue; }
-a:active { color: lightblue }
+a:link { text-decoration: none; color: dodgerblue; }
+a:visited { text-decoration: none; color: dodgerblue; }
+a:hover { color: lightblue; text-decoration: underline; }
+a:active { color: lightblue; }
 
 li {
   padding: 5px;
