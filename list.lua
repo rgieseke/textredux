@@ -1,6 +1,6 @@
 --[[--
 The list class provides a versatile and extensible text based item listing for
-Textadept, featuring advanced search capabilities and styling. It's a convinient
+Textadept, featuring advanced search capabilities and styling. It's a convenient
 way of presenting lists to the user for simple selection, but is equally well
 suited for creating advanced list based interfaces.
 
