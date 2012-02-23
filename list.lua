@@ -341,7 +341,7 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
   if not key then return end
   local search = buffer.data.search or ''
 
-  if key == '\n' then
+  if key:match('\n$') then
     if #search > 1 and self.on_new_selection then
       self.on_new_selection(self, search, shift, ctl, alt, meta)
       return true
