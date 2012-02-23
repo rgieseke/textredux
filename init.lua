@@ -1,5 +1,4 @@
 --[[-
-
 The TextRedux module offers a set of text based replacement interfaces for
 Textadept.
 
@@ -15,8 +14,7 @@ can with text based counterparts. In addition to injecting the above modules in
 the menu and key bindings, it also replaces the traditional filtered list with
 a TextUI list for a number of operations.
 
-How to use it
--------------
+## How to use it
 
 TextRedux depends on the TextUI module, and thus you need to install that along
 with the TextRedux module itself. Download and install both modules in your
@@ -41,14 +39,21 @@ then the @{_M.textredux.hijack} module is for you. Simple place this in your
 As the name suggest, TextRedux has now hijacked your environment. All your regular
 key bindings, as well as the menu etc. should now use TextRedux where applicable.
 
+## Customizing
+
+Please see the module documentation for the various modules for configurable
+settings.
+
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
 @module _M.textredux
 ]]
+
 local M = {
   buffer_list = require 'textredux.buffer_list',
   fs = require 'textredux.fs',
+  gui = require 'textredux.gui',
 }
 
 return M

@@ -46,6 +46,7 @@ to define styles.
 local list = require('textui.list')
 local style = require('textui.style')
 local lfs = require('lfs')
+local tr_gui = require 'textredux.gui'
 
 local _G, table, io, gui = _G, table, io, gui
 local ipairs, error, type, assert, pcall =
@@ -271,7 +272,7 @@ local function chdir(list, directory)
   end
 end
 
-local function open_selected_file(path, exists, list)
+local function open_selected_file(path, exists, list, shift)
   if not exists then
     local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
     if not file then
@@ -281,6 +282,7 @@ local function open_selected_file(path, exists, list)
     file:close()
   end
   list:close()
+  if shift then tr_gui.switch_to_other_view() end
   io.open_file(path)
 end
 
@@ -349,10 +351,19 @@ end
 
 --[[- Opens a file browser and lets the user choose a file.
 @param on_selection The function to invoke when the user has choosen a file. The function
-will be called with three parameters: The full path of the choosen file (UTF-8 encoded),
-a boolean indicating whether the file exists or not, and a reference to the TextUI
-list used by browser. The list will not be closed automatically, so close it
-explicitly using `list:close()` if desired.
+will be called with following parameters:
+
+- `path`: The full path of the choosen file (UTF-8 encoded).
+- `exists`: A boolean indicating whether the file exists or not.
+- `list`: A reference to the TextUI list used by browser.
+- `shift`: True if the Shift key was held down when selecting the file.
+- `ctrl`: True if the Control/Command key was held down when selecting the file.
+- `alt`: True if the Alt/option key was held down when selecting the file.
+- `meta`: True if the Control key on Mac OSX was held down when selecting the file.
+
+The list will not be closed automatically, so close it explicitly using
+`list:close()` if desired.
+
 @param start_directory The initial directory to open, in UTF-8 encoding. If nil,
 the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
@@ -374,20 +385,20 @@ function select_file(on_selection, start_directory, filter, depth, max_files)
 
   local list = create_list(start_directory, filter, depth or 1, max_files or 10000)
 
-  list.on_selection = function(list, item)
+  list.on_selection = function(list, item, shift, ctrl, alt, meta)
     local path, mode = item.path, item.mode
       if mode == 'link' then mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode') end
       if mode == 'directory' then
         chdir(list, path)
       else
-        on_selection(path, true, list)
+        on_selection(path, true, list, shift, ctrl, alt, meta)
       end
   end
 
-  list.on_new_selection = function(list, name)
+  list.on_new_selection = function(list, name, shift, ctrl, alt, meta)
     local path = split_path(list.data.directory)
     path[#path + 1] = name
-    on_selection(join_path(path), false, list)
+    on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
   end
 
   chdir(list, start_directory)
