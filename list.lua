@@ -107,19 +107,30 @@ headers = nil
 -- be multi column, or a string in which case the list be single column.
 items = nil
 
---- The handler/callback to call when the user has selected an item.
--- The handler will be passed the following parameters:
---
--- - `list`: the list itself
--- - `item`: the item selected
+--[[- The handler/callback to call when the user has selected an item.
+The handler will be passed the following parameters:
+
+- `list`: the list itself
+- `item`: the item selected
+- `shift`: True if the Shift key was held down.
+- `ctrl`: True if the Control/Command key was held down.
+- `alt`: True if the Alt/option key was held down.
+- `meta`: True if the Control key on Mac OSX was held down.
+]]
 on_selection = nil
 
---- The handler/callback to call when the user has typed in text which doesn't
--- match any item, and presses <enter>. The handler will be passed the following
--- parameters:
---
--- - `list`: the list itself
--- - `search`: the current search of the list
+--[[- The handler/callback to call when the user has typed in text which doesn't
+match any item, and presses `<enter>`.
+
+The handler will be passed the following parameters:
+
+- `list`: the list itself
+- `search`: the current search of the list
+- `shift`: True if the Shift key was held down.
+- `ctrl`: True if the Control/Command key was held down.
+- `alt`: True if the Alt/option key was held down.
+- `meta`: True if the Control key on Mac OSX was held down.
+]]
 on_new_selection = nil
 
 --- The underlying @{_M.textui.buffer} used by the list
@@ -293,7 +304,10 @@ function list:_refresh()
     end
     buffer:add_text('\n')
     if self.on_selection then
-      buffer:add_hotspot(line_start, buffer.current_pos, {self.on_selection, self, item})
+      local handler = function (buffer, shift, ctrl, alt, meta)
+        self.on_selection(self, item, shift, ctrl, alt, meta)
+      end
+      buffer:add_hotspot(line_start, buffer.current_pos, handler)
     end
   end
 
@@ -329,7 +343,7 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
 
   if key == '\n' then
     if #search > 1 and self.on_new_selection then
-      self.on_new_selection(self, search)
+      self.on_new_selection(self, search, shift, ctl, alt, meta)
       return true
     end
   elseif #key == 1 and not string.match(key, '^%c$') then

@@ -268,11 +268,11 @@ hotspot.
 either a function or a table. When the command is a function, it will be passed
 the following parameters:
 
-- buffer: The buffer instance
-- shift: True if the Shift key was held down.
-- ctrl: True if the Control/Command key was held down.
-- alt: True if the Alt/option key was held down.
-- meta: True if the Control key on Mac OSX was held down.
+- `buffer`: The buffer instance
+- `shift`: True if the Shift key was held down.
+- `ctrl`: True if the Control/Command key was held down.
+- `alt`: True if the Alt/option key was held down.
+- `meta`: True if the Control key on Mac OSX was held down.
 ]]
 function buffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
