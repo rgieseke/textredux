@@ -104,11 +104,18 @@ on_refresh = nil
 --[[- Callback invoked whenever the buffer receives a keypress.
 Please note that if there is any key command defined in @{keys} matching
 the keypress, that key command will be invoked and this callback will never
-be called. The callback will receive as its first two parameters the buffer
-object and the "translated key" (same format as for @{keys}), and will in
-addition after that receive all the parameters from the the standard Textadept
-KEYPRESS event (which you can read more about
-[here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
+be called. The callback will receive the following parameters:
+
+- `buffer`: The buffer instance.
+- `key`: The "translated key" (same format as for @{keys}).
+- `code`: The key code.
+- `shift`: True if the Shift key was held down.
+- `ctrl`: True if the Control/Command key was held down.
+- `alt`: True if the Alt/option key was held down.
+- `meta`: True if the Control key on Mac OSX was held down.
+
+It's similar to the standard Textadept KEYPRESS event (which you can read more
+about [here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
 The return value determines whether the key press should be propagated, just
 the same as for the standard Textadept event.
 @see keys
@@ -496,7 +503,7 @@ local function _on_keypress(code, shift, ctl, alt, meta)
     invoke_command(command, tui_buf, shift, ctl, alt, meta)
     return true
   end
-  return tui_buf:_call_hook('on_keypress', key, shift, ctl, alt, meta)
+  return tui_buf:_call_hook('on_keypress', key, code, shift, ctl, alt, meta)
 end
 
 events.connect(events.BUFFER_DELETED, _on_buffer_deleted)
