@@ -67,22 +67,6 @@ column_styles =  {
   style.operator,
 }
 
---- The maximum numbers of items to display in the list.
--- The default value is `nil`, in which case the list will show only as many
--- items as can be shown in the view. When there are more items than can be
--- shown. this will be indicated visually at the end of the list. The user can
--- then chose to show more interactively.
---
--- Please be aware that this is perhaps the biggest factor when it comes to
--- list performance, and that setting this to any large value will significantly
--- slow things down. It might be prudent to override this in case you know that
--- a specific type of list typically always contains less than, say 200 items or
--- so, but in the general case it's best left untouched.
---
--- It's possible to override this for a specific list by assigning another value
--- to the instance itself.
-max_shown_items = nil
-
 --- Whether searches are case insensitive or not.
 -- It's possible to override this for a specific list by assigning another value
 -- to the instance itself. The default value is `true`.
@@ -260,6 +244,40 @@ local function add_column_text(buffer, text, pad_to, style)
   if padding then buffer:add_text(string_rep(' ', padding)) end
 end
 
+function list:_add_items(items, start_index, end_index)
+  local buffer = self.buffer
+  local data = buffer.data
+  local column_widths = self._column_widths
+
+  for index = start_index, end_index do
+    local item = items[index]
+    if item == nil or index > end_index then break end
+    local columns = type(item) == 'table' and item or { item }
+    local line_start = buffer.current_pos
+    for j, field in ipairs(columns) do
+      local pad_to = j == nr_columns and 0 or column_widths[j]
+      add_column_text(buffer, tostring(field), pad_to, self:_column_style(columns, j))
+    end
+    buffer:add_text('\n')
+    if self.on_selection then
+      local handler = function (buffer, shift, ctrl, alt, meta)
+        self.on_selection(self, item, shift, ctrl, alt, meta)
+      end
+      buffer:add_hotspot(line_start, buffer.current_pos, handler)
+    end
+  end
+  data.shown_items = end_index
+  data.items_end_line = buffer:line_from_position(buffer.current_pos) - 1
+
+  if #items > end_index then
+    local message = string.format(
+      "[..] (%d more items not shown, press <pagedown>/<down> here to see more)",
+      #items - end_index
+    )
+    buffer:add_text(message, style.comment)
+  end
+end
+
 function list:_refresh()
   local buffer = self.buffer
   local data = buffer.data
@@ -293,43 +311,25 @@ function list:_refresh()
 
   -- items
   data.items_start_line = buffer:line_from_position(buffer.current_pos)
-  local max_shown_items = self.max_shown_items or buffer.lines_on_screen - data.items_start_line - 1
-  for i, item in ipairs(data.matching_items) do
-    if i > max_shown_items then break end
-    local columns = type(item) == 'table' and item or { item }
-    local line_start = buffer.current_pos
-    for j, field in ipairs(columns) do
-      local pad_to = j == nr_columns and 0 or column_widths[j]
-      add_column_text(buffer, tostring(field), pad_to, self:_column_style(columns, j))
-    end
-    buffer:add_text('\n')
-    if self.on_selection then
-      local handler = function (buffer, shift, ctrl, alt, meta)
-        self.on_selection(self, item, shift, ctrl, alt, meta)
-      end
-      buffer:add_hotspot(line_start, buffer.current_pos, handler)
-    end
-  end
-
-  data.items_end_line = buffer:line_from_position(buffer.current_pos)
-  if #data.matching_items > max_shown_items then
-    local message = string.format(
-      "[..] (%d more items not shown, select to show more)",
-      #data.matching_items - max_shown_items
-    )
-    buffer:add_text(message, style.comment, { _show_more, self, max_shown_items } )
-  end
-
+  local nr_items = buffer.lines_on_screen - data.items_start_line - 1
+  self:_add_items(data.matching_items, 1, nr_items)
   buffer:goto_line(data.items_start_line)
   buffer:home()
 end
 
-function list:_show_more(current_max)
+function list:_load_more_items()
   local buffer = self.buffer
-  self.max_shown_items = current_max * 2
-  local current_pos = buffer.current_pos
-  buffer:refresh()
-  buffer:goto_pos(current_pos)
+  local data = buffer.data
+  local start_index = data.shown_items + 1
+  local end_index = start_index + buffer.lines_on_screen - 3
+  buffer:goto_pos(buffer.length)
+  buffer:home()
+
+  buffer:update(function()
+    buffer:del_line_right()
+    self:_add_items(data.matching_items, start_index, end_index)
+  end)
+  buffer:goto_pos(buffer.length)
 end
 
 function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
@@ -339,14 +339,21 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
   end
 
   if not key then return end
-  local search = buffer.data.search or ''
+  local data = buffer.data
+  local search = data.search or ''
 
-  if key:match('\n$') then
+  if buffer:line_from_position(buffer.current_pos) > data.items_end_line and
+     data.shown_items < #data.matching_items and
+     (key == 'down' or key == 'pgdn')
+  then
+    self:_load_more_items()
+    return true
+  elseif key:match('\n$') then
     if #search > 1 and self.on_new_selection then
       self.on_new_selection(self, search, shift, ctl, alt, meta)
       return true
     end
-  elseif #key == 1 and not string.match(key, '^%c$') then
+  elseif #key == 1 and not key:match('^%c$') then
     search = search .. key
   elseif key == '\b' then
     if search == '' then return end

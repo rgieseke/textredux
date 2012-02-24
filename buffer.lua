@@ -183,11 +183,10 @@ function new(title)
   return buf
 end
 
----
--- Shows the buffer. If the target buffer doesn't exist, due to
--- it either not having been created yet or it having been deleted,
--- it is automatically created. Upon the return, the buffer is showing
--- and set as the global buffer.
+--- Shows the buffer.
+-- If the target buffer doesn't exist, due to it either not having been created
+-- yet or it having been deleted, it is automatically created. Upon the return,
+-- the buffer is showing and set as the global buffer.
 function buffer:show()
   local origin_buffer = _G.buffer
   if not self:is_attached() then self:_create_target() end
@@ -197,8 +196,7 @@ function buffer:show()
   end
 end
 
----
--- Closes the buffer.
+--- Closes the buffer.
 function buffer:close()
   if self:is_attached() then
     self:show()
@@ -206,19 +204,37 @@ function buffer:close()
   end
 end
 
----
--- Refreshes the buffer. A refresh works by ensuring that it's
--- possible to write to the buffer and invoking the @{on_refresh} handler.
--- After the refresh is complete, the @{read_only} state is reset to
--- whatever it was before the refresh, and a save point is set.
-function buffer:refresh()
+--[[- Performs an update of the buffer contents.
+You invoke this with a callback that will do the actual update. This function
+takes care of ensuring that the target is writable, and handles setting the
+save point, etc.
+@param callback The callback to invoke to perform the update. The callback
+will receive the buffer instance as its sole parameter.
+]]
+function buffer:update(callback)
   if not self:is_attached() then error("Can't refresh: not attached", 2) end
   self.target.read_only = false
-  self.hotspots = {}
-  self:clear_all()
-  self:_call_hook('on_refresh')
+  callback(self)
   self.target.read_only = self.read_only
   self:set_save_point()
+end
+
+--[[- Refreshes the buffer.
+A refresh works by ensuring that it's possible to write to the buffer and
+invoking the @{on_refresh} handler. After the refresh is complete, the
+@{read_only} state is reset to whatever it was before the refresh, and a save
+point is set.
+
+Please note that a refresh will clear all content, along with hotspots, etc.
+If you want to perform smaller updates please use the @{buffer:update} function
+instead.
+]]
+function buffer:refresh()
+  self:update(function()
+    self.hotspots = {}
+    self:clear_all()
+    self:_call_hook('on_refresh')
+  end)
 end
 
 ---
