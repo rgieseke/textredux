@@ -3,8 +3,8 @@ The matcher module provides easy and advanced matching of strings.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
-@license matcherIT (see LICENSE)
-@module _matcher.textui.list
+@license MIT (see LICENSE)
+@module _M.textui.util.matcher
 ]]
 
 local _G, string, table, math = _G, string, table, math
