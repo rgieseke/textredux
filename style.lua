@@ -45,10 +45,12 @@ What's a style?
 ---------------
 
 TextUI styling has been made to resemble the lexer based style creation.
-A style is thus just a table with certain properties, exactly the same as
+A style is thus just a table with certain properties, almost exactly the same as
 for style created for a lexer or theme. Please see the documentation for
 [lexer.style](http://caladbolg.net/luadoc/textadept/modules/lexer.html#style)
-for information about the fields.
+for information about the fields. The one exception compared to lexer styles
+is that colors are specified using the standard `'#rrggbb'` notation instead of
+the lexer styles' `bgr` notation.
 
 This is what you use to create custom styles (see below), and also what you
 get when accessing any already existing styles. The one exception to note is
@@ -157,7 +159,7 @@ local function color_to_string(color)
   return '#' .. r .. g .. b
 end
 
----
+--
 -- Gets a style definition for the specified style (number)
 -- @param number The style number to get the definition for
 -- @param name (Optional) name of the style if known
@@ -190,7 +192,7 @@ local function set_style_property(table, number, value)
   if value ~= nil then table[number] = value end
 end
 
----
+--
 -- Defines a style using the specified style number
 -- @param number The style number that should be used for the style
 -- @param style The style definition
@@ -220,7 +222,7 @@ local function get_buffer_styles()
   return styles
 end
 
----
+--
 -- Retrieves the style number used for the specified style
 -- in the current buffer. The style will automatically be
 -- defined in the current buffer if it isn't already.

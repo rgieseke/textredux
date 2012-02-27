@@ -58,6 +58,7 @@ Please see the examples for more hands on instructions.
 
 local key = require('textui.key')
 local tui_style = require('textui.style')
+local tui_indicator = require('textui.indicator')
 
 local _G = _G
 local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
@@ -317,50 +318,56 @@ end
 
 --[[- Override for
 [buffer:add_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.add_text)
-which accepts optional style and command parameters.
+which accepts optional style, command and indicator parameters.
 @param text The text to add.
 @param style The style to use for the text, as defined using @{_M.textui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
+@param indicator Optional @{_M.textui.indicator} to use for the added text.
 ]]
-function buffer:add_text(text, style, command)
+function buffer:add_text(text, style, command, indicator)
   text = tostring(text)
   local insert_pos = self.target.current_pos
   self.target:add_text(text)
   self:_set_style(insert_pos, #text, style)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
+  if indicator then tui_indicator.apply(indicator, insert_pos, #text) end
 end
 
 --[[- Override for
 [buffer:append_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.append_text)
-which accepts optional style and command parameters.
+which accepts optional style, command and indicator parameters.
 @param text The text to append.
 @param style The style to use for the text, as defined using @{_M.textui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
+@param indicator Optional @{_M.textui.indicator} to use for the appended text.
 ]]
-function buffer:append_text(text, style, command)
+function buffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
   text = tostring(text)
   self.target:append_text(text)
   self:_set_style(insert_pos, #text, style)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
+  if indicator then tui_indicator.apply(indicator, insert_pos, #text) end
 end
 
 --[[- Override for
 [buffer:insert_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.insert_text)
-which accepts optional style and command parameters.
+which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
 @param text The text to insert.
 @param style The style to use for the text, as defined using @{_M.textui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
+@param indicator Optional @{_M.textui.indicator} to use for the inserted text.
 ]]
-function buffer:insert_text(pos, text, style, command)
+function buffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
   self:_set_style(pos, #text, style)
   if command then self:add_hotspot(pos, pos + #text, command) end
+  if indicator then tui_indicator.apply(indicator, pos, #text) end
 end
 
 --[[-
@@ -484,6 +491,7 @@ local function _on_buffer_after_switch()
   local tui_buf = _G.buffer._textui
   if tui_buf then
     tui_style.define_styles()
+    tui_indicator.define_indicators()
     tui_buf:refresh()
   end
 end
