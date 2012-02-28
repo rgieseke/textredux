@@ -8,8 +8,8 @@ The matcher module provides easy and advanced matching of strings.
 ]]
 
 local _G, string, table, math = _G, string, table, math
-local ipairs, type, setmetatable, tostring =
-      ipairs, type, setmetatable, tostring
+local ipairs, type, setmetatable, tostring, append =
+      ipairs, type, setmetatable, tostring, table.insert
 
 local matcher = {}
 local _ENV = matcher
@@ -47,6 +47,49 @@ local function match_score(line, matchers)
     score = score + matcher_score
   end
   return score
+end
+
+--[[ Explains the match for a given search.
+@param search The search string to match
+@param text The text to match against
+@return A list of explanation tables. Each explanation table contains the
+following fields:
+  `score`: The score for the match
+  `start_pos`: The start position of the best match
+  `end_pos`: The end position of the best match
+  `1..n`: Tables of matching positions with the field start_pos and length
+]]
+function matcher:explain(search, text)
+  if not search or #search == 0 then return {} end
+  if self.search_case_insensitive then
+    search = search:lower()
+    text = text:lower()
+  end
+  local matchers = self:_matchers_for_search(search)
+  local explanations = {}
+
+  for _, matcher in ipairs(matchers) do
+    local score, start_pos, end_pos, search = matcher(text)
+    if not score then return {} end
+    local explanation = { score = score, start_pos = start_pos, end_pos = end_pos }
+    local s_start, s_index = 1, 1
+    local l_start, l_index = start_pos, start_pos
+    while s_index <= #search do
+      repeat
+        s_index = s_index + 1
+        l_index = l_index + 1
+      until search:sub(s_index, s_index) ~= text:sub(l_index, l_index) or s_index > #search
+      append(explanation, { start_pos = l_start, length = l_index - l_start })
+      if s_index > #search then break end
+      repeat
+        l_index = l_index + 1
+      until search:sub(s_index, s_index) == text:sub(l_index, l_index) or l_index > end_pos
+      l_start = l_index
+    end
+    append(explanations, explanation)
+  end
+
+  return explanations
 end
 
 -- Matches search against the candidates.
@@ -130,14 +173,17 @@ function matcher:_matchers_for_search(search_string)
   for _, search in ipairs(groups) do
     local fuzzy_pattern = fuzzy and fuzzy_search_pattern(search)
     matchers[#matchers + 1] = function(line)
-      local score = line:find(search, 1, true)
-      if not score and fuzzy then
-        local start_pos, end_pos = line:find(fuzzy_pattern)
+      local start_pos, end_pos = line:find(search, 1, true)
+      local score = start_pos
+      if not start_pos and fuzzy then
+        start_pos, end_pos = line:find(fuzzy_pattern)
         if start_pos then
           score = (end_pos - start_pos) + fuzzy_penalty
         end
       end
-      return score and (score + #line) or nil
+      if score then
+        return score + #line, start_pos, end_pos, search
+      end
     end
   end
   return matchers

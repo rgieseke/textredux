@@ -45,11 +45,18 @@ local _ENV = list
 if setfenv then setfenv(1, _ENV) end
 
 style.list_header = { fore = '#5E5E5E', underline = true }
+style.list_match_highlight = style.default
 
 --- The default style to use for diplaying headers.
 -- This is by default the `style.list_header` style. It's possible to override
 -- this for a specific list by assigning another value to the instance itself.
 header_style = style.list_header
+
+--- The style to use for indicating matches.
+-- You can turn off highlighing of matches by setting this to nil.
+-- It's possible to override this for a specific list by assigning another value
+-- to the instance itself. The default value is `style.default`.
+match_highlight_style = style.list_match_highlight
 
 --- The default styles to use for different columns. This can be specified
 -- individually for each list as well. Values can either be explicit styles,
@@ -244,9 +251,21 @@ local function add_column_text(buffer, text, pad_to, style)
   if padding then buffer:add_text(string_rep(' ', padding)) end
 end
 
+function highlight_matches(explanations, line_start, buffer, match_style)
+  for _, explanation in ipairs(explanations) do
+    for _, range in ipairs(explanation) do
+      style.apply(match_style,
+                  buffer,
+                  line_start + range.start_pos - 1,
+                  range.length)
+    end
+  end
+end
+
 function list:_add_items(items, start_index, end_index)
   local buffer = self.buffer
   local data = buffer.data
+  local search = data.search
   local column_widths = self._column_widths
 
   for index = start_index, end_index do
@@ -258,6 +277,12 @@ function list:_add_items(items, start_index, end_index)
       local pad_to = j == nr_columns and 0 or column_widths[j]
       add_column_text(buffer, tostring(field), pad_to, self:_column_style(columns, j))
     end
+
+    if self.match_highlight_style then
+      local explanations = data.matcher:explain(search, buffer:get_cur_line())
+      highlight_matches(explanations, line_start, buffer, self.match_highlight_style)
+    end
+
     buffer:add_text('\n')
     if self.on_selection then
       local handler = function (buffer, shift, ctrl, alt, meta)
