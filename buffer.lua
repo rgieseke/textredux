@@ -66,12 +66,14 @@ local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type,
 local new_buffer, events, table = new_buffer, events, table
 local constants = _SCINTILLA.constants
 local huge = math.huge
+local band = bit32.band
 
 local buffer = {}
 local _ENV = buffer
 if setfenv then setfenv(1, _ENV) end
 
 local default_style = tui_style.default
+local hotspot_indicator = { style = constants.INDIC_HIDDEN }
 local __newindex, __index
 local tui_buffers = setmetatable({}, { __mode = 'k' })
 local origin_buffers  = setmetatable({}, { __mode = 'kv' })
@@ -312,6 +314,8 @@ function buffer:add_hotspot(start_pos, end_pos, command)
     current_spots[#current_spots + 1] = hotspot
     hotspots[i] = current_spots
   end
+  length = end_pos - start_pos
+  tui_indicator.apply(hotspot_indicator, start_pos, length)
 end
 
 -- add styling and hotspot support to buffer text insertion functions
@@ -463,15 +467,14 @@ function buffer:_on_target_deleted()
   self:_call_hook('on_deleted')
 end
 
-function buffer:_on_user_select(...)
+function buffer:_on_user_select(position, shift, ctrl, alt, meta)
   local target = self.target
-  local cur_pos = target.current_pos
-  local cur_line = target:line_from_position(cur_pos)
+  local cur_line = target:line_from_position(position)
   local spots = self.hotspots[cur_line]
   if not spots then return end
   for _, spot in ipairs(spots) do
-    if cur_pos >= spot.start_pos and cur_pos < spot.end_pos then
-      invoke_command(spot.command, self, ...)
+    if position >= spot.start_pos and position < spot.end_pos then
+      invoke_command(spot.command, self, shift, ctrl, alt, meta)
       return true
     end
   end
@@ -520,7 +523,10 @@ local function _on_keypress(code, shift, ctl, alt, meta)
   if not tui_buf then return end
   local key = key.translate(code, shift, ctl, alt, meta)
 
-  if key and key:match('\n') and tui_buf:_on_user_select(shift, ctl, alt, meta) then return true end
+  if key and key:match('\n') and
+     tui_buf:_on_user_select(tui_buf.current_pos, shift, ctl, alt, meta) then
+    return true
+  end
 
   local command = tui_buf.keys[key]
   if command then
@@ -530,9 +536,40 @@ local function _on_keypress(code, shift, ctl, alt, meta)
   return tui_buf:_call_hook('on_keypress', key, code, shift, ctl, alt, meta)
 end
 
+--[[ Mouse support.. The stack has the following issues:
+
+- Modifiers are not reported correctly (ctrl pressed reports as ctrl+alt)
+- Doing buffer switches in the action results in the new buffer recieving button
+up and setting a selection.
+- Scintilla docs says indicator release event gets modifiers - we do not.
+]]
+local indicator_modifiers
+
+local function _on_indicator_click(position, modifiers)
+  if not _G.buffer._textui then return end
+  indicator_modifiers = modifiers
+end
+
+local function _on_indicator_release(position, modifiers)
+  local tui_buf = _G.buffer._textui
+  if not tui_buf then return end
+
+  modifiers = modifiers or indicator_modifiers or 0
+  local shift = band(constants.SCMOD_SHIFT, modifiers) ~= 0
+  local ctrl = band(constants.SCMOD_CTRL, modifiers) ~= 0
+  local alt = band(constants.SCMOD_ALT, modifiers) ~= 0
+  local meta = band(constants.SCMOD_META, modifiers) ~= 0
+
+  if tui_buf:_on_user_select(position, shift, ctrl, alt, meta) then
+    return true
+  end
+end
+
 events.connect(events.BUFFER_DELETED, _on_buffer_deleted)
 events.connect(events.BUFFER_AFTER_SWITCH, _on_buffer_after_switch)
 events.connect(events.KEYPRESS, _on_keypress, 1)
+events.connect(events.INDICATOR_CLICK, _on_indicator_click)
+events.connect(events.INDICATOR_RELEASE, _on_indicator_release)
 events.connect(events.VIEW_NEW, _on_new_view)
 events.connect(events.QUIT, _on_quit, 1)
 
