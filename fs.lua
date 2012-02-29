@@ -272,7 +272,7 @@ local function chdir(list, directory)
   end
 end
 
-local function open_selected_file(path, exists, list, shift)
+local function open_selected_file(path, exists, list, shift, ctrl)
   if not exists then
     local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
     if not file then
@@ -282,7 +282,7 @@ local function open_selected_file(path, exists, list, shift)
     file:close()
   end
   list:close()
-  if shift then tr_gui.switch_to_other_view() end
+  if ctrl then tr_gui.switch_to_other_view() end
   io.open_file(path)
 end
 

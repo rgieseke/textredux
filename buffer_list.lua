@@ -48,9 +48,9 @@ local function get_buffer_items()
   return items
 end
 
-local function on_selection(list, item, shift)
+local function on_selection(list, item, shift, ctrl)
   list:close()
-  if shift then tr_gui.switch_to_other_view() end
+  if ctrl then tr_gui.switch_to_other_view() end
   view:goto_buffer(_BUFFERS[item.buffer])
 end
 
