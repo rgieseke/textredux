@@ -560,7 +560,19 @@ local function _on_indicator_release(position, modifiers)
   local alt = band(constants.SCMOD_ALT, modifiers) ~= 0
   local meta = band(constants.SCMOD_META, modifiers) ~= 0
 
+  local cur_view = _G.view
+
   if tui_buf:_on_user_select(position, shift, ctrl, alt, meta) then
+    -- if the view's buffer was switched as a result of the select, the new
+    -- buffer will get a weird selection (see issue above). Work around that
+    -- somewhat by setting the buffer's position to the position it will get
+    -- upon the return
+    if _G._VIEWS[cur_view] and cur_view.buffer ~= tui_buf.target then
+      local focused_view = _G.view
+      if cur_view ~= focused_view then _G.gui.goto_view(_G._VIEWS[cur_view], false) end
+      _G.buffer:goto_pos(position)
+      if _G.view ~= focused_view then _G.gui.goto_view(_G._VIEWS[focused_view], false) end
+    end
     return true
   end
 end
