@@ -1,5 +1,5 @@
 --[[
-The matcher module provides easy and advanced matching of strings.
+The color module provides utility functions for color handling.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
