@@ -314,7 +314,7 @@ function buffer:add_hotspot(start_pos, end_pos, command)
     current_spots[#current_spots + 1] = hotspot
     hotspots[i] = current_spots
   end
-  length = end_pos - start_pos
+  local length = end_pos - start_pos
   tui_indicator.apply(hotspot_indicator, start_pos, length)
 end
 
