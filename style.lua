@@ -50,12 +50,8 @@ for style created for a lexer or theme. Please see the documentation for
 [lexer.style](http://caladbolg.net/luadoc/textadept/modules/lexer.html#style)
 for information about the fields. The one exception compared to lexer styles
 is that colors are specified using the standard `'#rrggbb'` notation instead of
-the lexer styles' `bgr` notation.
-
-This is what you use to create custom styles (see below), and also what you
-get when accessing any already existing styles. The one exception to note is
-that the `font` field is unfortunately not available for any of the default
-fields, as that information is not available through Scintilla.
+the lexer styles' `bgr` notation. This is what you use to create custom styles
+(see below), and also what you get when accessing any already existing styles.
 
 Defining styles
 ---------------
@@ -168,7 +164,7 @@ local function get_definition(number, name)
   if number < 0 or number > STYLE_MAX then error('invalid style number "'.. number .. '"', 2) end
   local buffer = _G.buffer
   local style = {
-    font = nil, -- buffer.style_font is write-only
+    font = buffer:style_get_font(number),
     size = buffer.style_size[number],
     bold = buffer.style_bold[number],
     italic = buffer.style_italic[number],
