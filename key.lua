@@ -31,6 +31,17 @@ local string_char = string.char
 
 local M = {}
 
+local KEYSYMS_PLUS = {
+  [0xff96] = 'left',
+  [0xff97] = 'up',
+  [0xff98] = 'right',
+  [0xff99] = 'down',
+  [0xff9a] = 'pgup',
+  [0xff9b] = 'pgdn',
+  [0xff9c] = 'end',
+  [0xff95] = 'home',
+}
+
 -- settings
 local ADD = ''
 local CTRL = 'c'..ADD
@@ -45,7 +56,7 @@ function M.translate(code, shift, control, alt, meta)
     key = string_char(code)
     shift = false -- for printable characters, key is upper case
   else
-    key = keys.KEYSYMS[code]
+    key = keys.KEYSYMS[code] or KEYSYMS_PLUS[code]
     if not key then return end
   end
   control = control and CTRL or ''
