@@ -72,3 +72,15 @@ not be an option I'll gladly accept patches through other means as well.
 If you have any bug reports or feature requests, please submit these to the
 [Github issue tracker](https://github.com/nilnor/textredux/issues). As with
 patches, I'll be happy to recieve these through other means as well.
+
+## Changelog
+
+### 0.2 (2012-03-08)
+
+- Make ctrl+enter open entries in another view (buffer list / file browser)
+- Make buffer list keys configurable
+- Handle buffers with nil directories in the buffer list
+
+### 0.1 (2012-01-20)
+
+First public release.
