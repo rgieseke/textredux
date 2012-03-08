@@ -32,14 +32,14 @@ local string_char = string.char
 local M = {}
 
 local KEYSYMS_PLUS = {
-  [0xff96] = 'left',
-  [0xff97] = 'up',
-  [0xff98] = 'right',
-  [0xff99] = 'down',
-  [0xff9a] = 'pgup',
-  [0xff9b] = 'pgdn',
-  [0xff9c] = 'end',
-  [0xff95] = 'home',
+  [0xff96] = 'kpleft',
+  [0xff97] = 'kpup',
+  [0xff98] = 'kpright',
+  [0xff99] = 'kpdown',
+  [0xff9a] = 'kppgup',
+  [0xff9b] = 'kppgdn',
+  [0xff9c] = 'kpend',
+  [0xff95] = 'kphome',
 }
 
 -- settings

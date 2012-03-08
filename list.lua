@@ -369,7 +369,7 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
 
   if buffer:line_from_position(buffer.current_pos) > data.items_end_line and
      data.shown_items < #data.matching_items and
-     (key == 'down' or key == 'pgdn')
+     (key == 'down' or key == 'pgdn' or key == 'kpdown' or key == 'kppgdn')
   then
     self:_load_more_items()
     return true
