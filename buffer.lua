@@ -394,7 +394,7 @@ end
 function buffer:_create_target()
   local target = new_buffer()
   target._textui = self
-  target:set_lexer_language(constants.SCLEX_CONTAINER)
+  target.lexer_language = constants.SCLEX_CONTAINER
   target.eol_mode = constants.SC_EOL_LF
   target:set_save_point()
   target.undo_collection = false

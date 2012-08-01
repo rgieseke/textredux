@@ -164,7 +164,7 @@ local function get_definition(number, name)
   if number < 0 or number > STYLE_MAX then error('invalid style number "'.. number .. '"', 2) end
   local buffer = _G.buffer
   local style = {
-    font = buffer:style_get_font(number),
+    font = buffer.style_font[number],
     size = buffer.style_size[number],
     bold = buffer.style_bold[number],
     italic = buffer.style_italic[number],
