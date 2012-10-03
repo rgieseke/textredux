@@ -67,7 +67,6 @@ local function patch_menu(replacements)
   local menubar = menu.menubar
   for _, menu in ipairs(menubar) do patch_sub_menu(menu, replacements) end
   menu.set_menubar(menubar)
-  menu.rebuild_command_tables()
 end
 
 local ta_snapopen_open = ta.snapopen.open
