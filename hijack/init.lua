@@ -3,7 +3,7 @@ The hijack module provides the easiest, and most invasive, way of getting
 TextRedux functionality for Textadept. It's a one-stop setup in the way that you
 don't really have to configure anything else to use TextRedux's functionality -
 the hijack module inserts TextRedux functionality anywhere it can and will
-automatically integrate with your existing key bindings as well as with the menu.
+automatically integrate with your existing key bindings.
 
 How to use
 ----------
@@ -48,25 +48,6 @@ local function patch_keys(replacements)
       keys[k] = replacement
     end
   end
-end
-
-local function patch_sub_menu(menu, replacements)
-  for _, entry in ipairs(menu) do
-    if entry.title then patch_sub_menu(entry, replacements)
-    else
-      local command = entry[2]
-      local replacement = get_replacement(replacements, command)
-      if replacement ~= nil then
-        entry[2] = replacement
-      end
-    end
-  end
-end
-
-local function patch_menu(replacements)
-  local menubar = menu.menubar
-  for _, menu in ipairs(menubar) do patch_sub_menu(menu, replacements) end
-  menu.set_menubar(menubar)
 end
 
 local ta_snapopen_open = ta.snapopen.open
@@ -129,6 +110,5 @@ io.open_file = open_file_compat
 replacements[buffer.save_as] = save_as_compat
 events.connect(events.BUFFER_NEW, function() buffer.save_as = save_as_compat end)
 
--- Finalize by patching keys and menu
+-- Finalize by patching keys
 patch_keys(replacements)
-patch_menu(replacements)
