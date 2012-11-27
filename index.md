@@ -2,7 +2,7 @@
 layout: default
 ---
 
-TextRedux is a module for the [TextAdept editor](http://code.google.com/p/textadept/)
+TextRedux is a module for the [TextAdept editor](http://foicica.com/textadept/)
 that offers a set of text based replacement interfaces for core TextAdept
 functionality. The current version offers:
 
@@ -20,11 +20,11 @@ functionality. The current version offers:
 
 ## Installation
 
-TextRedux depends on the [TextUI module](https://github.com/nilnor/textui), which
+TextRedux depends on the [TextUI module](https://github.com/rgieseke/textui), which
 needs to be installed along with TextRedux. Please see the link for more information
 about how to download TextUI.
 
-The TextRedux module itself can be downloaded from the [download page](https://github.com/nilnor/textredux/downloads).
+The TextRedux module itself can be downloaded from the [download page](https://github.com/rgieseke/textredux/downloads).
 
 To install the module, just unpack the module into the `.textadept/modules/textredux`
 directory.
@@ -59,7 +59,7 @@ quick tips on using TextRedux.
 ## Code
 
 TextRedux is released under the MIT license (see the LICENSE file in the source
-for the full details). The source code is available from [GitHub](https://github.com/nilnor/textredux).
+for the full details). The source code is available from [GitHub](https://github.com/rgieseke/textredux). It was written by [Nils Nordman](https://github.com/nilnor) and is now maintained by [Robert Gieseke](https://github.com/rgieseke).
 
 ## Contribute
 
@@ -70,10 +70,15 @@ request via GitHub, or as a pull request from some other Git server. Should that
 not be an option I'll gladly accept patches through other means as well.
 
 If you have any bug reports or feature requests, please submit these to the
-[Github issue tracker](https://github.com/nilnor/textredux/issues). As with
+[Github issue tracker](https://github.com/rgieseke/textredux/issues). As with
 patches, I'll be happy to recieve these through other means as well.
 
 ## Changelog
+
+### 0.3 (2012-11-28)
+
+- Updates for API changes until Textadept 6.
+- Don't hijack menu entries, use the default widget when clicking the menus.
 
 ### 0.2 (2012-03-08)
 
