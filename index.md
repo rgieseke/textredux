@@ -2,7 +2,7 @@
 layout: default
 ---
 
-TextRedux is a module for the [TextAdept editor](http://foicica.com/textadept/)
+TextRedux is a module for the [Textadept editor](http://foicica.com/textadept/)
 that offers a set of text based replacement interfaces for core TextAdept
 functionality. The current version offers:
 
