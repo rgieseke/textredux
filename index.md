@@ -24,7 +24,7 @@ TextRedux depends on the [TextUI module](https://github.com/rgieseke/textui), wh
 needs to be installed along with TextRedux. Please see the link for more information
 about how to download TextUI.
 
-The TextRedux module itself can be downloaded from the [download page](https://github.com/rgieseke/textredux/downloads).
+The TextRedux module itself can be downloaded from the [download page](https://github.com/rgieseke/textredux/tags).
 
 To install the module, just unpack the module into the `.textadept/modules/textredux`
 directory.
