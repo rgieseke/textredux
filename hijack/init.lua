@@ -51,12 +51,11 @@ local function patch_keys(replacements)
 end
 
 local ta_snapopen_open = ta.snapopen.open
-local function snapopen_compat(utf8_paths, filter, exclude_PATHS, exclude_FILTER, depth)
+local function snapopen_compat(utf8_paths, filter, exclude_FILTER, depth)
   if not utf8_paths or
-     (type(utf8_paths) == 'table' and #utf8_paths ~= 1) or
-     (not exclude_PATHS and #ta.snapopen.PATHS > 1)
+     (type(utf8_paths) == 'table' and #utf8_paths ~= 1)
   then
-    return ta_snapopen(utf8_paths, filter, exclude_PATHS, exclude_FILTER, depth)
+    return ta_snapopen(utf8_paths, filter, exclude_FILTER, depth)
   end
   local directory = type(utf8_paths) == 'table' and utf8_paths[1] or utf8_paths
   fs.snapopen(directory, filter, exclude_FILTER, depth)
