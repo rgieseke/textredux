@@ -28,14 +28,14 @@ Please see the various list examples for more hands on instructions.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textui.list
+@module _M.textredux.list
 ]]
 
-local style = require 'textui.style'
-local textui_buffer = require 'textui.buffer'
-local util_matcher = require 'textui.util.matcher'
+local style = require 'textredux.style'
+local textredux_buffer = require 'textredux.buffer'
+local util_matcher = require 'textredux.util.matcher'
 
-local _G, textui, string, table, keys, math = _G, _M.textui, string, table, keys, math
+local _G, textredux, string, table, keys, math = _G, _M.textredux, string, table, keys, math
 local ipairs, error, type, setmetatable, select, tostring =
       ipairs, error, type, setmetatable, select, tostring
 local string_rep = string.rep
@@ -60,7 +60,7 @@ match_highlight_style = style.list_match_highlight
 
 --- The default styles to use for different columns. This can be specified
 -- individually for each list as well. Values can either be explicit styles,
--- defined using @{_M.textui.style}, or functions which returns explicit styles.
+-- defined using @{_M.textredux.style}, or functions which returns explicit styles.
 -- In the latter case, the function will be invoked with the corresponding
 -- item and column index. The default styles contains styles for up to three
 -- columns, after which the default style will be used.
@@ -124,18 +124,18 @@ The handler will be passed the following parameters:
 ]]
 on_new_selection = nil
 
---- The underlying @{_M.textui.buffer} used by the list
+--- The underlying @{_M.textredux.buffer} used by the list
 buffer = nil
 
 ---
 -- A table of key commands for the list.
--- This functions almost exactly the same as @{_M.textui.buffer.keys}. The one
+-- This functions almost exactly the same as @{_M.textredux.buffer.keys}. The one
 -- difference is that for function values, the parameter passed will be a
 -- reference to the list instead of a buffer reference.
 keys = nil
 
 --- Callback invoked whenever the list receives a keypress.
--- This functions almost exactly the sames as @{_M.textui.buffer.on_keypress}.
+-- This functions almost exactly the sames as @{_M.textredux.buffer.on_keypress}.
 -- The one difference is that for function values, the first parameter passed
 -- will be a reference to the list instead of a buffer reference.
 --
@@ -145,7 +145,7 @@ keys = nil
 on_keypress = nil
 
 --- A general purpose table that can be used for storing state associated
--- with the list. Just like @{_M.textui.buffer.data}, the `data` table is
+-- with the list. Just like @{_M.textredux.buffer.data}, the `data` table is
 -- special in the way that it will automatically be cleared whenever the user
 -- closes the buffer associated with the list.
 data = nil
@@ -392,7 +392,7 @@ function list:_on_keypress(buffer, key, code, shift, ctl, alt, meta)
 end
 
 function list:_create_buffer()
-  local buffer = textui_buffer.new(self.title)
+  local buffer = textredux_buffer.new(self.title)
   buffer.on_refresh = function(...) self:_refresh(...) end
   buffer.on_keypress = function(...) return self:_on_keypress(...) end
   buffer.on_deleted = function() self.data = {} end

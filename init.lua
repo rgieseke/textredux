@@ -12,11 +12,11 @@ from the list.
 - @{_M.textredux.hijack}. Hijacks Textadept, replacing as much functionality as it
 can with text based counterparts. In addition to injecting the above modules in
 the menu and key bindings, it also replaces the traditional filtered list with
-a TextUI list for a number of operations.
+a Textredux list for a number of operations.
 
 ## How to use it
 
-TextRedux depends on the TextUI module, and thus you need to install that along
+TODO FIXME TextRedux depends on the Textredux module, and thus you need to install that along
 with the TextRedux module itself. Download and install both modules in your
 `.textadept/modules/` directory.
 
@@ -54,6 +54,10 @@ local M = {
   buffer_list = require 'textredux.buffer_list',
   fs = require 'textredux.fs',
   gui = require 'textredux.gui',
+  buffer = require 'textredux.buffer',
+  list = require 'textredux.list',
+  indicator = require 'textredux.indicator',
+  style = require 'textredux.style',
 }
 
 return M

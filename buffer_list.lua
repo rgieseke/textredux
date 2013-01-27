@@ -9,21 +9,21 @@ and the option of specifying the buffers to list via a provided function.
 @license MIT (see LICENSE)
 @module _M.textredux.buffer_list
 ]]
-local tui_list = require 'textui.list'
+local tr_list = require 'textredux.list'
 local tr_gui = require 'textredux.gui'
 local L = _L
 
 local M = {}
 
---- The TextUI list instance used by the buffer list.
+--- The Textredux list instance used by the buffer list.
 M.list = nil
 
 --[[- The key bindings for the buffer list.
 
 You can modifiy this to customise the key bindings to your liking. The key
-bindings are passed directly to the TextUI list, so note that the
-first argument to any function will be the TextUI list itself. You can read more
-about the TextUI list's keys [here](http://nilnor.github.com/textui/docs/modules/_M.textui.list.html#keys).
+bindings are passed directly to the Textredux list, so note that the
+first argument to any function will be the Textredux list itself. You can read more
+about the Textredux list's keys [here](TODO/textredux/docs/modules/_M.textredux.list.html#keys).
 
 If you like to add a custom key binding for closing a buffer you can bind the
 @{close_buffer} function to a key of your choice. For other actions it's likely
@@ -75,7 +75,7 @@ local function on_selection(list, item, shift, ctrl)
 end
 
 --[[- Returns the currently selected buffer in the list.
-@param list The TextUI list instance used by the buffer list. If not provided,
+@param list The Textredux list instance used by the buffer list. If not provided,
 then the global list is used automatically.
 @return The currently selected buffer, if any.
 @return The currently selected buffer's name, if any.
@@ -88,7 +88,7 @@ function M.currently_selected_buffer(list)
 end
 
 --[[- Closes the currently selected buffer in the buffer list.
-@param list The TextUI list instance used by the buffer list. This function
+@param list The Textredux list instance used by the buffer list. This function
 is ordinarily invoked as the result of a key binding, and you should thus not need
 to specify this yourself. If list isn't provided, the global list is automatically
 used.
@@ -123,7 +123,7 @@ function M.show(buffers)
   buffer_source = buffers or function() return _BUFFERS end
 
   if not M.list then
-    M.list = tui_list.new('Buffer listing')
+    M.list = tr_list.new('Buffer listing')
     M.list.headers = { 'Name', 'Directory' }
     M.list.on_selection = on_selection
     for k, v in pairs(M.keys) do

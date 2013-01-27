@@ -29,7 +29,7 @@ Using indicators
 
 Start with defining your indicators using the format described above. You can
 then  either apply them against a range of text using @{apply}, or pass them to
-one of the text insertion functions in @{_M.textui.buffer}. If you need to get
+one of the text insertion functions in @{_M.textredux.buffer}. If you need to get
 the defined indicator number for an indicator, you can retrieve it using
 @{number_for}. Please note that indicator numbers are not necessarily stable
 between buffer switches, so problems may arise if you hold on to an indicator
@@ -40,10 +40,10 @@ Please see the example @{buffer_indicators.lua} for some practical usage.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
 @license MIT (see LICENSE)
-@module _M.textui.indicator
+@module _M.textredux.indicator
 ]]
 
-local color = require 'textui.util.color'
+local color = require 'textredux.util.color'
 
 local constants = _SCINTILLA.constants
 local _G = _G
@@ -77,7 +77,7 @@ end
 
 ---  Defines the currently used custom indicators for the current buffer.
 -- This must be called whenever a buffer with custom indicators is switched to.
--- This is automatically done by the @{_M.textui.buffer} class, and thus
+-- This is automatically done by the @{_M.textredux.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_indicators()
   local buffer = _G.buffer

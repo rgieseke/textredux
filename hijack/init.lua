@@ -8,7 +8,7 @@ automatically integrate with your existing key bindings.
 How to use
 ----------
 
-After installing the textredux module (as well as it's dependency, the TextUI
+After installing the textredux module (as well as it's dependency, the Textredux
 module) into your .textadept/modules directory, simple add the following to
 your .textadept/init.lua file:
 

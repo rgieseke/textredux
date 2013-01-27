@@ -4,7 +4,7 @@ The color module provides utility functions for color handling.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textui.util.matcher
+@module _M.textredux.util.matcher
 ]]
 
 local M = {}

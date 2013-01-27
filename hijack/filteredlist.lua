@@ -1,4 +1,4 @@
-local list = require 'textui.list'
+local list = require 'textredux.list'
 
 local M = {}
 

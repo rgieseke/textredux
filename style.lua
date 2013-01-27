@@ -4,8 +4,8 @@ The style module lets you define and use custom, non-lexer-based styles.
 The default styles
 ------------------
 
-TextUI piggybacks on the default lexer styles defined by a user's theme,
-and makes them available for your TextUI interface. The big benefit of this
+Textredux piggybacks on the default lexer styles defined by a user's theme,
+and makes them available for your Textredux interface. The big benefit of this
 is that by using those styles, or by basing your custom styles on them, your
 interface stands a much higher chance of blending in well with the color scheme
 used. As an example, your custom style with cyan foreground text might look
@@ -44,7 +44,7 @@ available are these:
 What's a style?
 ---------------
 
-TextUI styling has been made to resemble the lexer based style creation.
+Textredux styling has been made to resemble the lexer based style creation.
 A style is thus just a table with certain properties, almost exactly the same as
 for style created for a lexer or theme. Please see the documentation for
 [lexer.style](http://caladbolg.net/luadoc/textadept/modules/lexer.html#style)
@@ -79,14 +79,14 @@ by prefixing their name with the name of your module. E.g. if your module is nam
 Using styles
 ------------
 
-You typically use a style by inserting text through @{_M.textui.buffer}'s text insertion
+You typically use a style by inserting text through @{_M. .buffer}'s text insertion
 methods, specifying the style. Please see the examples in @{buffer_styling.lua}
 for examples on this.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textui.style
+@module _M.textredux.style
 ]]
 
 local _G, pairs, setmetatable, error, tonumber =
@@ -236,7 +236,7 @@ end
 ---
 -- Applies the specified style for the given text range and buffer.
 -- While you could use this directly, you'd typically use the text insertion
--- methods in @{_M.textui.buffer} to style content.
+-- methods in @{_M.textredux.buffer} to style content.
 -- @param style The defined style
 -- @param buffer The buffer to apply the style for
 -- @param start_pos The starting position of the style
@@ -249,7 +249,7 @@ end
 ---
 -- Defines the currently used custom styles for the current buffer.
 -- This must be called whenever a buffer with custom styles is switched to.
--- This is automatically done by the @{_M.textui.buffer} class, and thus
+-- This is automatically done by the @{_M.textredux.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_styles()
   local buffer_styles = get_buffer_styles()

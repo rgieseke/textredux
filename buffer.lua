@@ -2,26 +2,26 @@
 The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
 care of the details needed for making a text based interface work, such as
-mapping Textadept events to the correct buffers, working with the @{_M.textui.style}
+mapping Textadept events to the correct buffers, working with the @{_M.textredux.style}
 module to ensure that styling works, etc.
 
 How it works
 ------------
 
-When you work with a TextUI buffer, it will nearly always seem just like an ordinary
+When you work with a Textredux buffer, it will nearly always seem just like an ordinary
 [Textadept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html)
 (but with benefits, such as support for custom styling and easy callbacks, etc.).
 But where an Textadept buffer is volatile, and might cease to exists at any
-time (due to it being closed by a user for example) a TextUI buffer is persistent.
+time (due to it being closed by a user for example) a Textredux buffer is persistent.
 
-When we say that a TextUI buffer "wraps" an Textadept buffer, there's more to it
-than just adding additional methods to the Textadept buffer class. A TextUI
+When we say that a Textredux buffer "wraps" an Textadept buffer, there's more to it
+than just adding additional methods to the Textadept buffer class. A Textredux
 buffer will always exist, but the corresponding Textadept buffer, named `target`
-hereafter, may not. When the target buffer exists, a TextUI buffer will
+hereafter, may not. When the target buffer exists, a Textredux buffer will
 expose all the functions and attributes of the Textadept buffer, making it
-possible to use the TextUI buffer in just the same way as you would a Textadept
+possible to use the Textredux buffer in just the same way as you would a Textadept
 buffer (i.e. invoking any of the ordinary buffer methods, setting attributes,
-etc.). The TextUI buffer takes care of creating the target buffer automatically
+etc.). The Textredux buffer takes care of creating the target buffer automatically
 if needed whenever you invoke @{buffer:show}. When the target buffer does not
 exist, for instance as the result of the user closing it, any attempt to invoke
 any of the ordinary buffer methods will raise an error. You can check explicitly
@@ -37,7 +37,7 @@ perform your work within the callbacks.
 How to use
 ----------
 
-You create a new TextUI buffer by calling @{new}, passing the buffer
+You create a new Textredux buffer by calling @{new}, passing the buffer
 title. You specify an @{on_refresh} handler for the buffer, which is responsible
 for actually inserting the content in the buffer, along with any custom styles
 and hotspot handlers. You specify any custom key bindings using either @{keys}
@@ -53,12 +53,12 @@ Please see the examples for more hands on instructions.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textui.buffer
+@module _M.textredux.buffer
 ]]
 
-local key = require('textui.key')
-local tui_style = require('textui.style')
-local tui_indicator = require('textui.indicator')
+local key = require 'textredux.key'
+local tr_style = require 'textredux.style'
+local tr_indicator = require 'textredux.indicator'
 
 local _G = _G
 local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
@@ -72,10 +72,10 @@ local buffer = {}
 local _ENV = buffer
 if setfenv then setfenv(1, _ENV) end
 
-local default_style = tui_style.default
+local default_style = tr_style.default
 local hotspot_indicator = { style = constants.INDIC_HIDDEN }
 local __newindex, __index
-local tui_buffers = setmetatable({}, { __mode = 'k' })
+local tr_buffers = setmetatable({}, { __mode = 'k' })
 local origin_buffers  = setmetatable({}, { __mode = 'kv' })
 
 --[[- Whether the buffer should be marked as read only.
@@ -134,7 +134,7 @@ and the values assigned can also be either functions or tables.
 There are differences compared to `_M.textadept.keys` however:
 
 - It's not possible to specify language specific key bindings. This is
-obviously not applicable for a textui buffer.
+obviously not applicable for a textredux buffer.
 - It's not possible to specify keychain sequences.
 - For function values, the buffer instance is passed as the first argument.
 - For table values, buffer or view references will not be magically fixed.
@@ -163,7 +163,7 @@ target = nil
 -- @section end
 
 ---
--- Creates and returns a new textui buffer. The buffer will not be attached
+-- Creates and returns a new textredux buffer. The buffer will not be attached
 -- upon the return.
 -- @param title The title of the buffer. This will be displayed as the buffer's
 -- title in the Textadept top bar.
@@ -182,7 +182,7 @@ function new(title)
     },
   }
   setmetatable(buf, {__index = __index, __newindex = __newindex})
-  tui_buffers[buf] = true
+  tr_buffers[buf] = true
   return buf
 end
 
@@ -315,7 +315,7 @@ function buffer:add_hotspot(start_pos, end_pos, command)
     hotspots[i] = current_spots
   end
   local length = end_pos - start_pos
-  tui_indicator.apply(hotspot_indicator, start_pos, length)
+  tr_indicator.apply(hotspot_indicator, start_pos, length)
 end
 
 -- add styling and hotspot support to buffer text insertion functions
@@ -324,10 +324,10 @@ end
 [buffer:add_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.add_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to add.
-@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param style The style to use for the text, as defined using @{_M.textredux.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textui.indicator} to use for the added text.
+@param indicator Optional @{_M.textredux.indicator} to use for the added text.
 ]]
 function buffer:add_text(text, style, command, indicator)
   text = tostring(text)
@@ -335,17 +335,17 @@ function buffer:add_text(text, style, command, indicator)
   self.target:add_text(text)
   self:_set_style(insert_pos, #text, style)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
-  if indicator then tui_indicator.apply(indicator, insert_pos, #text) end
+  if indicator then tr_indicator.apply(indicator, insert_pos, #text) end
 end
 
 --[[- Override for
 [buffer:append_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.append_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to append.
-@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param style The style to use for the text, as defined using @{_M.textredux.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textui.indicator} to use for the appended text.
+@param indicator Optional @{_M.textredux.indicator} to use for the appended text.
 ]]
 function buffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
@@ -353,7 +353,7 @@ function buffer:append_text(text, style, command, indicator)
   self.target:append_text(text)
   self:_set_style(insert_pos, #text, style)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
-  if indicator then tui_indicator.apply(indicator, insert_pos, #text) end
+  if indicator then tr_indicator.apply(indicator, insert_pos, #text) end
 end
 
 --[[- Override for
@@ -361,39 +361,39 @@ end
 which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
 @param text The text to insert.
-@param style The style to use for the text, as defined using @{_M.textui.style}.
+@param style The style to use for the text, as defined using @{_M.textredux.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textui.indicator} to use for the inserted text.
+@param indicator Optional @{_M.textredux.indicator} to use for the inserted text.
 ]]
 function buffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
   self:_set_style(pos, #text, style)
   if command then self:add_hotspot(pos, pos + #text, command) end
-  if indicator then tui_indicator.apply(indicator, pos, #text) end
+  if indicator then tr_indicator.apply(indicator, pos, #text) end
 end
 
 --[[-
 Override for
 [buffer:new_line](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.new_line).
-A TextUI buffer will always have eol mode set to LF, so it's also possible,
+A Textredux buffer will always have eol mode set to LF, so it's also possible,
 and arguably easier, to just insert a newline using the `\n` escape via any
 of the other text insertion functions.
 ]]
 function buffer:newline()
-  self:add_text('\n', tui_style.whitespace)
+  self:add_text('\n', tr_style.whitespace)
 end
 
 -- begin private code
 
 function buffer:_set_style(pos, length, style)
-  tui_style.apply(style or default_style, self.target, pos, length)
+  tr_style.apply(style or default_style, self.target, pos, length)
 end
 
 function buffer:_create_target()
   local target = new_buffer()
-  target._textui = self
+  target._textredux = self
   target.lexer_language = constants.SCLEX_CONTAINER
   target.eol_mode = constants.SC_EOL_LF
   target:set_save_point()
@@ -412,11 +412,11 @@ local function emit_error(error)
   events.emit(events.ERROR, error)
 end
 
-function __index(tui_buf, k)
+function __index(tr_buf, k)
   local value = rawget(buffer, k)
   if value then return value end
-  if tui_buf.fields[k] then return nil end
-  local target = rawget(tui_buf, 'target')
+  if tr_buf.fields[k] then return nil end
+  local target = rawget(tr_buf, 'target')
   if target then
     value = target[k]
     if type(value) == 'function' then
@@ -429,11 +429,11 @@ function __index(tui_buf, k)
   end
 end
 
-function __newindex(tui_buf, k, v)
-  if tui_buf.fields[k] then
-    rawset(tui_buf, k, v)
-  elseif tui_buf.target then
-    tui_buf.target[k] = v
+function __newindex(tr_buf, k, v)
+  if tr_buf.fields[k] then
+    rawset(tr_buf, k, v)
+  elseif tr_buf.target then
+    tr_buf.target[k] = v
   else
     error("'=': Unknown field '" .. k .. "', perhaps invoke :show() first?", 2)
   end
@@ -482,58 +482,58 @@ end
 
 local function _on_buffer_deleted()
   local ta_buffers = _G._BUFFERS
-  for tui_buf, _ in pairs(tui_buffers) do
-    if tui_buf:is_attached() and not ta_buffers[tui_buf.target] then
-      tui_buf:_on_target_deleted()
+  for tr_buf, _ in pairs(tr_buffers) do
+    if tr_buf:is_attached() and not ta_buffers[tr_buf.target] then
+      tr_buf:_on_target_deleted()
       break
     end
   end
 end
 
 local function _on_buffer_after_switch()
-  local tui_buf = _G.buffer._textui
-  if tui_buf then
-    tui_style.define_styles()
-    tui_indicator.define_indicators()
-    tui_buf:refresh()
+  local tr_buf = _G.buffer._textredux
+  if tr_buf then
+    tr_style.define_styles()
+    tr_indicator.define_indicators()
+    tr_buf:refresh()
   end
 end
 
 local function _on_new_view()
-  local tui_buf = _G.buffer._textui
-  if tui_buf then
+  local tr_buf = _G.buffer._textredux
+  if tr_buf then
     local tmp_buf = new_buffer()
     tmp_buf:delete()
-    tui_buf:show()
+    tr_buf:show()
   end
 end
 
--- we close all textui buffer upon quit - they won't restore properly anyway
+-- we close all textredux buffer upon quit - they won't restore properly anyway
 -- and it's annoying to have empty non-functioning buffers upon start
 local function _on_quit()
   local buffers = {}
-  for tui_buf,_ in pairs(tui_buffers) do buffers[#buffers + 1] = tui_buf end
-  for _, tui_buf in ipairs(buffers) do
-    tui_buf:close()
+  for tr_buf,_ in pairs(tr_buffers) do buffers[#buffers + 1] = tr_buf end
+  for _, tr_buf in ipairs(buffers) do
+    tr_buf:close()
   end
 end
 
 local function _on_keypress(code, shift, ctl, alt, meta)
-  local tui_buf = _G.buffer._textui
-  if not tui_buf then return end
+  local tr_buf = _G.buffer._textredux
+  if not tr_buf then return end
   local key = key.translate(code, shift, ctl, alt, meta)
 
   if key and key:match('\n') and
-     tui_buf:_on_user_select(tui_buf.current_pos, shift, ctl, alt, meta) then
+     tr_buf:_on_user_select(tr_buf.current_pos, shift, ctl, alt, meta) then
     return true
   end
 
-  local command = tui_buf.keys[key]
+  local command = tr_buf.keys[key]
   if command then
-    invoke_command(command, tui_buf, shift, ctl, alt, meta)
+    invoke_command(command, tr_buf, shift, ctl, alt, meta)
     return true
   end
-  return tui_buf:_call_hook('on_keypress', key, code, shift, ctl, alt, meta)
+  return tr_buf:_call_hook('on_keypress', key, code, shift, ctl, alt, meta)
 end
 
 --[[ Mouse support.. The stack has the following issues:
@@ -546,13 +546,13 @@ up and setting a selection.
 local indicator_modifiers
 
 local function _on_indicator_click(position, modifiers)
-  if not _G.buffer._textui then return end
+  if not _G.buffer._textredux then return end
   indicator_modifiers = modifiers
 end
 
 local function _on_indicator_release(position, modifiers)
-  local tui_buf = _G.buffer._textui
-  if not tui_buf then return end
+  local tr_buf = _G.buffer._textredux
+  if not tr_buf then return end
 
   modifiers = modifiers or indicator_modifiers or 0
   local shift = band(constants.SCMOD_SHIFT, modifiers) ~= 0
@@ -562,12 +562,12 @@ local function _on_indicator_release(position, modifiers)
 
   local cur_view = _G.view
 
-  if tui_buf:_on_user_select(position, shift, ctrl, alt, meta) then
+  if tr_buf:_on_user_select(position, shift, ctrl, alt, meta) then
     -- if the view's buffer was switched as a result of the select, the new
     -- buffer will get a weird selection (see issue above). Work around that
     -- somewhat by setting the buffer's position to the position it will get
     -- upon the return
-    if _G._VIEWS[cur_view] and cur_view.buffer ~= tui_buf.target then
+    if _G._VIEWS[cur_view] and cur_view.buffer ~= tr_buf.target then
       local focused_view = _G.view
       if cur_view ~= focused_view then _G.gui.goto_view(_G._VIEWS[cur_view], false) end
       _G.buffer:goto_pos(position)

@@ -29,12 +29,12 @@ to snapopen that directory.
 
 If you don't like the default styles (colors, etc.) used by the file browser,
 you can easily change these by customizing any of the `style_<foo>` entries using
-the TextUI style module. As an example, to make directory entries underlined
+the Textredux style module. As an example, to make directory entries underlined
 you would do something like the following:
 
-    _M.textui.style.textredux_fs_directory = { underline = true }
+    _M.textredux.style.textredux_fs_directory = { underline = true }
 
-Please see the documentation for the TextUI style module for instructions on how
+Please see the documentation for the Textredux style module for instructions on how
 to define styles.
 
 @author Nils Nordman <nino at nordman.org>
@@ -43,8 +43,8 @@ to define styles.
 @module _M.textredux.fs
 ]]
 
-local list = require('textui.list')
-local style = require('textui.style')
+local list = require('textredux.list')
+local style = require('textredux.style')
 local lfs = require('lfs')
 local tr_gui = require 'textredux.gui'
 
@@ -355,7 +355,7 @@ will be called with following parameters:
 
 - `path`: The full path of the choosen file (UTF-8 encoded).
 - `exists`: A boolean indicating whether the file exists or not.
-- `list`: A reference to the TextUI list used by browser.
+- `list`: A reference to the Textredux list used by browser.
 - `shift`: True if the Shift key was held down when selecting the file.
 - `ctrl`: True if the Control/Command key was held down when selecting the file.
 - `alt`: True if the Alt/option key was held down when selecting the file.
