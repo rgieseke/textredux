@@ -1,18 +1,30 @@
 --[[-
-The TextRedux module offers a set of text based replacement interfaces for
-Textadept.
+The Textredux module allows you to easily create text based interfaces for the
+[Textadept](http://foicica.com/textadept/) editor and offers a set of text
+based interfaces.
 
 It currently contains the following modules:
 
-- @{_M.textredux.fs}. Contains text based interfaces for file io operations, i.e.
-open file, save file as well as snapopen functionality.
+- @{_M.textredux.style}. A module that let's you easily define custom styles,
+  as well as leveraging the default styles already provided by the user's
+  theme.
+- @{_M.textredux.indicator}. A module that provides a convenient way of using
+  indicators in your buffers.
+- @{_M.textredux.buffer}. A  class that supports custom styling, buffer
+  specific key bindings, hotspot support and generally makes it easy to create
+  a text based interface buffer by taking care of the background gruntwork
+  required.
+- @{_M.textredux.list}. A class that provides a versatile and extensible text
+  based item listing for Textadept, featuring advanced search capabilities and
+  styling.
+- @{_M.textredux.fs}. Contains text based interfaces for file io operations,
+  i.e. open file, save file as well as snapopen functionality.
 - @{_M.textredux.buffer_list}. A text based buffer list replacement, which in
-addition to being text based also offers an easy way to close buffers directly
-from the list.
-- @{_M.textredux.hijack}. Hijacks Textadept, replacing as much functionality as it
-can with text based counterparts. In addition to injecting the above modules in
-the menu and key bindings, it also replaces the traditional filtered list with
-a Textredux list for a number of operations.
+  addition to being text based also offers an easy way to close buffers
+  directly from the list.
+- @{_M.textredux.hijack}. Hijacks Textadept, replacing all keyboard shortcuts
+  with text based counterparts. Additionally, it replaces the traditional
+  filtered list with a Textredux list for a number of operations.
 
 ## How to use it
 
