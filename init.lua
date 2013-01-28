@@ -28,11 +28,10 @@ It currently contains the following modules:
 
 ## How to use it
 
-TODO FIXME TextRedux depends on the Textredux module, and thus you need to install that along
-with the TextRedux module itself. Download and install both modules in your
-`.textadept/modules/` directory.
+Download and install the Textredux module in your `.textadept/modules/`
+directory.
 
-Having installed it, there are two ways you can use TextRedux.
+Having installed it, there are two ways you can use Textredux.
 
 1) Cherrypick the functionality you want from the different modules by assigning
 key bindings to the desired functions. As an example, if you would like to use
@@ -48,8 +47,9 @@ then the @{_M.textredux.hijack} module is for you. Simple place this in your
 
     require 'textredux.hijack'
 
-As the name suggest, TextRedux has now hijacked your environment. All your regular
-key bindings, as well as the menu etc. should now use TextRedux where applicable.
+As the name suggest, Textredux has now hijacked your environment. All your
+regular key bindings should now use Textredux where applicable. Clicking the
+menu will open the standard dialogs.
 
 ## Customizing
 
