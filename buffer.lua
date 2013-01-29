@@ -9,7 +9,7 @@ How it works
 ------------
 
 When you work with a Textredux buffer, it will nearly always seem just like an ordinary
-[Textadept buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html)
+[Textadept buffer](http://foicica.com/textadept/api/buffer.html)
 (but with benefits, such as support for custom styling and easy callbacks, etc.).
 But where an Textadept buffer is volatile, and might cease to exists at any
 time (due to it being closed by a user for example) a Textredux buffer is persistent.
@@ -118,7 +118,7 @@ be called. The callback will receive the following parameters:
 - `meta`: True if the Control key on Mac OSX was held down.
 
 It's similar to the standard Textadept KEYPRESS event (which you can read more
-about [here](http://caladbolg.net/luadoc/textadept/modules/events.html)).
+about [here](http://foicica.com/textadept/api/events.html)).
 The return value determines whether the key press should be propagated, just
 the same as for the standard Textadept event.
 @see keys
@@ -129,7 +129,7 @@ on_keypress = nil
 This is similar to `_M.textadept.keys` works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
 is the same as for
-[_M.textadept.keys](http://caladbolg.net/luadoc/textadept/modules/keys.html),
+[_M.textadept.keys](http://foicica.com/textadept/api/keys.html),
 and the values assigned can also be either functions or tables.
 There are differences compared to `_M.textadept.keys` however:
 
