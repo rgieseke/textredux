@@ -13,7 +13,7 @@ great with your own dark theme, but may be pretty near invisible for some user
 with a light blue background.
 
 You can read more about the default lexer styles
-[here](http://caladbolg.net/luadoc/textadept/modules/lexer.html).
+[here](http://foicica.com/textadept/api/lexer.html).
 You access a default style (or any style for that matter), by indexing the
 style module, like so: `style.<name>`. For reference, the default styles
 available are these:
@@ -47,7 +47,7 @@ What's a style?
 Textredux styling has been made to resemble the lexer based style creation.
 A style is thus just a table with certain properties, almost exactly the same as
 for style created for a lexer or theme. Please see the documentation for
-[lexer.style](http://caladbolg.net/luadoc/textadept/modules/lexer.html#style)
+[lexer.style](http://foicica.com/textadept/api/lexer.html#style)
 for information about the fields. The one exception compared to lexer styles
 is that colors are specified using the standard `'#rrggbb'` notation instead of
 the lexer styles' `bgr` notation. This is what you use to create custom styles

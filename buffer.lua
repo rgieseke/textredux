@@ -321,7 +321,7 @@ end
 -- add styling and hotspot support to buffer text insertion functions
 
 --[[- Override for
-[buffer:add_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.add_text)
+[buffer:add_text](http://foicica.com/textadept/api/buffer.html#add_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to add.
 @param style The style to use for the text, as defined using @{_M.textredux.style}.
@@ -339,7 +339,7 @@ function buffer:add_text(text, style, command, indicator)
 end
 
 --[[- Override for
-[buffer:append_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.append_text)
+[buffer:append_text](http://foicica.com/textadept/api/buffer.html#append_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to append.
 @param style The style to use for the text, as defined using @{_M.textredux.style}.
@@ -357,7 +357,7 @@ function buffer:append_text(text, style, command, indicator)
 end
 
 --[[- Override for
-[buffer:insert_text](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.insert_text)
+[buffer:insert_text](http://foicica.com/textadept/api/buffer.html#insert_text)
 which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
 @param text The text to insert.
@@ -376,7 +376,7 @@ end
 
 --[[-
 Override for
-[buffer:new_line](http://caladbolg.net/luadoc/textadept/modules/buffer.html#buffer.new_line).
+[buffer:new_line](http://foicica.com/textadept/api/buffer.html#new_line).
 A Textredux buffer will always have eol mode set to LF, so it's also possible,
 and arguably easier, to just insert a newline using the `\n` escape via any
 of the other text insertion functions.

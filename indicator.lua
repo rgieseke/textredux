@@ -9,7 +9,7 @@ The indicator definition
 
 An indicator is defined using a simple table with the properties listed below.
 For the most part, these properties maps directly to fields in the
-[buffer](http://caladbolg.net/luadoc/textadept/modules/buffer.html) class. The
+[buffer](http://foicica.com/textadept/api/buffer.html) class. The
 list below will give short descriptions and refer to the corresponding field in
 the buffer class where applicable.
 

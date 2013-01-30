@@ -369,7 +369,7 @@ the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
 @param filter The filter to apply, if any. The structure and semantics are the
 same as for Textadept's
-[snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
+[snapopen](http://foicica.com/textadept/api/_M.textadept.snapopen.html).
 @param depth The number of directory levels to display in the list. Defaults to
 1 if not specified, which results in a "normal" directory listing.
 @param max_files The maximum number of files to scan and display in the list.
@@ -448,7 +448,7 @@ end
 --[[-
 Opens a list of files in the specified directory, according to the given
 parameters. This works similarily to
-[Textadept snapopen](http://caladbolg.net/luadoc/textadept/modules/_m.textadept.snapopen.html).
+[Textadept snapopen](http://foicica.com/textadept/api/_M.textadept.snapopen.html).
 The main differences are:
 
 - it does not support opening multiple paths at once, which also makes the
