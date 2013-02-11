@@ -43,8 +43,8 @@ to define styles.
 @module _M.textredux.fs
 ]]
 
-local list = require('textredux.list')
-local style = require('textredux.style')
+local list = require('textredux.ui.list')
+local style = require('textredux.ui.style')
 local lfs = require('lfs')
 local tr_gui = require 'textredux.gui'
 

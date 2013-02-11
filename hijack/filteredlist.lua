@@ -1,4 +1,4 @@
-local list = require 'textredux.list'
+local list = require 'textredux.ui.list'
 
 local M = {}
 

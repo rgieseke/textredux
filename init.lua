@@ -66,10 +66,10 @@ local M = {
   buffer_list = require 'textredux.buffer_list',
   fs = require 'textredux.fs',
   gui = require 'textredux.gui',
-  buffer = require 'textredux.buffer',
-  list = require 'textredux.list',
-  indicator = require 'textredux.indicator',
-  style = require 'textredux.style',
+  buffer = require 'textredux.ui.buffer',
+  list = require 'textredux.ui.list',
+  indicator = require 'textredux.ui.indicator',
+  style = require 'textredux.ui.style',
 }
 
 return M

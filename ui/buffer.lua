@@ -56,9 +56,9 @@ Please see the examples for more hands on instructions.
 @module _M.textredux.buffer
 ]]
 
-local key = require 'textredux.key'
-local tr_style = require 'textredux.style'
-local tr_indicator = require 'textredux.indicator'
+local key = require 'textredux.ui.key'
+local tr_style = require 'textredux.ui.style'
+local tr_indicator = require 'textredux.ui.indicator'
 
 local _G = _G
 local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
