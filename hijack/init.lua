@@ -1,8 +1,8 @@
 --[[--
 The hijack module provides the easiest, and most invasive, way of getting
-TextRedux functionality for Textadept. It's a one-stop setup in the way that you
-don't really have to configure anything else to use TextRedux's functionality -
-the hijack module inserts TextRedux functionality anywhere it can and will
+Textredux functionality for Textadept. It's a one-stop setup in the way that you
+don't really have to configure anything else to use Textredux's functionality -
+the hijack module inserts Textredux functionality anywhere it can and will
 automatically integrate with your existing key bindings.
 
 How to use

@@ -1,5 +1,5 @@
 --[[-
-The gui module handles GUI related operations for TextRedux.
+The gui module handles GUI related operations for Textredux.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
@@ -8,7 +8,7 @@ The gui module handles GUI related operations for TextRedux.
 ]]
 local M = {}
 
---[[- Specifies the way that TextRedux should split views.
+--[[- Specifies the way that Textredux should split views.
 
 Possible values are:
 
