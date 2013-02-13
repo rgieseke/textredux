@@ -43,9 +43,9 @@ to define styles.
 @module _M.textredux.fs
 ]]
 
-local list = require('textredux.ui.list')
-local style = require('textredux.ui.style')
-local lfs = require('lfs')
+local list = require 'textredux.ui.list'
+local style = require 'textredux.ui.style'
+local lfs = require 'lfs'
 local tr_gui = require 'textredux.ui.gui'
 
 local _G, table, io, gui = _G, table, io, gui
