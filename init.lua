@@ -65,7 +65,7 @@ settings.
 local M = {
   buffer_list = require 'textredux.buffer_list',
   fs = require 'textredux.fs',
-  gui = require 'textredux.gui',
+  gui = require 'textredux.ui.gui',
   buffer = require 'textredux.ui.buffer',
   list = require 'textredux.ui.list',
   indicator = require 'textredux.ui.indicator',
