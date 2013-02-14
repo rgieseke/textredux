@@ -15,22 +15,22 @@ the buffer class where applicable.
 
 - `style`: The style of the indicator. See `indic_style`.
 - `alpha`: Alpha transparency value from 0 to 255 (or 256 for no alpha), used
-for fill colors of rectangles . See `indic_alpha`.
+   for fill colors of rectangles . See `indic_alpha`.
 - `outline_alpha`: Alpha transparency value from 0 to 255 (or 256 for no alpha),
-used for outline colors of rectangles . See `indic_outline_alpha`.
+  used for outline colors of rectangles . See `indic_outline_alpha`.
 - `fore`: The foreground color of the indicator. The color should be specified
-in the `'#rrggbb'` notation.
+  in the `'#rrggbb'` notation.
 - `under`: Whether an indicator is drawn under text or over (default). Drawing
-under text works only when two phase drawing is enabled for the buffer (the
-default).
+  under text works only when two phase drawing is enabled for the buffer (the
+  default).
 
 Using indicators
 ----------------
 
 Start with defining your indicators using the format described above. You can
 then  either apply them against a range of text using @{apply}, or pass them to
-one of the text insertion functions in @{_M.textredux.buffer}. If you need to get
-the defined indicator number for an indicator, you can retrieve it using
+one of the text insertion functions in @{_M.textredux.buffer}. If you need to
+get the defined indicator number for an indicator, you can retrieve it using
 @{number_for}. Please note that indicator numbers are not necessarily stable
 between buffer switches, so problems may arise if you hold on to an indicator
 number.
@@ -67,8 +67,12 @@ local function define_indicator(indicator, buffer)
 
   if indicator.style then buffer.indic_style[number] = indicator.style end
   if indicator.alpha then buffer.indic_alpha[number] = indicator.alpha end
-  if indicator.outline_alpha then buffer.indic_outline_alpha[number] = indicator.outline_alpha end
-  if indicator.fore then buffer.indic_fore[number] = color.string_to_color(indicator.fore) end
+  if indicator.outline_alpha then
+    buffer.indic_outline_alpha[number] = indicator.outline_alpha
+  end
+  if indicator.fore then
+    buffer.indic_fore[number] = color.string_to_color(indicator.fore)
+  end
   if indicator.under then buffer.indic_under[number] = indicator.under end
   buf_indics[indicator] = number
   buf_indics.next_number = buf_indics.next_number - 1
