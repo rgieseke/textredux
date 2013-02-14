@@ -2,33 +2,35 @@
 The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
 care of the details needed for making a text based interface work, such as
-mapping Textadept events to the correct buffers, working with the @{_M.textredux.style}
-module to ensure that styling works, etc.
+mapping Textadept events to the correct buffers, working with the
+@{_M.textredux.ui.style} module to ensure that styling works, etc.
 
 How it works
 ------------
 
-When you work with a Textredux buffer, it will nearly always seem just like an ordinary
-[Textadept buffer](http://foicica.com/textadept/api/buffer.html)
-(but with benefits, such as support for custom styling and easy callbacks, etc.).
-But where an Textadept buffer is volatile, and might cease to exists at any
-time (due to it being closed by a user for example) a Textredux buffer is persistent.
+When you work with a Textredux buffer, it will nearly always seem just like an
+ordinary [Textadept buffer](http://foicica.com/textadept/api/buffer.html)
+(but with benefits, such as support for custom styling and easy callbacks,
+etc.). But where a Textadept buffer is volatile, and might cease to exists at
+any time (due to it being closed by a user for example) a Textredux buffer is
+persistent.
 
-When we say that a Textredux buffer "wraps" an Textadept buffer, there's more to it
-than just adding additional methods to the Textadept buffer class. A Textredux
-buffer will always exist, but the corresponding Textadept buffer, named `target`
-hereafter, may not. When the target buffer exists, a Textredux buffer will
-expose all the functions and attributes of the Textadept buffer, making it
-possible to use the Textredux buffer in just the same way as you would a Textadept
-buffer (i.e. invoking any of the ordinary buffer methods, setting attributes,
-etc.). The Textredux buffer takes care of creating the target buffer automatically
-if needed whenever you invoke @{buffer:show}. When the target buffer does not
-exist, for instance as the result of the user closing it, any attempt to invoke
-any of the ordinary buffer methods will raise an error. You can check explicitly
-whether the target exists by using the @{buffer:is_attached} function. This is
-not however something you will have to worry much about in practice, since you'll
-typically interact with the buffer as part of a refresh, key press, etc., where
-the target buffer will always exist.
+When we say that a Textredux buffer "wraps" a Textadept buffer, there's more to
+it than just adding additional methods to the Textadept buffer class. A
+Textredux buffer will always exist, but the corresponding Textadept buffer,
+named `target` hereafter, may not. When the target buffer exists, a Textredux
+buffer will expose all the functions and attributes of the Textadept buffer,
+making it possible to use the Textredux buffer in just the same way as you
+would a Textadept buffer (i.e. invoking any of the ordinary buffer methods,
+setting attributes, etc.). The Textredux buffer takes care of creating the
+target buffer automatically if needed whenever you invoke @{buffer:show}.
+When the target buffer does not exist, for instance as the result of the user
+closing it, any attempt to invoke any of the ordinary buffer methods will
+raise an error. You can check explicitly whether the target exists by using the
+@{buffer:is_attached} function. However, this is not something you will have to
+worry much about in practice, since you'll typically interact with the buffer
+as part of a refresh, key press, etc., where the target buffer will always
+exist.
 
 In short, you don't have to worry about creating buffers, detecting whether the
 buffer was closed, etc., as long as you remember to invoke @{buffer:show} and
@@ -48,7 +50,7 @@ text insertion functions (@{buffer:add_text}, @{buffer:append_text},
 @{buffer:show} to show the buffer, and respond to any interactions using the
 provided callbacks.
 
-Please see the examples for more hands on instructions.
+Please see the examples for more hands-on instructions.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
@@ -61,8 +63,10 @@ local tr_style = require 'textredux.ui.style'
 local tr_indicator = require 'textredux.ui.indicator'
 
 local _G = _G
-local error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select =
-      error, setmetatable, ipairs, pairs, tostring, error, rawget, rawset, type, xpcall, select
+local error, setmetatable, ipairs, pairs, tostring, error,
+      rawget, rawset, type, xpcall, select =
+      error, setmetatable, ipairs, pairs, tostring, error,
+      rawget, rawset, type, xpcall, select
 local new_buffer, events, table = new_buffer, events, table
 local constants = _SCINTILLA.constants
 local huge = math.huge
@@ -81,12 +85,12 @@ local origin_buffers  = setmetatable({}, { __mode = 'kv' })
 --[[- Whether the buffer should be marked as read only.
 The default is true but can be changed on a buffer to buffer basis. Any call to
 @{buffer:refresh} will automatically take care of setting the buffer to write
-mode before invoking the @{on_refresh} handler, and will restore the @{read_only}
-state afterwards.
+mode before invoking the @{on_refresh} handler, and will restore the
+@{read_only} state afterwards.
 ]]
 read_only = true
 
---- Instance fields. These can be set only for an buffer instance, and not
+--- Instance fields. These can be set only for a buffer instance, and not
 -- globally for the module.
 -- @section instance
 
@@ -96,7 +100,7 @@ read_only = true
 on_deleted = nil
 
 --[[- Callback invoked whenever the buffer should refresh.
-This should set for each buffer. It is this callback that is responsible
+This should be set for each buffer. It is this callback that is responsible
 for actually inserting any content into the buffer. Before this callback
 is invoked, any previous buffer content will be cleared.
 The callback will be invoked with the buffer as the sole parameter.
@@ -120,7 +124,7 @@ be called. The callback will receive the following parameters:
 It's similar to the standard Textadept KEYPRESS event (which you can read more
 about [here](http://foicica.com/textadept/api/events.html)).
 The return value determines whether the key press should be propagated, just
-the same as for the standard Textadept event.
+as for the standard Textadept event.
 @see keys
 ]]
 on_keypress = nil
@@ -134,7 +138,7 @@ and the values assigned can also be either functions or tables.
 There are differences compared to `_M.textadept.keys` however:
 
 - It's not possible to specify language specific key bindings. This is
-obviously not applicable for a textredux buffer.
+  obviously not applicable for a Textredux buffer.
 - It's not possible to specify keychain sequences.
 - For function values, the buffer instance is passed as the first argument.
 - For table values, buffer or view references will not be magically fixed.
@@ -188,7 +192,7 @@ end
 
 --- Shows the buffer.
 -- If the target buffer doesn't exist, due to it either not having been created
--- yet or it having been deleted, it is automatically created. Upon the return,
+-- yet or having been deleted, it is automatically created. Upon the return,
 -- the buffer is showing and set as the global buffer.
 function buffer:show()
   local origin_buffer = _G.buffer
@@ -281,7 +285,7 @@ end
 --[[- Adds a hotspot for the given text range.
 Hotspots allows you to specify the behaviour for when the user selects
 certain text. Besides using this function directly, it's also possible and
-in many cases more convinient to add an hotspot when using any of the text
+in many cases more convenient to add a hotspot when using any of the text
 insertion functions (@{buffer:add_text}, @{buffer:append_text},
 @{buffer:insert_text}). Note that the range given is interpreted as being
 half closed, i.e. `[start_pos, end_pos)`.
@@ -318,16 +322,18 @@ function buffer:add_hotspot(start_pos, end_pos, command)
   tr_indicator.apply(hotspot_indicator, start_pos, length)
 end
 
--- add styling and hotspot support to buffer text insertion functions
+-- Add styling and hotspot support to buffer text insertion functions.
 
 --[[- Override for
 [buffer:add_text](http://foicica.com/textadept/api/buffer.html#add_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to add.
-@param style The style to use for the text, as defined using @{_M.textredux.style}.
+@param style The style to use for the text, as defined using
+@{_M.textredux.ui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.indicator} to use for the added text.
+@param indicator Optional @{_M.textredux.ui.indicator} to use for the added
+text.
 ]]
 function buffer:add_text(text, style, command, indicator)
   text = tostring(text)
@@ -342,10 +348,12 @@ end
 [buffer:append_text](http://foicica.com/textadept/api/buffer.html#append_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to append.
-@param style The style to use for the text, as defined using @{_M.textredux.style}.
+@param style The style to use for the text, as defined using
+@{_M.textredux.ui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.indicator} to use for the appended text.
+@param indicator Optional @{_M.textredux.ui.indicator} to use for the appended
+text.
 ]]
 function buffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
@@ -361,10 +369,12 @@ end
 which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
 @param text The text to insert.
-@param style The style to use for the text, as defined using @{_M.textredux.style}.
+@param style The style to use for the text, as defined using
+@{_M.textredux.ui.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.indicator} to use for the inserted text.
+@param indicator Optional @{_M.textredux.ui.indicator} to use for the inserted
+text.
 ]]
 function buffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
@@ -385,7 +395,7 @@ function buffer:newline()
   self:add_text('\n', tr_style.whitespace)
 end
 
--- begin private code
+-- Begin private code.
 
 function buffer:_set_style(pos, length, style)
   tr_style.apply(style or default_style, self.target, pos, length)
@@ -459,7 +469,7 @@ function buffer:_restore_origin_buffer()
   end
 end
 
--- event hooks
+-- Event hooks.
 function buffer:_on_target_deleted()
   self.target = nil
   self.data = {}
@@ -508,8 +518,8 @@ local function _on_new_view()
   end
 end
 
--- we close all textredux buffer upon quit - they won't restore properly anyway
--- and it's annoying to have empty non-functioning buffers upon start
+-- We close all textredux buffer upon quit - they won't restore properly anyway
+-- and it's annoying to have empty non-functioning buffers upon start.
 local function _on_quit()
   local buffers = {}
   for tr_buf,_ in pairs(tr_buffers) do buffers[#buffers + 1] = tr_buf end
@@ -539,8 +549,8 @@ end
 --[[ Mouse support.. The stack has the following issues:
 
 - Modifiers are not reported correctly (ctrl pressed reports as ctrl+alt)
-- Doing buffer switches in the action results in the new buffer recieving button
-up and setting a selection.
+- Doing buffer switches in the action results in the new buffer recieving
+  button up and setting a selection.
 - Scintilla docs says indicator release event gets modifiers - we do not.
 ]]
 local indicator_modifiers
@@ -569,9 +579,13 @@ local function _on_indicator_release(position, modifiers)
     -- upon the return
     if _G._VIEWS[cur_view] and cur_view.buffer ~= tr_buf.target then
       local focused_view = _G.view
-      if cur_view ~= focused_view then _G.gui.goto_view(_G._VIEWS[cur_view], false) end
+      if cur_view ~= focused_view then
+        _G.gui.goto_view(_G._VIEWS[cur_view], false)
+      end
       _G.buffer:goto_pos(position)
-      if _G.view ~= focused_view then _G.gui.goto_view(_G._VIEWS[focused_view], false) end
+      if _G.view ~= focused_view then
+        _G.gui.goto_view(_G._VIEWS[focused_view], false)
+      end
     end
     return true
   end
