@@ -29,7 +29,7 @@ Using indicators
 
 Start with defining your indicators using the format described above. You can
 then  either apply them against a range of text using @{apply}, or pass them to
-one of the text insertion functions in @{_M.textredux.buffer}. If you need to
+one of the text insertion functions in @{_M.textredux.ui.buffer}. If you need to
 get the defined indicator number for an indicator, you can retrieve it using
 @{number_for}. Please note that indicator numbers are not necessarily stable
 between buffer switches, so problems may arise if you hold on to an indicator
@@ -81,7 +81,7 @@ end
 
 ---  Defines the currently used custom indicators for the current buffer.
 -- This must be called whenever a buffer with custom indicators is switched to.
--- This is automatically done by the @{_M.textredux.buffer} class, and thus
+-- This is automatically done by the @{_M.textredux.ui.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_indicators()
   local buffer = _G.buffer
