@@ -12,8 +12,8 @@ used. As an example, your custom style with cyan foreground text might look
 great with your own dark theme, but may be pretty near invisible for some user
 with a light blue background.
 
-You can read more about the default lexer styles
-[here](http://foicica.com/textadept/api/lexer.html).
+You can read more about the default lexer styles in the
+[Textadept lexer documentation](http://foicica.com/textadept/api/lexer.html).
 You access a default style (or any style for that matter), by indexing the
 style module, like so: `style.<name>`. For reference, the default styles
 available are these:
@@ -45,8 +45,8 @@ What's a style?
 ---------------
 
 Textredux styling has been made to resemble the lexer based style creation.
-A style is thus just a table with certain properties, almost exactly the same as
-for style created for a lexer or theme. Please see the documentation for
+A style is thus just a table with certain properties, almost exactly the same
+as for style created for a lexer or theme. Please see the documentation for
 [lexer.style](http://foicica.com/textadept/api/lexer.html#style)
 for information about the fields. The one exception compared to lexer styles
 is that colors are specified using the standard `'#rrggbb'` notation instead of
@@ -70,18 +70,19 @@ you can achieve this by concatenating styles:
 
     local header = style.string .. { underline = true }
 
-This will _not_ work, as the style is not correctly defined with the style module.
+This will _not_ work, as the style is not correctly defined with the style
+module.
 
 In order to avoid name clashes, it's suggested that you name any custom styles
-by prefixing their name with the name of your module. E.g. if your module is named
-`awesome`, then name your style something like `style.awesome_style`.
+by prefixing their name with the name of your module. E.g. if your module is
+named `awesome`, then name your style something like `style.awesome_style`.
 
 Using styles
 ------------
 
-You typically use a style by inserting text through @{_M. .buffer}'s text insertion
-methods, specifying the style. Please see the examples in @{buffer_styling.lua}
-for examples on this.
+You typically use a style by inserting text through @{_M. .buffer}'s text
+insertion methods, specifying the style. Please see the examples in
+@{buffer_styling.lua} for examples on this.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
@@ -156,12 +157,14 @@ local function color_to_string(color)
 end
 
 --
--- Gets a style definition for the specified style (number)
+-- Gets a style definition for the specified style (number).
 -- @param number The style number to get the definition for
 -- @param name (Optional) name of the style if known
 -- @return a style definition (table)
 local function get_definition(number, name)
-  if number < 0 or number > STYLE_MAX then error('invalid style number "'.. number .. '"', 2) end
+  if number < 0 or number > STYLE_MAX then
+    error('invalid style number "'.. number .. '"', 2)
+  end
   local buffer = _G.buffer
   local style = {
     font = buffer.style_font[number],
@@ -189,7 +192,7 @@ local function set_style_property(table, number, value)
 end
 
 --
--- Defines a style using the specified style number
+-- Defines a style using the specified style number.
 -- @param number The style number that should be used for the style
 -- @param style The style definition
 local function define_style(number, style)
@@ -236,7 +239,7 @@ end
 ---
 -- Applies the specified style for the given text range and buffer.
 -- While you could use this directly, you'd typically use the text insertion
--- methods in @{_M.textredux.buffer} to style content.
+-- methods in @{_M.textredux.ui.buffer} to style content.
 -- @param style The defined style
 -- @param buffer The buffer to apply the style for
 -- @param start_pos The starting position of the style
@@ -249,7 +252,7 @@ end
 ---
 -- Defines the currently used custom styles for the current buffer.
 -- This must be called whenever a buffer with custom styles is switched to.
--- This is automatically done by the @{_M.textredux.buffer} class, and thus
+-- This is automatically done by the @{_M.textredux.ui.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_styles()
   local buffer_styles = get_buffer_styles()
@@ -262,7 +265,7 @@ function define_styles()
 end
 
 ---
--- Gets a list of currently defined styles
+-- Gets a list of currently defined styles.
 -- @return a table of style definitions
 local function get_current_styles()
   local buffer_styles = {}
