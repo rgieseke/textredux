@@ -1,8 +1,8 @@
 --[[--
 The hijack module provides the easiest, and most invasive, way of getting
-Textredux functionality for Textadept. It's a one-stop setup in the way that you
-don't really have to configure anything else to use Textredux's functionality -
-the hijack module inserts Textredux functionality anywhere it can and will
+Textredux functionality for Textadept. It's a one-stop setup in the way that
+you don't really have to configure anything else to use the functionality of
+Textredux  - the hijack module inserts itself anywhere it can and will
 automatically integrate with your existing key bindings.
 
 How to use
@@ -18,6 +18,7 @@ simple add the following to your .textadept/init.lua file:
 @license MIT (see LICENSE)
 @module _M.textredux.hijack
 ]]
+
 _M.textredux = require 'textredux'
 
 local fl = require 'textredux.hijack.filteredlist'
@@ -80,7 +81,7 @@ end
 
 local replacements = {}
 
--- Hijack filteredlist for the below functions
+-- Hijack filteredlist for the below functions.
 for _, target in ipairs({
   { gui,           'select_theme' },
   { ta.mime_types, 'select_lexer' },
@@ -94,19 +95,19 @@ for _, target in ipairs({
   replacements[func] = wrap
 end
 
--- Hijack buffer list
+-- Hijack buffer list.
 replacements[gui.switch_buffer] = _M.textredux.buffer_list.show
 gui.switch_buffer = _M.textredux.buffer_list.show
 
--- Hijack snapopen
+-- Hijack snapopen.
 replacements[ta.snapopen.open] = snapopen_compat
 ta.snapopen.open = snapopen_compat
 
--- Hijack open file and save_as
+-- Hijack open file and save_as.
 replacements[io.open_file] = open_file_compat
 io.open_file = open_file_compat
 replacements[buffer.save_as] = save_as_compat
 events.connect(events.BUFFER_NEW, function() buffer.save_as = save_as_compat end)
 
--- Finalize by patching keys
+-- Finalize by patching keys.
 patch_keys(replacements)
