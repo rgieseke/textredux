@@ -2,7 +2,8 @@
 textredux.fs provides a text based file browser for Textadept.
 
 It features traditional directory browsing, snapopen functionality, completely
-keyboard driven interaction, and provides powerful narrow to search functionality.
+keyboard driven interaction, and provides powerful narrow to search
+functionality.
 
 Some tips on using the file browser
 -----------------------------------
@@ -28,14 +29,14 @@ to snapopen that directory.
 *Changing the styles used for different file types*
 
 If you don't like the default styles (colors, etc.) used by the file browser,
-you can easily change these by customizing any of the `style_<foo>` entries using
-the Textredux style module. As an example, to make directory entries underlined
-you would do something like the following:
+you can easily change these by customizing any of the `style_<foo>` entries
+using the Textredux style module. As an example, to make directory entries
+underlined you would do something like the following:
 
-    _M.textredux.style.textredux_fs_directory = { underline = true }
+    _M.textredux.ui.style.textredux_fs_directory = { underline = true }
 
-Please see the documentation for the Textredux style module for instructions on how
-to define styles.
+Please see the documentation for the Textredux style module for instructions
+on how to define styles.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
