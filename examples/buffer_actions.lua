@@ -4,9 +4,10 @@ input. This example illustrates the use of implicit and explicit hotspots using
 either function or table commands, as well as key commands and responding
 directly to key presses.
 
-For the purpose of this example the `F6' key will be set to show the
-example buffer. Provided that TextUI is installed, you can copy this to
-your .textadept/init.lua, and press `F6` to try it out.
+For the purpose of this example `Ctrl+3' will be set to show the
+example buffer. Provided that Textredux is installed, you can run this
+example by pasting `require 'textredux.examples.buffer_actions'` into the
+`Command entry` and then press `Ctrl+3` to try it out.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
@@ -14,14 +15,15 @@ your .textadept/init.lua, and press `F6` to try it out.
 ]]
 
 require 'textadept'
-_M.textui = require 'textui'
+_M.textredux = require 'textredux'
 
-local style = _M.textui.style
+local style = _M.textredux.style
 style.action_style = { back = '#6e6e6e', fore = '#00FFFF' }
 
 local function on_refresh(buffer)
   buffer:add_text('Function command: ')
-  buffer:add_text('Show modifiers', style.action_style, function(buffer, shift, ctl, alt, meta)
+  buffer:add_text('Show modifiers',
+                  style.action_style, function(buffer, shift, ctl, alt, meta)
     local modifiers = ''
     if shift then modifiers = modifiers .. ' shift' end
     if ctl then modifiers = modifiers .. ' control' end
@@ -36,7 +38,8 @@ local function on_refresh(buffer)
 
   buffer:add_text('\n\nExplicit hotspot: ')
   local start_pos = buffer.current_pos
-  buffer:add_text('Click here somewhere\nto select a theme', style.action_style)
+  buffer:add_text('Click here somewhere\nto select a theme',
+                  style.action_style)
   buffer:add_hotspot(start_pos, buffer.current_pos, gui.select_theme)
 end
 
@@ -49,7 +52,7 @@ local function on_keypress(buffer, key, code, shift, ctl, alt, meta)
 end
 
 local function create_action_buffer()
-  local buffer = _M.textui.buffer.new('Action buffer')
+  local buffer = _M.textredux.buffer.new('Action buffer')
   buffer.on_refresh = on_refresh
   buffer.on_keypress = on_keypress
 
@@ -59,4 +62,4 @@ local function create_action_buffer()
   buffer:show()
 end
 
-keys['f6'] = create_action_buffer
+keys['c3'] = create_action_buffer
