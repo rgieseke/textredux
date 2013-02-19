@@ -1,8 +1,8 @@
 --[[--
 The list class provides a versatile and extensible text based item listing for
-Textadept, featuring advanced search capabilities and styling. It's a convenient
-way of presenting lists to the user for simple selection, but is equally well
-suited for creating advanced list based interfaces.
+Textadept, featuring advanced search capabilities and styling. It's a
+convenient way of presenting lists to the user for simple selection, but is
+equally well suited for creating advanced list based interfaces.
 
 Features at a glance
 --------------------
@@ -10,12 +10,13 @@ Features at a glance
 - Support for multi-column table items, in addition to supporting the simpler
   case of just listing strings.
 - Fully customizable styling. You can either specify individual styles for
-  different columns, or specify styles for each item dynamically using a callback.
-  If you do neither, you will automatically get sane defaults.
+  different columns, or specify styles for each item dynamically using a
+  callback. If you do neither, you will automatically get sane defaults.
 - Powerful search capabilities. The list class supports both exact matching and
-  fuzzy matching, and will present best matches first. It also supports searching
-  for multiple search strings (any text separated by whitespace is considered to
-  be multiple search strings). Searches are done against all columns.
+  fuzzy matching, and will present best matches first. It also supports
+  searching for multiple search strings (any text separated by whitespace is
+  considered to be multiple search strings). Searches are done against all
+  columns.
 
 How to use
 ----------
@@ -23,7 +24,7 @@ How to use
 Create the list using @{new}, specify @{items} and other fields/callbacks
 (such as @{on_selection}) and invoke @{list:show}.
 
-Please see the various list examples for more hands on instructions.
+Please see the various list examples for more hands-on instructions.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
@@ -35,7 +36,8 @@ local style = require 'textredux.ui.style'
 local textredux_buffer = require 'textredux.ui.buffer'
 local util_matcher = require 'textredux.util.matcher'
 
-local _G, textredux, string, table, keys, math = _G, _M.textredux, string, table, keys, math
+local _G, textredux, string, table, keys, math =
+      _G, _M.textredux, string, table, keys, math
 local ipairs, error, type, setmetatable, select, tostring =
       ipairs, error, type, setmetatable, select, tostring
 local string_rep = string.rep
@@ -54,16 +56,16 @@ header_style = style.list_header
 
 --- The style to use for indicating matches.
 -- You can turn off highlighing of matches by setting this to nil.
--- It's possible to override this for a specific list by assigning another value
--- to the instance itself. The default value is `style.default`.
+-- It's possible to override this for a specific list by assigning another
+-- value to the instance itself. The default value is `style.default`.
 match_highlight_style = style.list_match_highlight
 
 --- The default styles to use for different columns. This can be specified
 -- individually for each list as well. Values can either be explicit styles,
--- defined using @{_M.textredux.style}, or functions which returns explicit styles.
--- In the latter case, the function will be invoked with the corresponding
--- item and column index. The default styles contains styles for up to three
--- columns, after which the default style will be used.
+-- defined using @{_M.textredux.style}, or functions which returns explicit
+-- styles. In the latter case, the function will be invoked with the
+-- corresponding item and column index. The default styles contains styles for
+-- up to three columns, after which the default style will be used.
 column_styles = nil
 
 -- I fought LDoc, but LDoc won. Define the field separately here to avoid it
@@ -75,13 +77,13 @@ column_styles =  {
 }
 
 --- Whether searches are case insensitive or not.
--- It's possible to override this for a specific list by assigning another value
--- to the instance itself. The default value is `true`.
+-- It's possible to override this for a specific list by assigning another
+-- value to the instance itself. The default value is `true`.
 search_case_insensitive = true
 
 --- Whether fuzzy searching should be in addition to explicit matches.
--- It's possible to override this for a specific list by assigning another value
--- to the instance itself. The default value is `true`.
+-- It's possible to override this for a specific list by assigning another
+-- value to the instance itself. The default value is `true`.
 search_fuzzy = true
 
 --- List instance fields.
@@ -110,8 +112,8 @@ The handler will be passed the following parameters:
 ]]
 on_selection = nil
 
---[[- The handler/callback to call when the user has typed in text which doesn't
-match any item, and presses `<enter>`.
+--[[- The handler/callback to call when the user has typed in text which
+doesn't match any item, and presses `<enter>`.
 
 The handler will be passed the following parameters:
 
@@ -124,18 +126,19 @@ The handler will be passed the following parameters:
 ]]
 on_new_selection = nil
 
---- The underlying @{_M.textredux.buffer} used by the list
+--- The underlying @{_M.textredux.buffer} used by the list.
 buffer = nil
 
 ---
 -- A table of key commands for the list.
--- This functions almost exactly the same as @{_M.textredux.buffer.keys}. The one
--- difference is that for function values, the parameter passed will be a
+-- This functions almost exactly the same as @{_M.textredux.buffer.keys}. The
+-- one difference is that for function values, the parameter passed will be a
 -- reference to the list instead of a buffer reference.
 keys = nil
 
 --- Callback invoked whenever the list receives a keypress.
--- This functions almost exactly the sames as @{_M.textredux.buffer.on_keypress}.
+-- This functions almost exactly the sames as
+-- @{_M.textredux.buffer.on_keypress}.
 -- The one difference is that for function values, the first parameter passed
 -- will be a reference to the list instead of a buffer reference.
 --
@@ -221,7 +224,7 @@ function list:set_current_search(search)
   if self.buffer:is_active() then self.buffer:refresh() end
 end
 
--- begin private section
+-- Begin private section.
 
 -- Calculates the column widths for the current items.
 function list:_calculate_column_widths()
@@ -275,12 +278,14 @@ function list:_add_items(items, start_index, end_index)
     local line_start = buffer.current_pos
     for j, field in ipairs(columns) do
       local pad_to = j == nr_columns and 0 or column_widths[j]
-      add_column_text(buffer, tostring(field), pad_to, self:_column_style(columns, j))
+      add_column_text(buffer, tostring(field),
+                      pad_to, self:_column_style(columns, j))
     end
 
     if self.match_highlight_style then
       local explanations = data.matcher:explain(search, buffer:get_cur_line())
-      highlight_matches(explanations, line_start, buffer, self.match_highlight_style)
+      highlight_matches(explanations, line_start, buffer,
+                        self.match_highlight_style)
     end
 
     buffer:add_text('\n')
@@ -308,7 +313,7 @@ function list:_refresh()
   local data = buffer.data
   data.matching_items = data.matcher:match(data.search)
 
-  -- header
+  -- Header.
   buffer:add_text(self.title .. ' : ')
   buffer:add_text(#data.matching_items, style.number)
   buffer:add_text('/')
@@ -320,11 +325,11 @@ function list:_refresh()
   end
   buffer:add_text('\n\n')
 
-  -- item listing
+  -- Item listing.
   local column_widths = self._column_widths
   local nr_columns = #column_widths
 
-  -- headers
+  -- Headers.
   local headers = self.headers
   if headers then
     for i, header in ipairs(self.headers or {}) do
@@ -334,7 +339,7 @@ function list:_refresh()
     buffer:add_text('\n')
   end
 
-  -- items
+  -- Items.
   data.items_start_line = buffer:line_from_position(buffer.current_pos)
   local nr_items = buffer.lines_on_screen - data.items_start_line - 1
   self:_add_items(data.matching_items, 1, nr_items)
@@ -406,7 +411,8 @@ function list:_create_buffer()
     end
   end
 
-  self.keys = setmetatable({}, { __index = buffer.keys, __newindex = key_wrapper })
+  self.keys = setmetatable({}, { __index = buffer.keys,
+                                 __newindex = key_wrapper })
   return buffer
 end
 
