@@ -22,8 +22,9 @@ M.list = nil
 
 You can modifiy this to customise the key bindings to your liking. The key
 bindings are passed directly to the Textredux list, so note that the
-first argument to any function will be the Textredux list itself. You can read more
-about the Textredux list's keys [here](TODO/textredux/docs/modules/_M.textredux.list.html#keys).
+first argument to any function will be the Textredux list itself.
+You can read more about the Textredux list's keys in the
+[list documentation](TODO/textredux/docs/modules/_M.textredux.list.html#keys).
 
 If you like to add a custom key binding for closing a buffer you can bind the
 @{close_buffer} function to a key of your choice. For other actions it's likely
@@ -31,7 +32,7 @@ that you want to obtain the currently selected buffer - you can use the
 @{currently_selected_buffer} function for that.
 ]]
 M.keys = {
-  cd = function(list) M.close_buffer(list) end, -- Default binding for `close buffer`
+  cd = function(list) M.close_buffer(list) end, -- Default for `close buffer`
   esc = function(list) list:close() end -- Escape closes list by default
 }
 
@@ -75,8 +76,8 @@ local function on_selection(list, item, shift, ctrl)
 end
 
 --[[- Returns the currently selected buffer in the list.
-@param list The Textredux list instance used by the buffer list. If not provided,
-then the global list is used automatically.
+@param list The Textredux list instance used by the buffer list. If not
+provided, then the global list is used automatically.
 @return The currently selected buffer, if any.
 @return The currently selected buffer's name, if any.
 ]]
@@ -89,9 +90,9 @@ end
 
 --[[- Closes the currently selected buffer in the buffer list.
 @param list The Textredux list instance used by the buffer list. This function
-is ordinarily invoked as the result of a key binding, and you should thus not need
-to specify this yourself. If list isn't provided, the global list is automatically
-used.
+is ordinarily invoked as the result of a key binding, and you should thus not
+need to specify this yourself. If list isn't provided, the global list is
+automatically used.
 ]]
 function M.close_buffer(list)
   list = list or M.list
