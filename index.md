@@ -25,7 +25,7 @@ To install the module, just unpack the module into the
 directory.
 Alternatively you can clone Textredux into it:
 
-    cd .textadept/modules/textredux
+    cd .textadept/modules
     git clone https://github.com/rgieseke/textredux.git
 
 ## Usage
