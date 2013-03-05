@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Textredux</title>
+    <link href="site.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Bowlby+One+SC' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+    <span id="forkongithub"><a href="https://github.com/rgieseke/textredux">Fork me on GitHub</a></span>
+    <div class="container">
+      <div class="header">
+        <span class="title">Textredux</span>
+      </div>
+      <div class="nav">
+        <ul>
+          <li><a href="index.html">Main</a></li>
+          <li><a href="index.html#Installation">Installation</a></li>
+          <li><a href="index.html#Usage">Usage</a></li>
+          <li><a href="index.html#Code">Code</a></li>
+          <li><a href="index.html#Contribute">Contribute</a></li>
+          <li><a href="index.html#Changelog">Changelog</a></li>
+          <li><a href="tour.html">Visual Tour</a></li>
+        </ul>
+      </div>
+      <div class="main"><p>Textredux is a module for the <a href="http://foicica.com/textadept/">Textadept editor</a>
+that offers a set of text based replacement interfaces for core Textadept
+functionality. The current version offers:</p>
+
+<ul>
+<li>A text based file browser. Completely keyboard driven, with powerful searching
+functionality and the ability to seamlessly switch between traditional and
+snapopen (recursive) listings.</li>
+<li>A replacement for the buffer list. In addition to being text based, it also
+provides an easy way of closing buffers.</li>
+<li>A no-holds-barred integration module that automatically integrates all Textredux
+functionality in the Textadept editor. No need to configure anything further
+unless you want to - once you&rsquo;ve required this you will be using Textredux.
+In addition to integrating the above modules, it will hook into Textadept and
+inject text based interfaces whereever it can, (e.g. theme selection,
+run command, etc.)</li>
+</ul>
+
+
+<h2 id="Installation"><a href="#Installation">Installation</a></h2>
+
+<p>The Textredux module itself can be downloaded from the
+<a href="https://github.com/rgieseke/textredux/tags">download page</a>.</p>
+
+<p>To install the module, just unpack the module into the</p>
+
+<pre><code>.textadept/modules/textredux
+</code></pre>
+
+<p>directory.
+Alternatively you can clone Textredux into it:</p>
+
+<pre><code>cd .textadept/modules/textredux
+git clone https://github.com/rgieseke/textredux.git
+</code></pre>
+
+<h2 id="Usage"><a href="#Usage">Usage</a></h2>
+
+<p>Having installed the module, there are two ways you can use it.</p>
+
+<p>1) Cherrypick the functionality you want from the different modules by assigning
+key bindings to the desired functions. As an example, if you would like to use
+the text based file browser and normally opens files using <code>Ctrl + o</code>, then the
+following code in your <code>init.lua</code> would do the trick:</p>
+
+<pre><code>_M.textredux = require 'textredux'
+keys.co = _M.textredux.fs.open_file
+</code></pre>
+
+<p>2) If you can&rsquo;t get enough of text based interfaces and the joy they provide,
+then the hijack module is for you. Simple place this in your <code>init.lua</code>:</p>
+
+<pre><code>require 'textredux.hijack'
+</code></pre>
+
+<p>As the name suggest, Textredux has now hijacked your environment. All your
+regular key bindings should now use TextRedux where applicable. To get the
+regular GUI elements you can click the menu.</p>
+
+<p>Regardless of the approach chosen, the
+<a href="./docs/index.html">module documentation</a> contains more
+in-depth documentation for the various modules, including customization tips.</p>
+
+<p>Also, make sure to take a brief look at the <a href="tour.html">visual tour</a> for some
+quick tips on using TextRedux.</p>
+
+<h2 id="Code"><a href="#Code">Code</a></h2>
+
+<p>TextRedux is released under the MIT license (see the LICENSE file in the source
+for the full details). The <a href="https://github.com/rgieseke/textredux">source code</a>
+is available from GitHub. It was written by
+<a href="https://github.com/nilnor">Nils Nordman</a>
+and is now maintained by <a href="https://github.com/rgieseke">Robert Gieseke</a>.</p>
+
+<h2 id="Contribute"><a href="#Contribute">Contribute</a></h2>
+
+<p>Any feedback, be it patches, feature request or bug reports is most welcome.</p>
+
+<p>If you want to provide patches, the preferred way of doing so would be as a pull
+request via GitHub, or as a pull request from some other Git server. Should that
+not be an option I&rsquo;ll gladly accept patches through other means as well.</p>
+
+<p>If you have any bug reports or feature requests, please submit these to the
+<a href="https://github.com/rgieseke/textredux/issues">Github issue tracker</a>. As with
+patches, I&rsquo;ll be happy to recieve these through other means as well.</p>
+
+<h2 id="Changelog"><a href="#Changelog">Changelog</a></h2>
+
+<h3>0.4 ()</h3>
+
+<ul>
+<li>Integrate TextUI module back into Textredux as the <code>core</code> submodule.</li>
+<li>Update to snapopen API change in Textadept 6.2.</li>
+</ul>
+
+
+<h3>0.3 (2012-11-28)</h3>
+
+<ul>
+<li>Updates for API changes until Textadept 6.</li>
+<li>Don&rsquo;t hijack menu entries, use the default widgets when clicking the menu.</li>
+</ul>
+
+
+<h3>0.2 (2012-03-08)</h3>
+
+<ul>
+<li>Make ctrl+enter open entries in another view (buffer list / file browser)</li>
+<li>Make buffer list keys configurable</li>
+<li>Handle buffers with nil directories in the buffer list</li>
+<li>TextUI:
+
+<ul>
+<li>Added support for indicators</li>
+<li>Improved auto-loading of not-shown list items</li>
+<li>Added highlighting of list matches</li>
+<li>Added mouse support for buffer hotspots</li>
+<li>Font names are now included for default styles</li>
+<li>List selection callbacks now receive modifiers as well</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>0.1 (2012-01-20)</h3>
+
+<p>First public release.</p>
+      </div>
+      <div class="footer">
+        <a href="https://github.com/rgieseke/textredux">Textredux on GitHub</a>
+      </div>
+    </div>
+  </body>
+</html>
