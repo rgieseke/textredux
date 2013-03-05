@@ -20,12 +20,12 @@ The Textredux module itself can be downloaded from the
 
 To install the module, just unpack the module into the
 
-    .textadept/modules/textredux
+    ~/.textadept/modules/textredux
 
 directory.
 Alternatively you can clone Textredux into it:
 
-    cd .textadept/modules
+    cd ~/.textadept/modules
     git clone https://github.com/rgieseke/textredux.git
 
 ## Usage
