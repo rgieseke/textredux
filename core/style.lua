@@ -239,7 +239,7 @@ end
 ---
 -- Applies the specified style for the given text range and buffer.
 -- While you could use this directly, you'd typically use the text insertion
--- methods in @{_M.textredux.ui.buffer} to style content.
+-- methods in @{_M.textredux.core.buffer} to style content.
 -- @param style The defined style
 -- @param buffer The buffer to apply the style for
 -- @param start_pos The starting position of the style
@@ -252,7 +252,7 @@ end
 ---
 -- Defines the currently used custom styles for the current buffer.
 -- This must be called whenever a buffer with custom styles is switched to.
--- This is automatically done by the @{_M.textredux.ui.buffer} class, and thus
+-- This is automatically done by the @{_M.textredux.core.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_styles()
   local buffer_styles = get_buffer_styles()

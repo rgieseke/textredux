@@ -32,8 +32,8 @@ Please see the various list examples for more hands-on instructions.
 @module _M.textredux.list
 ]]
 
-local style = require 'textredux.ui.style'
-local textredux_buffer = require 'textredux.ui.buffer'
+local style = require 'textredux.core.style'
+local textredux_buffer = require 'textredux.core.buffer'
 local util_matcher = require 'textredux.util.matcher'
 
 local _G, textredux, string, table, keys, math =
