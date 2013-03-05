@@ -1,4 +1,4 @@
-# Visual tour
+## Visual tour
 
 ![Open file](images/fs_listing.png)
 
