@@ -78,7 +78,7 @@ patches, I'll be happy to recieve these through other means as well.
 
 ## Changelog
 
-### 0.4 ()
+### 0.4 (2013-03-05)
 
 - Integrate TextUI module back into Textredux as the `core` submodule.
 - Update to snapopen API change in Textadept 6.2.
