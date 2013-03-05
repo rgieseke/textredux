@@ -1,0 +1,717 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Textredux docs</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Textredux</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+<li><a href="#Instance_fields">Instance fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul>
+  <li><a href="../modules/_M.textredux.html">_M.textredux</a></li>
+  <li><strong>_M.textredux.buffer</strong></li>
+  <li><a href="../modules/_M.textredux.buffer_list.html">_M.textredux.buffer_list</a></li>
+  <li><a href="../modules/_M.textredux.core.html">_M.textredux.core</a></li>
+  <li><a href="../modules/_M.textredux.core.indicator.html">_M.textredux.core.indicator</a></li>
+  <li><a href="../modules/_M.textredux.core.list.html">_M.textredux.core.list</a></li>
+  <li><a href="../modules/_M.textredux.core.style.html">_M.textredux.core.style</a></li>
+  <li><a href="../modules/_M.textredux.fs.html">_M.textredux.fs</a></li>
+  <li><a href="../modules/_M.textredux.gui.html">_M.textredux.gui</a></li>
+  <li><a href="../modules/_M.textredux.hijack.html">_M.textredux.hijack</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>_M.textredux.buffer</code></h1>
+
+<p>The buffer class wraps a Textadept buffer, and extends it with support for
+custom styling, buffer specific key bindings and hotspot support.</p>
+<p> It takes
+care of the details needed for making a text based interface work, such as
+mapping Textadept events to the correct buffers, working with the
+<a href="../modules/_M.textredux.core.style.html#">_M.textredux.core.style</a> module to ensure that styling works, etc.</p>
+
+<h2>How it works</h2>
+
+<p>When you work with a Textredux buffer, it will nearly always seem just like an
+ordinary <a href="http://foicica.com/textadept/api/buffer.html">Textadept buffer</a>
+(but with benefits, such as support for custom styling and easy callbacks,
+etc.). But where a Textadept buffer is volatile, and might cease to exists at
+any time (due to it being closed by a user for example) a Textredux buffer is
+persistent.</p>
+
+<p>When we say that a Textredux buffer "wraps" a Textadept buffer, there's more to
+it than just adding additional methods to the Textadept buffer class. A
+Textredux buffer will always exist, but the corresponding Textadept buffer,
+named <code>target</code> hereafter, may not. When the target buffer exists, a Textredux
+buffer will expose all the functions and attributes of the Textadept buffer,
+making it possible to use the Textredux buffer in just the same way as you
+would a Textadept buffer (i.e. invoking any of the ordinary buffer methods,
+setting attributes, etc.). The Textredux buffer takes care of creating the
+target buffer automatically if needed whenever you invoke <a href="../modules/_M.textredux.buffer.html#buffer:show">buffer:show</a>.
+When the target buffer does not exist, for instance as the result of the user
+closing it, any attempt to invoke any of the ordinary buffer methods will
+raise an error. You can check explicitly whether the target exists by using the
+<a href="../modules/_M.textredux.buffer.html#buffer:is_attached">buffer:is_attached</a> function. However, this is not something you will have to
+worry much about in practice, since you'll typically interact with the buffer
+as part of a refresh, key press, etc., where the target buffer will always
+exist.</p>
+
+<p>In short, you don't have to worry about creating buffers, detecting whether the
+buffer was closed, etc., as long as you remember to invoke <a href="../modules/_M.textredux.buffer.html#buffer:show">buffer:show</a> and
+perform your work within the callbacks.</p>
+
+<h2>How to use</h2>
+
+<p>You create a new Textredux buffer by calling <a href="../modules/_M.textredux.buffer.html#new">new</a>, passing the buffer
+title. You specify an <a href="../modules/_M.textredux.buffer.html#on_refresh">on_refresh</a> handler for the buffer, which is responsible
+for actually inserting the content in the buffer, along with any custom styles
+and hotspot handlers. You specify any custom key bindings using either <a href="../modules/_M.textredux.buffer.html#keys">keys</a>
+or <a href="../modules/_M.textredux.buffer.html#on_keypress">on_keypress</a>, and/or hook any other handlers of interest. In the
+<a href="../modules/_M.textredux.buffer.html#on_refresh">on_refresh</a> handler, you add the actual text using any of the extended
+text insertion functions (<a href="../modules/_M.textredux.buffer.html#buffer:add_text">buffer:add_text</a>, <a href="../modules/_M.textredux.buffer.html#buffer:append_text">buffer:append_text</a>,
+<a href="../modules/_M.textredux.buffer.html#buffer:insert_text">buffer:insert_text</a> or possibly <a href="../modules/_M.textredux.buffer.html#buffer:newline">buffer:newline</a>). You invoke
+<a href="../modules/_M.textredux.buffer.html#buffer:show">buffer:show</a> to show the buffer, and respond to any interactions using the
+provided callbacks.</p>
+
+<p>Please see the examples for more hands-on instructions.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2011-2012</li>
+        <li><strong>License</strong>: MIT (see LICENSE)</li>
+        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#new">new&nbsp;(title)</a></td>
+	<td class="summary">Creates and returns a new textredux buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:show">buffer:show&nbsp;()</a></td>
+	<td class="summary">Shows the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:close">buffer:close&nbsp;()</a></td>
+	<td class="summary">Closes the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:update">buffer:update&nbsp;(callback)</a></td>
+	<td class="summary">Performs an update of the buffer contents.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:refresh">buffer:refresh&nbsp;()</a></td>
+	<td class="summary">Refreshes the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:set_title">buffer:set_title&nbsp;(title)</a></td>
+	<td class="summary">Updates the title of the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:is_attached">buffer:is_attached&nbsp;()</a></td>
+	<td class="summary">Checks whether a target buffer currently exists.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:is_showing">buffer:is_showing&nbsp;()</a></td>
+	<td class="summary">Checks whether the buffer is currently showing in any view.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:is_active">buffer:is_active&nbsp;()</a></td>
+	<td class="summary">Checks whether the buffer is currently active, i.e.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:add_hotspot">buffer:add_hotspot&nbsp;(start_pos, end_pos, command)</a></td>
+	<td class="summary">Adds a hotspot for the given text range.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:add_text">buffer:add_text&nbsp;(text, style, command, indicator)</a></td>
+	<td class="summary">Override for
+<a href="http://foicica.com/textadept/api/buffer.html#add_text">buffer:add_text</a>
+which accepts optional style, command and indicator parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:append_text">buffer:append_text&nbsp;(text, style, command, indicator)</a></td>
+	<td class="summary">Override for
+<a href="http://foicica.com/textadept/api/buffer.html#append_text">buffer:append_text</a>
+which accepts optional style, command and indicator parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:insert_text">buffer:insert_text&nbsp;(pos, text, style, command, indicator)</a></td>
+	<td class="summary">Override for
+<a href="http://foicica.com/textadept/api/buffer.html#insert_text">buffer:insert_text</a>
+which accepts optional style, command and indicator parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buffer:newline">buffer:newline&nbsp;()</a></td>
+	<td class="summary">Override for
+<a href="http://foicica.com/textadept/api/buffer.html#new_line">buffer:new_line</a>.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#read_only">read_only</a></td>
+	<td class="summary">Whether the buffer should be marked as read only.</td>
+	</tr>
+</table>
+<h2><a href="#Instance_fields">Instance fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#on_deleted">on_deleted</a></td>
+	<td class="summary">Callback invoked whenever the target buffer is deleted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#on_refresh">on_refresh</a></td>
+	<td class="summary">Callback invoked whenever the buffer should refresh.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#on_keypress">on_keypress</a></td>
+	<td class="summary">Callback invoked whenever the buffer receives a keypress.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#keys">keys</a></td>
+	<td class="summary">A table of key commands for the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#data">data</a></td>
+	<td class="summary">A general purpose table that can be used for storing state associated
+ with the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#target">target</a></td>
+	<td class="summary">The target buffer, if any.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "new"></a>
+    <strong>new&nbsp;(title)</strong>
+    </dt>
+    <dd>
+    Creates and returns a new textredux buffer.  The buffer will not be attached
+ upon the return.
+ title in the Textadept top bar.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">title</span>
+       The title of the buffer. This will be displayed as the buffer's</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:show"></a>
+    <strong>buffer:show&nbsp;()</strong>
+    </dt>
+    <dd>
+    Shows the buffer.
+ If the target buffer doesn't exist, due to it either not having been created
+ yet or having been deleted, it is automatically created. Upon the return,
+ the buffer is showing and set as the global buffer.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:close"></a>
+    <strong>buffer:close&nbsp;()</strong>
+    </dt>
+    <dd>
+    Closes the buffer.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:update"></a>
+    <strong>buffer:update&nbsp;(callback)</strong>
+    </dt>
+    <dd>
+    Performs an update of the buffer contents.
+You invoke this with a callback that will do the actual update. This function
+takes care of ensuring that the target is writable, and handles setting the
+save point, etc.
+will receive the buffer instance as its sole parameter.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">callback</span>
+       The callback to invoke to perform the update. The callback</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:refresh"></a>
+    <strong>buffer:refresh&nbsp;()</strong>
+    </dt>
+    <dd>
+    Refreshes the buffer.
+A refresh works by ensuring that it's possible to write to the buffer and
+invoking the <a href="../modules/_M.textredux.buffer.html#on_refresh">on_refresh</a> handler. After the refresh is complete, the
+<a href="../modules/_M.textredux.buffer.html#read_only">read_only</a> state is reset to whatever it was before the refresh, and a save
+point is set.</p>
+
+<p>Please note that a refresh will clear all content, along with hotspots, etc.
+If you want to perform smaller updates please use the <a href="../modules/_M.textredux.buffer.html#buffer:update">buffer:update</a> function
+instead.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:set_title"></a>
+    <strong>buffer:set_title&nbsp;(title)</strong>
+    </dt>
+    <dd>
+    Updates the title of the buffer.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">title</span>
+
+
+</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:is_attached"></a>
+    <strong>buffer:is_attached&nbsp;()</strong>
+    </dt>
+    <dd>
+    Checks whether a target buffer currently exists.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        true if the target buffer exists and false otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:is_showing"></a>
+    <strong>buffer:is_showing&nbsp;()</strong>
+    </dt>
+    <dd>
+    Checks whether the buffer is currently showing in any view.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        true if the buffer is showing and false otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:is_active"></a>
+    <strong>buffer:is_active&nbsp;()</strong>
+    </dt>
+    <dd>
+    Checks whether the buffer is currently active, i.e.  the current buffer.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        true if the buffer is active and false otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:add_hotspot"></a>
+    <strong>buffer:add_hotspot&nbsp;(start_pos, end_pos, command)</strong>
+    </dt>
+    <dd>
+
+<p>Adds a hotspot for the given text range.
+Hotspots allows you to specify the behaviour for when the user selects
+certain text. Besides using this function directly, it's also possible and
+in many cases more convenient to add a hotspot when using any of the text
+insertion functions (<a href="../modules/_M.textredux.buffer.html#buffer:add_text">buffer:add_text</a>, <a href="../modules/_M.textredux.buffer.html#buffer:append_text">buffer:append_text</a>,
+<a href="../modules/_M.textredux.buffer.html#buffer:insert_text">buffer:insert_text</a>). Note that the range given is interpreted as being
+half closed, i.e. <code>[start_pos, end_pos)</code>.</p>
+
+<p><em>NB</em>: Please note that all hotspots are cleared as part of a refresh.
+either a function or a table. When the command is a function, it will be passed
+the following parameters:</p>
+
+<ul>
+    <li><code>buffer</code>: The buffer instance</li>
+    <li><code>shift</code>: True if the Shift key was held down.</li>
+    <li><code>ctrl</code>: True if the Control/Command key was held down.</li>
+    <li><code>alt</code>: True if the Alt/option key was held down.</li>
+    <li><code>meta</code>: True if the Control key on Mac OSX was held down.</li>
+</ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">start_pos</span>
+       The start position</li>
+      <li><span class="parameter">end_pos</span>
+       The end position. The end position itself is not part of the
+hotspot.</li>
+      <li><span class="parameter">command</span>
+       The command to execute. Similarily to <a href="../modules/_M.textredux.buffer.html#keys">keys</a>, command can be</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:add_text"></a>
+    <strong>buffer:add_text&nbsp;(text, style, command, indicator)</strong>
+    </dt>
+    <dd>
+    Override for
+<a href="http://foicica.com/textadept/api/buffer.html#add_text">buffer:add_text</a>
+which accepts optional style, command and indicator parameters.
+text.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">text</span>
+       The text to add.</li>
+      <li><span class="parameter">style</span>
+       The style to use for the text, as defined using
+<a href="../modules/_M.textredux.core.style.html#">_M.textredux.core.style</a>.</li>
+      <li><span class="parameter">command</span>
+       The command to run if the user "selects" this text. See
+<a href="../modules/_M.textredux.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.</li>
+      <li><span class="parameter">indicator</span>
+       Optional <a href="../modules/_M.textredux.core.indicator.html#">_M.textredux.core.indicator</a> to use for the added</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:append_text"></a>
+    <strong>buffer:append_text&nbsp;(text, style, command, indicator)</strong>
+    </dt>
+    <dd>
+    Override for
+<a href="http://foicica.com/textadept/api/buffer.html#append_text">buffer:append_text</a>
+which accepts optional style, command and indicator parameters.
+text.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">text</span>
+       The text to append.</li>
+      <li><span class="parameter">style</span>
+       The style to use for the text, as defined using
+<a href="../modules/_M.textredux.core.style.html#">_M.textredux.core.style</a>.</li>
+      <li><span class="parameter">command</span>
+       The command to run if the user "selects" this text. See
+<a href="../modules/_M.textredux.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.</li>
+      <li><span class="parameter">indicator</span>
+       Optional <a href="../modules/_M.textredux.core.indicator.html#">_M.textredux.core.indicator</a> to use for the appended</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:insert_text"></a>
+    <strong>buffer:insert_text&nbsp;(pos, text, style, command, indicator)</strong>
+    </dt>
+    <dd>
+    Override for
+<a href="http://foicica.com/textadept/api/buffer.html#insert_text">buffer:insert_text</a>
+which accepts optional style, command and indicator parameters.
+text.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">pos</span>
+       The position to insert text at or <code>-1</code> for the current position.</li>
+      <li><span class="parameter">text</span>
+       The text to insert.</li>
+      <li><span class="parameter">style</span>
+       The style to use for the text, as defined using
+<a href="../modules/_M.textredux.core.style.html#">_M.textredux.core.style</a>.</li>
+      <li><span class="parameter">command</span>
+       The command to run if the user "selects" this text. See
+<a href="../modules/_M.textredux.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.</li>
+      <li><span class="parameter">indicator</span>
+       Optional <a href="../modules/_M.textredux.core.indicator.html#">_M.textredux.core.indicator</a> to use for the inserted</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer:newline"></a>
+    <strong>buffer:newline&nbsp;()</strong>
+    </dt>
+    <dd>
+    Override for
+<a href="http://foicica.com/textadept/api/buffer.html#new_line">buffer:new_line</a>.
+A Textredux buffer will always have eol mode set to LF, so it's also possible,
+and arguably easier, to just insert a newline using the <code>\n</code> escape via any
+of the other text insertion functions.
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "read_only"></a>
+    <strong>read_only</strong>
+    </dt>
+    <dd>
+    Whether the buffer should be marked as read only.
+The default is true but can be changed on a buffer to buffer basis. Any call to
+<a href="../modules/_M.textredux.buffer.html#buffer:refresh">buffer:refresh</a> will automatically take care of setting the buffer to write
+mode before invoking the <a href="../modules/_M.textredux.buffer.html#on_refresh">on_refresh</a> handler, and will restore the
+<a href="../modules/_M.textredux.buffer.html#read_only">read_only</a> state afterwards.
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Instance_fields"></a>Instance fields</h2>
+     These can be set only for a buffer instance, and not
+ globally for the module.
+    <dl class="function">
+    <dt>
+    <a name = "on_deleted"></a>
+    <strong>on_deleted</strong>
+    </dt>
+    <dd>
+    Callback invoked whenever the target buffer is deleted.
+ The callback has the following with the following parameters: <code>buffer</code>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "on_refresh"></a>
+    <strong>on_refresh</strong>
+    </dt>
+    <dd>
+    Callback invoked whenever the buffer should refresh.
+This should be set for each buffer. It is this callback that is responsible
+for actually inserting any content into the buffer. Before this callback
+is invoked, any previous buffer content will be cleared.
+The callback will be invoked with the buffer as the sole parameter.
+
+
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/_M.textredux.buffer.html#buffer:refresh">buffer:refresh</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "on_keypress"></a>
+    <strong>on_keypress</strong>
+    </dt>
+    <dd>
+    Callback invoked whenever the buffer receives a keypress.
+Please note that if there is any key command defined in <a href="../modules/_M.textredux.buffer.html#keys">keys</a> matching
+the keypress, that key command will be invoked and this callback will never
+be called. The callback will receive the following parameters:</p>
+
+<ul>
+    <li><code>buffer</code>: The buffer instance.</li>
+    <li><code>key</code>: The "translated key" (same format as for <a href="../modules/_M.textredux.buffer.html#keys">keys</a>).</li>
+    <li><code>code</code>: The key code.</li>
+    <li><code>shift</code>: True if the Shift key was held down.</li>
+    <li><code>ctrl</code>: True if the Control/Command key was held down.</li>
+    <li><code>alt</code>: True if the Alt/option key was held down.</li>
+    <li><code>meta</code>: True if the Control key on Mac OSX was held down.</li>
+</ul>
+
+<p>It's similar to the standard Textadept KEYPRESS event (which you can read more
+about <a href="http://foicica.com/textadept/api/events.html">here</a>).
+The return value determines whether the key press should be propagated, just
+as for the standard Textadept event.
+
+
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/_M.textredux.buffer.html#keys">keys</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "keys"></a>
+    <strong>keys</strong>
+    </dt>
+    <dd>
+    A table of key commands for the buffer.
+This is similar to <code>_M.textadept.keys</code> works, but allows you to specify key
+commands specifically for one buffer. The format for specifying keys
+is the same as for
+<a href="http://foicica.com/textadept/api/keys.html">_M.textadept.keys</a>,
+and the values assigned can also be either functions or tables.
+There are differences compared to <code>_M.textadept.keys</code> however:</p>
+
+<ul>
+    <li>It's not possible to specify language specific key bindings. This is
+    obviously not applicable for a Textredux buffer.</li>
+    <li>It's not possible to specify keychain sequences.</li>
+    <li>For function values, the buffer instance is passed as the first argument.</li>
+    <li>For table values, buffer or view references will not be magically fixed.
+    This means that you should not use either of the above in a table command,
+    unless you enjoy the occasional segfault.</li>
+</ul>
+
+<p>In short, only explicit simple mappings are supported. Defining a key command
+for a certain key means that key presses are never propagated any further for
+that particular key. Key commands take preference over any <a href="../modules/_M.textredux.buffer.html#on_keypress">on_keypress</a>
+callback, so any such callback will never be called if a key command matches.
+
+
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/_M.textredux.buffer.html#on_keypress">on_keypress</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "data"></a>
+    <strong>data</strong>
+    </dt>
+    <dd>
+    A general purpose table that can be used for storing state associated
+ with the buffer.  The <code>data</code> table is special in the way that it will
+ automatically be cleared whenever the user closes the buffer.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "target"></a>
+    <strong>target</strong>
+    </dt>
+    <dd>
+    The target buffer, if any.
+ This holds a reference to the target buffer, when present.
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Textredux docs</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Textredux</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul>
+  <li><a href="../modules/_M.textredux.html">_M.textredux</a></li>
+  <li><strong>_M.textredux.buffer_list</strong></li>
+  <li><a href="../modules/_M.textredux.core.html">_M.textredux.core</a></li>
+  <li><a href="../modules/_M.textredux.core.buffer.html">_M.textredux.core.buffer</a></li>
+  <li><a href="../modules/_M.textredux.core.indicator.html">_M.textredux.core.indicator</a></li>
+  <li><a href="../modules/_M.textredux.core.list.html">_M.textredux.core.list</a></li>
+  <li><a href="../modules/_M.textredux.core.style.html">_M.textredux.core.style</a></li>
+  <li><a href="../modules/_M.textredux.fs.html">_M.textredux.fs</a></li>
+  <li><a href="../modules/_M.textredux.gui.html">_M.textredux.gui</a></li>
+  <li><a href="../modules/_M.textredux.hijack.html">_M.textredux.hijack</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>_M.textredux.buffer_list</code></h1>
+
+<p>The buffer list module provides a text based replacement for the standard
+Textadept buffer list.</p>
+<p> Two differences compared to the stock one is the ability
+to close a buffer directly from the buffer list (bound to <code>Ctrl + d</code> by default),
+and the option of specifying the buffers to list via a provided function.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2011-2012</li>
+        <li><strong>License</strong>: MIT (see LICENSE)</li>
+        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#currently_selected_buffer">currently_selected_buffer&nbsp;(list)</a></td>
+	<td class="summary">Returns the currently selected buffer in the list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#close_buffer">close_buffer&nbsp;(list)</a></td>
+	<td class="summary">Closes the currently selected buffer in the buffer list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#show">show&nbsp;(buffers)</a></td>
+	<td class="summary">Shows a list of the specified buffers, or _G.BUFFERS it not specified.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#keys">keys</a></td>
+	<td class="summary">The key bindings for the buffer list.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#list">list</a></td>
+	<td class="summary">The Textredux list instance used by the buffer list.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "currently_selected_buffer"></a>
+    <strong>currently_selected_buffer&nbsp;(list)</strong>
+    </dt>
+    <dd>
+    Returns the currently selected buffer in the list.
+provided, then the global list is used automatically.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">list</span>
+       The Textredux list instance used by the buffer list. If not</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        The currently selected buffer, if any.</li>
+        <li>
+        The currently selected buffer's name, if any.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "close_buffer"></a>
+    <strong>close_buffer&nbsp;(list)</strong>
+    </dt>
+    <dd>
+    Closes the currently selected buffer in the buffer list.
+is ordinarily invoked as the result of a key binding, and you should thus not
+need to specify this yourself. If list isn't provided, the global list is
+automatically used.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">list</span>
+       The Textredux list instance used by the buffer list. This function</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "show"></a>
+    <strong>show&nbsp;(buffers)</strong>
+    </dt>
+    <dd>
+    Shows a list of the specified buffers, or _G.BUFFERS it not specified.
+ are displayed, or a function returning a table of buffers to display.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">buffers</span>
+       Either nil, in which case all buffers within _G.BUFFERS</li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "keys"></a>
+    <strong>keys</strong>
+    </dt>
+    <dd>
+    The key bindings for the buffer list. </p>
+
+<p>You can modifiy this to customise the key bindings to your liking. The key
+bindings are passed directly to the Textredux list, so note that the
+first argument to any function will be the Textredux list itself.
+You can read more about the Textredux list's keys in the
+<a href="TODO/textredux/docs/modules/_M.textredux.list.html#keys">list documentation</a>.</p>
+
+<p>If you like to add a custom key binding for closing a buffer you can bind the
+<a href="../modules/_M.textredux.buffer_list.html#close_buffer">close_buffer</a> function to a key of your choice. For other actions it's likely
+that you want to obtain the currently selected buffer - you can use the
+<a href="../modules/_M.textredux.buffer_list.html#currently_selected_buffer">currently_selected_buffer</a> function for that.
+
+    <h3>Fields:</h3>
+    <ul>
+      <li><span class="parameter">cd</span>
+      Default for <code>close buffer</code></li>
+      <li><span class="parameter">esc</span>
+      Escape closes list by default</li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "list"></a>
+    <strong>list</strong>
+    </dt>
+    <dd>
+    The Textredux list instance used by the buffer list.
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

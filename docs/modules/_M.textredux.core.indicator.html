@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Textredux docs</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Textredux</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul>
+  <li><a href="../modules/_M.textredux.html">_M.textredux</a></li>
+  <li><a href="../modules/_M.textredux.buffer_list.html">_M.textredux.buffer_list</a></li>
+  <li><a href="../modules/_M.textredux.core.html">_M.textredux.core</a></li>
+  <li><a href="../modules/_M.textredux.core.buffer.html">_M.textredux.core.buffer</a></li>
+  <li><strong>_M.textredux.core.indicator</strong></li>
+  <li><a href="../modules/_M.textredux.core.list.html">_M.textredux.core.list</a></li>
+  <li><a href="../modules/_M.textredux.core.style.html">_M.textredux.core.style</a></li>
+  <li><a href="../modules/_M.textredux.fs.html">_M.textredux.fs</a></li>
+  <li><a href="../modules/_M.textredux.gui.html">_M.textredux.gui</a></li>
+  <li><a href="../modules/_M.textredux.hijack.html">_M.textredux.hijack</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>_M.textredux.core.indicator</code></h1>
+
+<p>The indicator module provides support for indicators in your buffers.</p>
+<p>Indicators lets you visually mark a certain text range using various styles and
+colors, and using the event mechanism you can also receive events whenever the
+user clicks the marked text.</p>
+
+<h2>The indicator definition</h2>
+
+<p>An indicator is defined using a simple table with the properties listed below.
+For the most part, these properties maps directly to fields in the
+<a href="http://foicica.com/textadept/api/buffer.html">buffer</a> class. The
+list below will give short descriptions and refer to the corresponding field in
+the buffer class where applicable.</p>
+
+<ul>
+    <li><code>style</code>: The style of the indicator. See <code>indic_style</code>.</li>
+    <li><code>alpha</code>: Alpha transparency value from 0 to 255 (or 256 for no alpha), used
+    for fill colors of rectangles . See <code>indic_alpha</code>.</li>
+    <li><code>outline_alpha</code>: Alpha transparency value from 0 to 255 (or 256 for no alpha),
+    used for outline colors of rectangles . See <code>indic_outline_alpha</code>.</li>
+    <li><code>fore</code>: The foreground color of the indicator. The color should be specified
+    in the <code>'#rrggbb'</code> notation.</li>
+    <li><code>under</code>: Whether an indicator is drawn under text or over (default). Drawing
+    under text works only when two phase drawing is enabled for the buffer (the
+    default).</li>
+</ul>
+
+<h2>Using indicators</h2>
+
+<p>Start with defining your indicators using the format described above. You can
+then  either apply them against a range of text using <a href="../modules/_M.textredux.core.indicator.html#apply">apply</a>, or pass them to
+one of the text insertion functions in <a href="../modules/_M.textredux.core.buffer.html#">_M.textredux.core.buffer</a>. If you need to
+get the defined indicator number for an indicator, you can retrieve it using
+<a href="../modules/_M.textredux.core.indicator.html#number_for">number_for</a>. Please note that indicator numbers are not necessarily stable
+between buffer switches, so problems may arise if you hold on to an indicator
+number.</p>
+
+<p>Please see the example <code>buffer_indicators.lua</code> for some practical usage.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2012</li>
+        <li><strong>License</strong>: MIT (see LICENSE)</li>
+        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#define_indicators">define_indicators&nbsp;()</a></td>
+	<td class="summary">Defines the currently used custom indicators for the current buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#number_for">number_for&nbsp;(indicator)</a></td>
+	<td class="summary">Retrieves the indicator number used in the current buffer for the indicator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#apply">apply&nbsp;(indicator, position, length)</a></td>
+	<td class="summary">Applies the given indicator for the text range specified in the current
+ buffer.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "define_indicators"></a>
+    <strong>define_indicators&nbsp;()</strong>
+    </dt>
+    <dd>
+    Defines the currently used custom indicators for the current buffer.
+ This must be called whenever a buffer with custom indicators is switched to.
+ This is automatically done by the <a href="../modules/_M.textredux.core.buffer.html#">_M.textredux.core.buffer</a> class, and thus
+ not something you typically have to worry about.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "number_for"></a>
+    <strong>number_for&nbsp;(indicator)</strong>
+    </dt>
+    <dd>
+    Retrieves the indicator number used in the current buffer for the indicator.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">indicator</span>
+       The indicator to retrieve the number for</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "apply"></a>
+    <strong>apply&nbsp;(indicator, position, length)</strong>
+    </dt>
+    <dd>
+    Applies the given indicator for the text range specified in the current
+ buffer.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">indicator</span>
+       The indicator to apply</li>
+      <li><span class="parameter">position</span>
+       The start position</li>
+      <li><span class="parameter">length</span>
+       The length of the range to fill</li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

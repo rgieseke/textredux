@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Textredux docs</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Textredux</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul>
+  <li><a href="../modules/_M.textredux.html">_M.textredux</a></li>
+  <li><a href="../modules/_M.textredux.buffer.html">_M.textredux.buffer</a></li>
+  <li><a href="../modules/_M.textredux.buffer_list.html">_M.textredux.buffer_list</a></li>
+  <li><a href="../modules/_M.textredux.core.html">_M.textredux.core</a></li>
+  <li><a href="../modules/_M.textredux.fs.html">_M.textredux.fs</a></li>
+  <li><a href="../modules/_M.textredux.gui.html">_M.textredux.gui</a></li>
+  <li><a href="../modules/_M.textredux.hijack.html">_M.textredux.hijack</a></li>
+  <li><a href="../modules/_M.textredux.indicator.html">_M.textredux.indicator</a></li>
+  <li><a href="../modules/_M.textredux.list.html">_M.textredux.list</a></li>
+  <li><strong>_M.textredux.style</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>_M.textredux.style</code></h1>
+
+<p>The style module lets you define and use custom, non-lexer-based styles.</p>
+<p>
+
+
+<h2>The default styles</h2>
+
+<p>Textredux piggybacks on the default lexer styles defined by a user's theme,
+and makes them available for your Textredux interface. The big benefit of this
+is that by using those styles, or by basing your custom styles on them, your
+interface stands a much higher chance of blending in well with the color scheme
+used. As an example, your custom style with cyan foreground text might look
+great with your own dark theme, but may be pretty near invisible for some user
+with a light blue background.</p>
+
+<p>You can read more about the default lexer styles in the
+<a href="http://foicica.com/textadept/api/lexer.html">Textadept lexer documentation</a>.
+You access a default style (or any style for that matter), by indexing the
+style module, like so: <code>style.&lt;name&gt;</code>. For reference, the default styles
+available are these:</p>
+
+<ul>
+    <li>style.nothing</li>
+    <li>style.whitespace</li>
+    <li>style.comment</li>
+    <li>style.string</li>
+    <li>style.number</li>
+    <li>style.keyword</li>
+    <li>style.identifier</li>
+    <li>style.operator</li>
+    <li>style.error</li>
+    <li>style.preproc</li>
+    <li>style.constant</li>
+    <li>style.variable</li>
+    <li>style.function</li>
+    <li>style.class</li>
+    <li>style.type</li>
+    <li>style.default</li>
+    <li>style.line_number</li>
+    <li>style.bracelight</li>
+    <li>style.bracebad</li>
+    <li>style.controlchar</li>
+    <li>style.indentguide</li>
+    <li>style.calltip</li>
+</ul>
+
+<h2>What's a style?</h2>
+
+<p>Textredux styling has been made to resemble the lexer based style creation.
+A style is thus just a table with certain properties, almost exactly the same
+as for style created for a lexer or theme. Please see the documentation for
+<a href="http://foicica.com/textadept/api/lexer.html#style">lexer.style</a>
+for information about the fields. The one exception compared to lexer styles
+is that colors are specified using the standard <code>'#rrggbb'</code> notation instead of
+the lexer styles' <code>bgr</code> notation. This is what you use to create custom styles
+(see below), and also what you get when accessing any already existing styles.</p>
+
+<h2>Defining styles</h2>
+
+<p>You define a new style by assigning the style to the style module, like so:</p>
+
+<pre><code>style.foo_header = { italic = true, fore = '#680000' }
+</code></pre>
+
+<p>As has been previously said, it's often a good idea to base your custom styles
+on an existing default style. Similarily to defining a lexer style in Textadept
+you can achieve this by concatenating styles:</p>
+
+<pre><code>style.foo_header = style.string .. { underline = true }
+</code></pre>
+
+<p><em>NB:</em> Watch out for the mistake of not assigning the style to the style module:</p>
+
+<pre><code>local header = style.string .. { underline = true }
+</code></pre>
+
+<p>This will <em>not</em> work, as the style is not correctly defined with the style
+module.</p>
+
+<p>In order to avoid name clashes, it's suggested that you name any custom styles
+by prefixing their name with the name of your module. E.g. if your module is
+named <code>awesome</code>, then name your style something like <code>style.awesome_style</code>.</p>
+
+<h2>Using styles</h2>
+
+<p>You typically use a style by inserting text through
+???'s text insertion methods, specifying the style.
+Please see the example in <code>examples/buffer_styling.lua</code> for usage of this.</p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2011-2012</li>
+        <li><strong>License</strong>: MIT (see LICENSE)</li>
+        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#apply">apply&nbsp;(style, buffer, start_pos, length)</a></td>
+	<td class="summary">Applies the specified style for the given text range and buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#define_styles">define_styles&nbsp;()</a></td>
+	<td class="summary">Defines the currently used custom styles for the current buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_current_styles">get_current_styles&nbsp;()</a></td>
+	<td class="summary">Gets a list of currently defined styles.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "apply"></a>
+    <strong>apply&nbsp;(style, buffer, start_pos, length)</strong>
+    </dt>
+    <dd>
+    Applies the specified style for the given text range and buffer.
+ While you could use this directly, you'd typically use the text insertion
+ methods in ??? to style content.
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">style</span>
+       The defined style</li>
+      <li><span class="parameter">buffer</span>
+       The buffer to apply the style for</li>
+      <li><span class="parameter">start_pos</span>
+       The starting position of the style</li>
+      <li><span class="parameter">length</span>
+       The number of positions to style</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "define_styles"></a>
+    <strong>define_styles&nbsp;()</strong>
+    </dt>
+    <dd>
+    Defines the currently used custom styles for the current buffer.
+ This must be called whenever a buffer with custom styles is switched to.
+ This is automatically done by the ??? class, and thus
+ not something you typically have to worry about.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_current_styles"></a>
+    <strong>get_current_styles&nbsp;()</strong>
+    </dt>
+    <dd>
+    Gets a list of currently defined styles.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        a table of style definitions
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
