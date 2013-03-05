@@ -9,8 +9,8 @@ and the option of specifying the buffers to list via a provided function.
 @license MIT (see LICENSE)
 @module _M.textredux.buffer_list
 ]]
-local tr_list = require 'textredux.ui.list'
-local tr_gui = require 'textredux.ui.gui'
+local tr_list = require 'textredux.core.list'
+local tr_gui = require 'textredux.core.gui'
 local L = _L
 
 local M = {}

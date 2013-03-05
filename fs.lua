@@ -1,5 +1,6 @@
 --[[--
-textredux.fs provides a text based file browser for Textadept.
+textredux.fs provides file system related functions and a text based file
+browser for Textadept.
 
 It features traditional directory browsing, snapopen functionality, completely
 keyboard driven interaction, and provides powerful narrow to search
@@ -16,9 +17,9 @@ the two modes (by default, `Ctrl + s` is assigned for this).
 
 *Quickly moving up one directory level*
 
-In traditional browsing mode, you can always select `..` to move up one directory
-level. But a quicker way of doing the same is to press `<backspace>` when you
-have an empty search. This also works when in snapopen mode.
+In traditional browsing mode, you can always select `..` to move up one
+directory level. But a quicker way of doing the same is to press `<backspace>`
+when you have an empty search. This also works when in snapopen mode.
 
 *Opening a sub directory in snapopen mode*
 
@@ -33,7 +34,7 @@ you can easily change these by customizing any of the `style_<foo>` entries
 using the Textredux style module. As an example, to make directory entries
 underlined you would do something like the following:
 
-    _M.textredux.ui.style.textredux_fs_directory = { underline = true }
+    _M.textredux.core.style.fs_directory = { underline = true }
 
 Please see the documentation for the Textredux style module for instructions
 on how to define styles.
@@ -44,15 +45,15 @@ on how to define styles.
 @module _M.textredux.fs
 ]]
 
-local list = require 'textredux.ui.list'
-local style = require 'textredux.ui.style'
-local lfs = require 'lfs'
-local tr_gui = require 'textredux.ui.gui'
+local tr_list = require 'textredux.core.list'
+local tr_style = require 'textredux.core.style'
+local tr_gui = require 'textredux.core.gui'
 
 local _G, table, io, gui = _G, table, io, gui
 local ipairs, error, type, assert, pcall =
       ipairs, error, type, assert, pcall
 local string_match, string_sub = string.match, string.sub
+local lfs = require 'lfs'
 
 local _CHARSET, WIN32 = _CHARSET, WIN32
 local ta_snapopen = _M.textadept.snapopen
@@ -66,38 +67,40 @@ local _ENV = M
 if setfenv then setfenv(1, _ENV) end
 
 --- The style used for directory entries.
-style.textredux_fs_directory = style.keyword
+tr_style.fs_directory = tr_style.keyword
 
 --- The style used for ordinary file entries.
-style.textredux_fs_file = style.string
+tr_style.fs_file = tr_style.string
 
 ---  The style used for link entries.
-style.textredux_fs_link = style.operator
+tr_style.fs_link = tr_style.operator
 
 --- The style used for socket entries.
-style.textredux_fs_socket = style.error
+tr_style.fs_socket = tr_style.error
 
 --- The style used for pipe entries.
-style.textredux_fs_pipe = style.error
+tr_style.fs_pipe = tr_style.error
 
 --- The style used for pipe entries.
-style.textredux_fs_device = style.error
+tr_style.fs_device = tr_style.error
 
 local file_styles = {
-  directory = style.textredux_fs_directory,
-  file = style.textredux_fs_file,
-  link = style.textredux_fs_link,
-  socket = style.textredux_fs_socket,
-  ['named pipe'] = style.textredux_fs_pipe,
-  ['char device'] = style.textredux_fs_device,
-  ['block device'] = style.textredux_fs_device,
-  other = style.default
+  directory = tr_style.fs_directory,
+  file = tr_style.fs_file,
+  link = tr_style.fs_link,
+  socket = tr_style.fs_socket,
+  ['named pipe'] = tr_style.fs_pipe,
+  ['char device'] = tr_style.fs_device,
+  ['block device'] = tr_style.fs_device,
+  other = tr_style.default
 }
 
 -- Splits a path into its components
 function split_path(path)
   local parts = {}
-  for part in path:gmatch('[^' .. separator .. ']+') do parts[#parts + 1] = part end
+  for part in path:gmatch('[^' .. separator .. ']+') do
+    parts[#parts + 1] = part
+  end
   return parts
 end
 
@@ -133,7 +136,9 @@ function normalize_path(path)
       normalized[#normalized + 1] = part
     end
   end
-  if #normalized == 1 and WIN32 then normalized[#normalized + 1] = '' end -- TODO: win hack
+  if #normalized == 1 and WIN32 then -- TODO: win hack
+    normalized[#normalized + 1] = ''
+  end
   return join_path(normalized)
 end
 
@@ -174,7 +179,6 @@ local function add_extensions_filter(filters, extensions)
   end
 end
 
----
 -- Given the patterns, returns a function returning true if
 -- the path should be filtered, and false otherwise
 local function create_filter(filter)
@@ -266,7 +270,8 @@ local function chdir(list, directory)
     list.buffer:line_down()
   end
   if not complete then
-    local status = 'Number of entries limited to ' .. data.max_files .. ' as per snapopen.MAX'
+    local status = 'Number of entries limited to ' ..
+                   data.max_files .. ' as per snapopen.MAX'
     gui.statusbar_text = status
   else
     gui.statusbar_text = ''
@@ -305,7 +310,7 @@ local function get_initial_directory()
 end
 
 local function get_file_style(item, index)
-  return file_styles[item.mode] or style.default
+  return file_styles[item.mode] or tr_style.default
 end
 
 local function toggle_snap(list)
@@ -337,7 +342,7 @@ local function toggle_snap(list)
 end
 
 local function create_list(directory, filter, depth, max_files)
-  local list = list.new(directory)
+  local list = tr_list.new(directory)
   local data = list.data
   list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
@@ -351,8 +356,8 @@ local function create_list(directory, filter, depth, max_files)
 end
 
 --[[- Opens a file browser and lets the user choose a file.
-@param on_selection The function to invoke when the user has choosen a file. The function
-will be called with following parameters:
+@param on_selection The function to invoke when the user has choosen a file.
+The function will be called with following parameters:
 
 - `path`: The full path of the choosen file (UTF-8 encoded).
 - `exists`: A boolean indicating whether the file exists or not.
@@ -365,8 +370,8 @@ will be called with following parameters:
 The list will not be closed automatically, so close it explicitly using
 `list:close()` if desired.
 
-@param start_directory The initial directory to open, in UTF-8 encoding. If nil,
-the initial directory is determined automatically (preferred choice is to
+@param start_directory The initial directory to open, in UTF-8 encoding. If
+nil, the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
 @param filter The filter to apply, if any. The structure and semantics are the
 same as for Textadept's
@@ -384,11 +389,14 @@ function select_file(on_selection, start_directory, filter, depth, max_files)
   filter.folders = filter.folders or {}
   filter.folders[#filter.folders + 1] = separator .. '%.$'
 
-  local list = create_list(start_directory, filter, depth or 1, max_files or 10000)
+  local list = create_list(start_directory, filter, depth or 1,
+                           max_files or 10000)
 
   list.on_selection = function(list, item, shift, ctrl, alt, meta)
     local path, mode = item.path, item.mode
-      if mode == 'link' then mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode') end
+      if mode == 'link' then
+        mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode')
+      end
       if mode == 'directory' then
         chdir(list, path)
       else
@@ -425,7 +433,8 @@ function save_buffer_as()
       buffer:save_as(path)
       gui.statusbar_text = ''
     else
-      gui.statusbar_text = 'File exists (' .. path .. '): Press enter to overwrite.'
+      gui.statusbar_text = 'File exists (' .. path ..
+                           '): Press enter to overwrite.'
       confirm_path = path
     end
   end
@@ -459,7 +468,8 @@ The main differences are:
   [lfs.attributes](http://keplerproject.github.com/luafilesystem/manual.html#attributes),
   with the following additions:
 
-    - `rel_path`: The path of the file relative to the currently displayed directory.
+    - `rel_path`: The path of the file relative to the currently
+      displayed directory.
     - `hidden`: Whether the path denotes a hidden file.
 
 @param directory The directory to open, in UTF-8 encoding.

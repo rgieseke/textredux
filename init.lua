@@ -5,18 +5,8 @@ based interfaces.
 
 It currently contains the following modules:
 
-- @{_M.textredux.style}. A module that let's you easily define custom styles,
-  as well as leveraging the default styles already provided by the user's
-  theme.
-- @{_M.textredux.indicator}. A module that provides a convenient way of using
-  indicators in your buffers.
-- @{_M.textredux.buffer}. A  class that supports custom styling, buffer
-  specific key bindings, hotspot support and generally makes it easy to create
-  a text based interface buffer by taking care of the background gruntwork
-  required.
-- @{_M.textredux.list}. A class that provides a versatile and extensible text
-  based item listing for Textadept, featuring advanced search capabilities and
-  styling.
+- @{_M.textredux.core}. The core module provides basic components to create
+  text based interfaces.
 - @{_M.textredux.fs}. Contains text based interfaces for file io operations,
   i.e. open file, save file as well as snapopen functionality.
 - @{_M.textredux.buffer_list}. A text based buffer list replacement, which in
@@ -28,7 +18,7 @@ It currently contains the following modules:
 
 ## How to use it
 
-Download and install the Textredux module in your `.textadept/modules/`
+Download and put the Textredux module in your `.textadept/modules/`
 directory.
 
 Having installed it, there are two ways you can use Textredux.
@@ -65,11 +55,7 @@ settings.
 local M = {
   buffer_list = require 'textredux.buffer_list',
   fs = require 'textredux.fs',
-  gui = require 'textredux.ui.gui',
-  buffer = require 'textredux.ui.buffer',
-  list = require 'textredux.ui.list',
-  indicator = require 'textredux.ui.indicator',
-  style = require 'textredux.ui.style',
+  core = require 'textredux.core',
 }
 
 return M
