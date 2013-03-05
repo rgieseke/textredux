@@ -1,9 +1,5 @@
----
-layout: default
----
-
-TextRedux is a module for the [Textadept editor](http://foicica.com/textadept/)
-that offers a set of text based replacement interfaces for core TextAdept
+Textredux is a module for the [Textadept editor](http://foicica.com/textadept/)
+that offers a set of text based replacement interfaces for core Textadept
 functionality. The current version offers:
 
 * A text based file browser. Completely keyboard driven, with powerful searching
@@ -11,23 +7,27 @@ functionality. The current version offers:
   snapopen (recursive) listings.
 * A replacement for the buffer list. In addition to being text based, it also
   provides an easy way of closing buffers.
-* A no-holds-barred integration module that automatically integrates all TextRedux
-  functionality in the TextAdept editor. No need to configure anything further
-  unless you want to - once you've required this you will be using TextRedux.
-  In addition to integrating the above modules, it will hook into TextAdept and
-  inject text based interfaces whereever it can, (.e.g. theme selection,
+* A no-holds-barred integration module that automatically integrates all Textredux
+  functionality in the Textadept editor. No need to configure anything further
+  unless you want to - once you've required this you will be using Textredux.
+  In addition to integrating the above modules, it will hook into Textadept and
+  inject text based interfaces whereever it can, (e.g. theme selection,
   run command, etc.)
 
 ## Installation
 
-TextRedux depends on the [TextUI module](https://github.com/rgieseke/textui), which
-needs to be installed along with TextRedux. Please see the link for more information
-about how to download TextUI.
+The Textredux module itself can be downloaded from the
+[download page](https://github.com/rgieseke/textredux/tags).
 
-The TextRedux module itself can be downloaded from the [download page](https://github.com/rgieseke/textredux/tags).
+To install the module, just unpack the module into the
 
-To install the module, just unpack the module into the `.textadept/modules/textredux`
+    .textadept/modules/textredux
+
 directory.
+Alternatively you can clone Textredux into it:
+
+    cd .textadept/modules/textredux
+    git clone https://github.com/rgieseke/textredux.git
 
 ## Usage
 
@@ -46,11 +46,12 @@ then the hijack module is for you. Simple place this in your `init.lua`:
 
     require 'textredux.hijack'
 
-As the name suggest, TextRedux has now hijacked your environment. All your regular
-key bindings, as well as the menu etc. should now use TextRedux where applicable.
+As the name suggest, Textredux has now hijacked your environment. All your
+regular key bindings should now use TextRedux where applicable. To get the
+regular GUI elements you can click the menu.
 
 Regardless of the approach chosen, the
-[module documentation](http://nordman.org/textredux/docs/) contains more
+[module documentation](./docs/index.html) contains more
 in-depth documentation for the various modules, including customization tips.
 
 Also, make sure to take a brief look at the [visual tour](tour.html) for some
@@ -59,7 +60,10 @@ quick tips on using TextRedux.
 ## Code
 
 TextRedux is released under the MIT license (see the LICENSE file in the source
-for the full details). The source code is available from [GitHub](https://github.com/rgieseke/textredux). It was written by [Nils Nordman](https://github.com/nilnor) and is now maintained by [Robert Gieseke](https://github.com/rgieseke).
+for the full details). The [source code](https://github.com/rgieseke/textredux)
+is available from GitHub. It was written by
+[Nils Nordman](https://github.com/nilnor)
+and is now maintained by [Robert Gieseke](https://github.com/rgieseke).
 
 ## Contribute
 
@@ -75,16 +79,28 @@ patches, I'll be happy to recieve these through other means as well.
 
 ## Changelog
 
+### 0.4 ()
+
+- Integrate TextUI module back into Textredux as the `core` submodule.
+- Update to snapopen API change in Textadept 6.2.
+
 ### 0.3 (2012-11-28)
 
 - Updates for API changes until Textadept 6.
-- Don't hijack menu entries, use the default widget when clicking the menus.
+- Don't hijack menu entries, use the default widgets when clicking the menu.
 
 ### 0.2 (2012-03-08)
 
 - Make ctrl+enter open entries in another view (buffer list / file browser)
 - Make buffer list keys configurable
 - Handle buffers with nil directories in the buffer list
+- TextUI:
+    - Added support for indicators
+    - Improved auto-loading of not-shown list items
+    - Added highlighting of list matches
+    - Added mouse support for buffer hotspots
+    - Font names are now included for default styles
+    - List selection callbacks now receive modifiers as well
 
 ### 0.1 (2012-01-20)
 

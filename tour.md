@@ -1,12 +1,8 @@
----
-layout: default
----
-
 # Visual tour
 
 ![Open file](images/fs_listing.png)
 
-Above you can see the open file screen for the TextAdept directory, displaying a
+Above you can see the open file screen for the Textadept directory, displaying a
 normal directory listing. To narrow the file list just type some characters.
 To change to the parent directory either select the '`..`' entry or press
 `backspace`.
@@ -33,5 +29,5 @@ buffer list you can also narrow entries by the directory name.
 ![Run command](images/run_command.png)
 
 The above image shows nothing new interface-wise, but illustrates the use of
-the TextRedux `hijack` module. When using the `hijack` module, TextRedux replaces
-whatever it can of traditional interfaces with text based counterparts.
+the Textredux `hijack` module. When using the `hijack` module, Textredux
+replaces whatever it can of traditional interfaces with text based counterparts.
