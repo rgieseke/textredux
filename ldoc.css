@@ -1,11 +1,13 @@
-/* LDoc stylesheet, by Nils Nordman <nino at nordman.org>. */
+/* LDoc stylesheet, by Nils Nordman <nino at nordman.org>.
+   Changed with Solarized Colors by Robert Gieseke */
 
 body {
   padding: 2em 1em 2em 1em;
   margin: 0;
-  background-color: #3D3D3D;
+  background-color: #fdf6e3;
   width: 100%;
   font-size: small;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 a:link { text-decoration: none; }
@@ -13,28 +15,25 @@ a:link { text-decoration: none; }
 #navigation {
   float: left;
   width: 20%;
-  border-radius: 15px;
-  -moz-border-radius: 15px;
-
-  background-color: navy;
-  font-family: Arial Bold,Gadget,sans-serif;
-  color: lightgray;
+  -moz-box-shadow: 0 0 5px #93a1a1;
+  -webkit-box-shadow: 0 0 5px#93a1a1;
+  box-shadow: 0 0 5px #93a1a1;
+  border: 1px solid #93a1a1;
+  color: #839496;
   vertical-align: top;
-  color: goldenrod;
-  border: 1px solid #2d2d2d;
 }
 
 #navigation h1 {
   font-size: 1.4em;
   padding-left:  1em;
-  color: lightgray;
+  color: #839496;
   margin-top: 0;
 }
 
 #navigation h2 {
-  background-color: #0000b0;
+  background-color: #eee8d5;
   font-size: 1.2em;
-  padding: 0.3em;
+  padding: 0.5em 1em 0.5em 1em;
 }
 
 #navigation ul {
@@ -44,41 +43,41 @@ a:link { text-decoration: none; }
 }
 
 #navigation li {
-  padding: 0.3em;
+  color: #073642;
+  padding: 0.5em;
 }
 
 #navigation a {
   font-weight: bold;
-  color: lightblue;
-  padding: 0.3em;
+  color: #839496;
+  padding: 0.5em;
 }
 
 #navigation a:hover {
-  background-color: #2D2D2D;
+  background-color: #eee8d5;
   border-radius: 5px;
 }
 
 #content {
-  background-color: white;
+  background-color: #fdf6e3;
   margin-left: 25%;
   width: 65%;
-  border-radius: 15px;
-  -moz-border-radius: 15px;
+  -moz-box-shadow: 0 0 5px #93a1a1;
+  -webkit-box-shadow: 0 0 5px#93a1a1;
+  box-shadow: 0 0 5px #93a1a1;
+  border: 1px solid #93a1a1;
   padding: 1em;
-  box-shadow: 5px 5px 5px black;
   font-size: 1.2em;
   overflow: visible;
 }
 
-#content a { font-weight: bold; color: navy; }
+#content a { font-weight: bold; color: #839496; }
 #content a:hover { text-decoration: underline; }
 #content h1 { margin-top: 0; }
 
 #content h2 {
-  border-radius: 10px;
-  -moz-border-radius: 10px;
   padding: 5px;
-  background-color: lightgrey;
+  background-color: #eee8d5;
 }
 
 #content dt { padding: 1em; }
