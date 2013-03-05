@@ -1,6 +1,7 @@
 -- ldoc configuration file
-title = 'TextRedux docs'
-project = 'TextRedux'
+title = 'Textredux docs'
+project = 'Textredux'
+file = {'init.lua', 'fs.lua', 'buffer_list.lua', 'core', 'hijack'}
 format = 'markdown'
 style = true
 template = false

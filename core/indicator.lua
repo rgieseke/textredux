@@ -35,12 +35,12 @@ get the defined indicator number for an indicator, you can retrieve it using
 between buffer switches, so problems may arise if you hold on to an indicator
 number.
 
-Please see the example @{buffer_indicators.lua} for some practical usage.
+Please see the example `buffer_indicators.lua` for some practical usage.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
 @license MIT (see LICENSE)
-@module _M.textredux.indicator
+@module _M.textredux.core.indicator
 ]]
 
 local color = require 'textredux.util.color'

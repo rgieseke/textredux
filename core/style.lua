@@ -80,14 +80,14 @@ named `awesome`, then name your style something like `style.awesome_style`.
 Using styles
 ------------
 
-You typically use a style by inserting text through @{_M. .buffer}'s text
-insertion methods, specifying the style. Please see the examples in
-@{buffer_styling.lua} for examples on this.
+You typically use a style by inserting text through
+@{_M.textredux.core.buffer}'s text insertion methods, specifying the style.
+Please see the example in `examples/buffer_styling.lua` for usage of this.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.style
+@module _M.textredux.core.style
 ]]
 
 local _G, pairs, setmetatable, error, tonumber =

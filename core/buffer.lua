@@ -55,7 +55,7 @@ Please see the examples for more hands-on instructions.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.buffer
+@module _M.textredux.core.buffer
 ]]
 
 local key = require 'textredux.core.key'

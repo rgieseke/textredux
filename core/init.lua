@@ -8,7 +8,7 @@ It currently consists of 4 components:
   styles, as well as leveraging the default styles already provided by the
   user's theme.
 
-  - A @{_M.textredux.core.indicator} module that provides a convenient way of
+- A @{_M.textredux.core.indicator} module that provides a convenient way of
   using indicators in your buffers.
 
 - A @{_M.textredux.core.buffer} class that supports custom styling, buffer
@@ -23,7 +23,7 @@ It currently consists of 4 components:
 How to use
 ----------
 
-After installing the TextUI module into your `modules` directory, you can
+After installing the Textredux module into your `modules` directory, you can
 either do
 
     _M.textredux.core = require 'textredux.core'
@@ -41,7 +41,7 @@ features, and the documentation for each component provide more in depth details
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textui
+@module _M.textredux.core
 ]]
 
 local M = {
