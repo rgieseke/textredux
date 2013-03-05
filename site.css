@@ -104,6 +104,16 @@ li {
 
 /* GitHub CSS ribbon from
 http://codepo8.github.com/css-fork-on-github-ribbon/ */
+#forkongithub{
+  position:absolute;
+  display:block;
+  top:0;
+  right:0;
+  width:200px;
+  overflow:hidden;
+  height:200px;
+}
+
 #forkongithub a{
   background:#000;
   color:#fff;
@@ -116,7 +126,15 @@ http://codepo8.github.com/css-fork-on-github-ribbon/ */
   line-height:2rem;
   position:relative;
   transition:0.5s;
+  width:200px;
+  position:absolute;
+  top:60px;
+  right:-60px;
+  transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
+  box-shadow:4px 4px 10px rgba(0,0,0,0.8);
 }
+
 
 #forkongithub a:hover{
   background:#060;
@@ -140,21 +158,8 @@ http://codepo8.github.com/css-fork-on-github-ribbon/ */
   top:auto;
 }
 
-@media screen and (min-width:800px){
+@media screen and (max-width:800px){
   #forkongithub{
-    position:absolute;
-    display:block;
-    top:0;
-    right:0;
-    width:200px;
-    overflow:hidden;
-    height:200px;
-    }#forkongithub a{width:200px;
-    position:absolute;
-    top:60px;
-    right:-60px;
-    transform:rotate(45deg);
-    -webkit-transform:rotate(45deg);
-    box-shadow:4px 4px 10px rgba(0,0,0,0.8);
+    display: none;
   }
 }
