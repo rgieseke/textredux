@@ -29,9 +29,6 @@ local header = [[<!DOCTYPE html>
 
 local footer = [[
       </div>
-      <div class="footer">
-        <a href="https://github.com/rgieseke/textredux">Textredux on GitHub</a>
-      </div>
     </div>
   </body>
 </html>]]

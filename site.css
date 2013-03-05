@@ -2,105 +2,96 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
-  background-color: #2d2d2d;
+  background-color: #fdf6e3;
   font-family: Arial Bold, Gadget, sans-serif;
 }
 
 img { border: 0; }
-a:link { text-decoration: none; color: dodgerblue; }
-a:visited { text-decoration: none; color: dodgerblue; }
-a:hover { color: lightblue; text-decoration: underline; }
-a:active { color: lightblue; }
+a:link { text-decoration: none; color: #b58900; }
+a:visited { text-decoration: none; color: #b58900; }
+a:hover { color:  #cb4b16; text-decoration: underline; }
+a:active { color: #cb4b16; }
 
 li {
   padding: 5px;
 }
 
 .header {
-  background-color: #00004d;
+  background-color: #fdf6e3;
   padding: 10px;
   vertical-align: top;
-  border-bottom: 1px solid black;
   padding: 0 0 0 1em;
-
-  border-radius: 30px 30px 0 0;
-  -moz-border-radius: 30px 30px 0 0;
-  background-color: none;
 }
 
 .header .title {
-  color: darkgoldenrod;
+  color: #b58900;
   margin: 0;
   font-size: 4em;
-  font-family: 'Bowlby One SC', cursive;
+  font-family: 'Bowlby One SC';
 }
-
-.header p {
-  color: darkgray;
-  margin: 0px;
-  padding: 0;
-  margin-top: -20px;
-}
-
-.header .gh-banner { float: right; }
 
 .nav {
-  background-color: #dadada;
-  background-color: navy;
+  border-top: 1px solid #93a1a1;
+  border-bottom: 1px solid #93a1a1;
+  background-color: #eee8d5;
   padding: 5px;
 }
 
 .nav a {
-  color: grey;
+  color: #839496;
   font-weight: bold;
-  font-size: 14px;
+  font-size: larger;
   padding: 5px;
 }
 
-.nav ul { margin: 0; display: inline; padding: 0; }
+.nav ul {
+  display: inline;
+  padding: 0;
+}
+
 .nav ul li { display: inline; list-style: none; padding-right: 5px; }
 
 .container {
+  -moz-box-shadow: 0 0 5px #93a1a1;
+  -webkit-box-shadow: 0 0 5px#93a1a1;
+  box-shadow: 0 0 5px #93a1a1;
+  border: 1px solid #93a1a1;
   max-width: 800px;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .main {
-  background-color: black;
-  padding: 20px;
+  background-color: #fdf6e3;
+  padding-top: 5px;
   font-size: normal;
-  color: #aaaaaa;
+  color: #073642;
+}
+.main p, h3 {
+  padding: 0 20px 0 20px;
 }
 
 .main h2 {
-  padding: 5px 5px 5px 10px;
+  margin: 30px 0 20px 0;
+  padding: 10px 20px 10px 20px;
   font-size: larger;
-  margin-bottom: 10px;
-  background-color: #2d2d2d;
-  background-color: #00004d;
-  color: grey;
   font-weight: bold;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
+  background-color: #eee8d5;
+  border-top: 1px solid #93a1a1;
+  border-bottom: 1px solid #93a1a1;
 }
 
 .main pre {
-  background-color: #2d2d2d;
-  color: #009900;
+  background-color: #eee8d5;
+  color: #586e75;
   font-size: large;
-  padding: 5px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
+  margin: 0 20px 0 20px;
+  padding: 10px 20px 10px 20px;
 }
 
-.footer {
-  text-align: center;
-  color: grey;
-  font-size: small;
-}
 
 /* GitHub CSS ribbon from
 http://codepo8.github.com/css-fork-on-github-ribbon/ */
@@ -115,8 +106,8 @@ http://codepo8.github.com/css-fork-on-github-ribbon/ */
 }
 
 #forkongithub a{
-  background:#000;
-  color:#fff;
+  background: #cb4b16;
+  color: #fdf6e3;
   text-decoration:none;
   font-family:arial, sans-serif;
   text-align:center;
@@ -132,13 +123,13 @@ http://codepo8.github.com/css-fork-on-github-ribbon/ */
   right:-60px;
   transform:rotate(45deg);
   -webkit-transform:rotate(45deg);
-  box-shadow:4px 4px 10px rgba(0,0,0,0.8);
+  box-shadow:4px 4px 10px #93a1a1;;
 }
 
 
 #forkongithub a:hover{
-  background:#060;
-  color:#fff;
+  background: #b58900;
+  color: #eee8d5;
 }
 
 #forkongithub a::before,

@@ -11,8 +11,7 @@ functionality. The current version offers:
   functionality in the Textadept editor. No need to configure anything further
   unless you want to - once you've required this you will be using Textredux.
   In addition to integrating the above modules, it will hook into Textadept and
-  inject text based interfaces whereever it can, (e.g. theme selection,
-  run command, etc.)
+  inject text based interfaces whereever it can (e.g. file open or theme selection).
 
 ## Installation
 
