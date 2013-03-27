@@ -50,15 +50,15 @@ local function patch_keys(replacements)
   end
 end
 
-local ta_snapopen_open = ta.snapopen.open
-local function snapopen_compat(utf8_paths, filter, exclude_FILTER, depth)
+local io_snapopen = io.snapopen
+local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
   if not utf8_paths or
      (type(utf8_paths) == 'table' and #utf8_paths ~= 1)
   then
-    return ta_snapopen(utf8_paths, filter, exclude_FILTER, depth)
+    return io_snapopen(utf8_paths, filter, exclude_FILTER, ...)
   end
   local directory = type(utf8_paths) == 'table' and utf8_paths[1] or utf8_paths
-  fs.snapopen(directory, filter, exclude_FILTER, depth)
+  fs.snapopen(directory, filter, exclude_FILTER)
 end
 
 local io_open_file = io.open_file
@@ -100,8 +100,8 @@ replacements[gui.switch_buffer] = _M.textredux.buffer_list.show
 gui.switch_buffer = _M.textredux.buffer_list.show
 
 -- Hijack snapopen.
-replacements[ta.snapopen.open] = snapopen_compat
-ta.snapopen.open = snapopen_compat
+replacements[io.snapopen] = snapopen_compat
+io.snapopen = snapopen_compat
 
 -- Hijack open file and save_as.
 replacements[io.open_file] = open_file_compat

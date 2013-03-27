@@ -31,7 +31,7 @@ local function on_refresh(buffer)
 
   buffer:add_text('\nTable command: ')
   buffer:add_text('Snapopen user home', tr_style.action_style,
-                  { _M.textadept.snapopen.open, _USERHOME })
+                  { io.snapopen, _USERHOME })
 
   buffer:add_text('\n\nExplicit hotspot: ')
   local start_pos = buffer.current_pos

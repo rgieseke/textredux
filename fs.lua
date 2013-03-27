@@ -56,7 +56,6 @@ local string_match, string_sub = string.match, string.sub
 local lfs = require 'lfs'
 
 local _CHARSET, WIN32 = _CHARSET, WIN32
-local ta_snapopen = _M.textadept.snapopen
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
 local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
 local separator = WIN32 and '\\' or '/'
@@ -94,6 +93,8 @@ local file_styles = {
   ['block device'] = tr_style.fs_device,
   other = tr_style.default
 }
+
+local DEFAULT_DEPTH = 99
 
 -- Splits a path into its components
 function split_path(path)
@@ -271,7 +272,7 @@ local function chdir(list, directory)
   end
   if not complete then
     local status = 'Number of entries limited to ' ..
-                   data.max_files .. ' as per snapopen.MAX'
+                   data.max_files .. ' as per io.SNAPOPEN_MAX'
     gui.statusbar_text = status
   else
     gui.statusbar_text = ''
@@ -320,7 +321,7 @@ local function toggle_snap(list)
   if data.prev_depth then
     data.depth = data.prev_depth
   else
-    data.depth = data.depth == 1 and ta_snapopen.DEFAULT_DEPTH or 1
+    data.depth = data.depth == 1 and DEFAULT_DEPTH or 1
   end
 
   local filter = data.filter
@@ -375,7 +376,7 @@ nil, the initial directory is determined automatically (preferred choice is to
 open the directory containing the current file).
 @param filter The filter to apply, if any. The structure and semantics are the
 same as for Textadept's
-[snapopen](http://foicica.com/textadept/api/_M.textadept.snapopen.html).
+[snapopen](http://foicica.com/textadept/api/io.html#snapopen).
 @param depth The number of directory levels to display in the list. Defaults to
 1 if not specified, which results in a "normal" directory listing.
 @param max_files The maximum number of files to scan and display in the list.
@@ -417,7 +418,7 @@ end
 -- @param start_directory The directory to open, in UTF-8 encoding
 function open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
-  select_file(open_selected_file, start_directory, filter, 1, ta_snapopen.MAX)
+  select_file(open_selected_file, start_directory, filter, 1, io.SNAPOPEN_MAX)
 end
 
 --- Saves the current buffer under a new name.
@@ -458,11 +459,10 @@ end
 --[[-
 Opens a list of files in the specified directory, according to the given
 parameters. This works similarily to
-[Textadept snapopen](http://foicica.com/textadept/api/_M.textadept.snapopen.html).
+[Textadept snapopen](http://foicica.com/textadept/api/io.html#snapopen).
 The main differences are:
 
-- it does not support opening multiple paths at once, which also makes the
-  Textadept parameter `exclusive` pointless.
+- it does not support opening multiple paths at once
 - filter can contain functions as well as patterns (and can be a function as well).
   Functions will be passed a file object which is the same as the return from
   [lfs.attributes](http://keplerproject.github.com/luafilesystem/manual.html#attributes),
@@ -478,12 +478,12 @@ Textadept.
 @param exclude_FILTER Same as for Textadept: unless if not true then
 snapopen.FILTER will be automatically added to the filter.
 to snapopen.FILTER if not specified.
-@param depth The number of directory levels to scan. Same as for Textadept,
-and also defaults to snapopen.DEFAULT_DEPTH if not specified.
+@param depth The number of directory levels to scan. Defaults to DEFAULT_DEPTH
+if not specified.
 ]]
 function snapopen(directory, filter, exclude_FILTER, depth)
   if not directory then error('directory not specified', 2) end
-  if not depth then depth = ta_snapopen.DEFAULT_DEPTH end
+  if not depth then depth = DEFAULT_DEPTH end
   filter = filter or {}
   if type(filter) == 'string' then filter = { filter } end
   filter.folders = filter.folders or {}
@@ -492,13 +492,13 @@ function snapopen(directory, filter, exclude_FILTER, depth)
   if not exclude_FILTER then
     for _, key in ipairs({ 'folders', 'extensions' }) do
       filter[key] = filter[key] or {}
-      for _, pattern in ipairs(ta_snapopen.FILTER[key]) do
+      for _, pattern in ipairs(lfs.FILTER[key]) do
         filter[key][#filter[key] + 1] = pattern
       end
     end
   end
 
-  select_file(open_selected_file, directory, filter, depth, ta_snapopen.MAX)
+  select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
 end
 
 return M

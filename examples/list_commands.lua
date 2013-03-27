@@ -16,7 +16,7 @@ function M.show_action_list()
   list.items = { 'one', 'two', 'three' }
 
   -- assign snapopen user home as a table command to `3`
-  list.keys['4'] = { _M.textadept.snapopen.open, _USERHOME }
+  list.keys['4'] = { io.snapopen, _USERHOME }
 
   -- assign a closure to `5`, which prints the list title to the statusbar
   list.keys['5'] = function(list)
