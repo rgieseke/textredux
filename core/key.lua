@@ -52,9 +52,10 @@ local SHIFT = 's'..ADD
 function M.translate(code, shift, control, alt, meta)
   local buffer = buffer
   local key
+
   if code < 256 then
-    key = string_char(code)
-    shift = false -- for printable characters, key is upper case
+    key = (not NCURSES or code > 32) and string_char(code) or keys.KEYSYMS[code]
+    shift = shift and code < 32 -- for printable characters, key is upper case
   else
     key = keys.KEYSYMS[code] or KEYSYMS_PLUS[code]
     if not key then return end
