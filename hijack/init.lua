@@ -28,27 +28,34 @@ local ta = _M.textadept
 local menu = ta.menu
 local unpack = unpack or table.unpack
 
-local function get_replacement(replacements, command)
-  if type(command) == 'table' then
-    local replacement = replacements[command[1]]
-    if replacement then
-      return { replacement, unpack(command, 2) }
+local function get_id(f)
+    local id = ''
+    if type(f) == 'function' then
+      id = tostring(f)
+    elseif type(f) == 'table' then
+      for i = 1, #f do id = id..tostring(f[i]) end
     end
+    return id
   end
-  return replacements[command]
-end
 
 local function patch_keys(replacements)
   local _keys = {}
-  for k, v in pairs(keys) do _keys[k] = v end
-
-  for k, command in pairs(_keys) do
-    local replacement = get_replacement(replacements, command)
+  for k, v in pairs(keys) do
+    _keys[k] = get_id(v)
+  end
+  for k, command_id in pairs(_keys) do
+    local replacement = replacements[command_id]
     if replacement ~= nil then
       keys[k] = replacement
     end
   end
 end
+
+-- Table with unique identifiers for items to be replaced.
+local replacements = {}
+setmetatable(replacements, {__newindex = function(t, k, v)
+  rawset(t, get_id(k), v)
+end})
 
 local io_snapopen = io.snapopen
 local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
@@ -78,8 +85,6 @@ function save_as_compat(buffer, utf8_filename)
   _G.buffer.save_as = save_as_compat
   if not status then events.emit(events.ERROR, ret) end
 end
-
-local replacements = {}
 
 -- Hijack filteredlist for the below functions.
 for _, target in ipairs({
