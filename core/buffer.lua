@@ -67,7 +67,7 @@ local error, setmetatable, ipairs, pairs, tostring, error,
       rawget, rawset, type, xpcall, select =
       error, setmetatable, ipairs, pairs, tostring, error,
       rawget, rawset, type, xpcall, select
-local new_buffer, events, table = new_buffer, events, table
+local events, table = events, table
 local constants = _SCINTILLA.constants
 local huge = math.huge
 local band = bit32.band
@@ -402,7 +402,7 @@ function buffer:_set_style(pos, length, style)
 end
 
 function buffer:_create_target()
-  local target = new_buffer()
+  local target = _G.buffer.new()
   target._textredux = self
   target.lexer_language = constants.SCLEX_CONTAINER
   target.eol_mode = constants.SC_EOL_LF
@@ -512,7 +512,7 @@ end
 local function _on_new_view()
   local tr_buf = _G.buffer._textredux
   if tr_buf then
-    local tmp_buf = new_buffer()
+    local tmp_buf = _G.buffer.new()
     tmp_buf:delete()
     tr_buf:show()
   end
