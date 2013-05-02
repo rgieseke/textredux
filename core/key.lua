@@ -6,7 +6,7 @@ translation functionality.
 This code is almost lifted verbatim from _M.textadept.keys, which has the
 following copyright and license:
 
-Copyright (c) 2007-2011 Mitchell
+Copyright (c) 2007-2013 Mitchell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 --]]
 
-local string_char = string.char
-
 local M = {}
 
-local KEYSYMS_PLUS = {
-  [0xff96] = 'kpleft',
-  [0xff97] = 'kpup',
-  [0xff98] = 'kpright',
-  [0xff99] = 'kpdown',
-  [0xff9a] = 'kppgup',
-  [0xff9b] = 'kppgdn',
-  [0xff9c] = 'kpend',
-  [0xff95] = 'kphome',
-}
-
--- settings
+-- Settings.
 local ADD = ''
 local CTRL = 'c'..ADD
 local ALT = 'a'..ADD
@@ -50,21 +37,17 @@ local META = 'm'..ADD
 local SHIFT = 's'..ADD
 
 function M.translate(code, shift, control, alt, meta)
-  local buffer = buffer
+  if code == 13 then return '\n' end -- workaround for curses version
   local key
-
-  if code < 256 then
-    key = (not NCURSES or code > 32) and string_char(code) or keys.KEYSYMS[code]
-    shift = shift and code < 32 -- for printable characters, key is upper case
+  if code < 256 and (not CURSES or code ~= 7) then
+    key = string.char(code)
   else
-    key = keys.KEYSYMS[code] or KEYSYMS_PLUS[code]
-    if not key then return end
+    key = _G.keys.KEYSYMS[code]
   end
-  control = control and CTRL or ''
-  alt = alt and ALT or ''
-  meta = meta and OSX and META or ''
-  shift = shift and SHIFT or ''
-  local key_seq = control..alt..meta..shift..key
+  if not key then return end
+  shift = shift and (code >= 256 or code == 9) -- printable chars are uppercased
+  local key_seq = (control and CTRL or '')..(alt and ALT or '')..
+                  (meta and OSX and META or '')..(shift and SHIFT or '')..key
   return key_seq
 end
 
