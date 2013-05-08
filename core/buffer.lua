@@ -404,7 +404,7 @@ end
 function buffer:_create_target()
   local target = _G.buffer.new()
   target._textredux = self
-  target.lexer_language = constants.SCLEX_CONTAINER
+  target:set_lexer('text')
   target.eol_mode = constants.SC_EOL_LF
   target:set_save_point()
   target.undo_collection = false
