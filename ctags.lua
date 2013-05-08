@@ -1,8 +1,8 @@
--- For supported filetypes, displays a filtered list dialog with symbols
+-- For supported filetypes, displays a filtered list with symbols
 -- in the current document using
 -- [Exuberant Ctags](http://ctags.sourceforge.net/).
 -- Note that it is possible to add support for additional filetypes, for
--- example for Latex:
+-- example for LaTeX:
 -- In `~/.ctags`:
 --
 --     --langdef=latex
