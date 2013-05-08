@@ -44,7 +44,7 @@ end
 function M.goto_symbol()
   if not buffer.filename then return end
   local symbols = {}
-  local p = io.popen(M.CTAGS..' --excmd=number -f - "'..buffer.filename..'"')
+  local p = io.popen(M.CTAGS..' --sort=no --excmd=number -f - "'..buffer.filename..'"')
   for line in p:read('*all'):gmatch('[^\r\n]+') do
     local name, line, ext = line:match('^(%S+)\t[^\t]+\t([^;]+);"\t(.+)$')
     if name and line and ext then
