@@ -37,7 +37,6 @@ local META = 'm'..ADD
 local SHIFT = 's'..ADD
 
 function M.translate(code, shift, control, alt, meta)
-  if code == 13 then return '\n' end -- workaround for curses version
   local key
   if code < 256 and (not CURSES or code ~= 7) then
     key = string.char(code)
