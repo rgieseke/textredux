@@ -74,9 +74,15 @@ not be an option I'll gladly accept patches through other means as well.
 
 If you have any bug reports or feature requests, please submit these to the
 [Github issue tracker](https://github.com/rgieseke/textredux/issues). As with
-patches, I'll be happy to recieve these through other means as well.
+patches, I'll be happy to receive these through other means as well.
 
 ## Changelog
+
+### 0.6 (2013-06-08)
+
+- Compatibility with Textadept 6.6 and 7.0 beta
+- Added ctags symbol filtered list search
+- Removed workaround for Curses version
 
 ### 0.5 (2013-05-02)
 
