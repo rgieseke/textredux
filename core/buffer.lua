@@ -533,7 +533,7 @@ local function _on_keypress(code, shift, ctl, alt, meta)
   if not tr_buf then return end
   local key = key.translate(code, shift, ctl, alt, meta)
 
-  if key and key:match('\n') and
+  if key and key:match('[\r\n]') and
      tr_buf:_on_user_select(tr_buf.current_pos, shift, ctl, alt, meta) then
     return true
   end
