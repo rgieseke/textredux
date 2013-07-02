@@ -91,7 +91,7 @@ for _, target in ipairs({
   { ta.mime_types, 'select_lexer' },
   { menu, 'select_command' },
   { io, 'open_recent_file' },
-  --{ ta.bookmarks, 'goto_mark' },
+  { ta.bookmarks, 'goto_mark' },
 }) do
   local func = target[1][target[2]]
   local wrap = fl.wrap(func)
