@@ -78,9 +78,15 @@ patches, I'll be happy to receive these through other means as well.
 
 ## Changelog
 
+### 0.7 (2013-07-02)
+
+- Compatibility with Textadept 7.0 alpha 2
+- Better workaround for item selection in Curses version
+  (Thanks to Chris Emerson)
+
 ### 0.6 (2013-06-08)
 
-- Compatibility with Textadept 6.6 and 7.0 beta
+- Compatibility with Textadept 6.6 and 7.0 alpha
 - Added ctags symbol filtered list search
 - Removed workaround for Curses version
 
