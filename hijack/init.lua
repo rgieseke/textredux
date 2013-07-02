@@ -88,11 +88,10 @@ end
 
 -- Hijack filteredlist for the below functions.
 for _, target in ipairs({
-  { gui, _RELEASE:find('Textadept 7') and 'set_theme' or 'select_theme' },
   { ta.mime_types, 'select_lexer' },
   { menu, 'select_command' },
   { io, 'open_recent_file' },
-  { ta.bookmarks, 'goto_bookmark' },
+  --{ ta.bookmarks, 'goto_mark' },
 }) do
   local func = target[1][target[2]]
   local wrap = fl.wrap(func)
