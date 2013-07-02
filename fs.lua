@@ -225,9 +225,9 @@ local function find_files(directory, filter, depth, max_files)
     local dir = table.remove(directories)
     if dir.depth > 1 then files[#files + 1] = dir end
     if dir.depth <= depth then
-      local status, entries = pcall(lfs.dir, dir.path:iconv(_CHARSET, 'UTF-8'))
+      local status, entries, dir_obj = pcall(lfs.dir, dir.path:iconv(_CHARSET, 'UTF-8'))
       if status then
-        for entry in entries do
+        for entry in entries, dir_obj do
           entry = entry:iconv('UTF-8', _CHARSET)
           local file = file(dir.path .. separator .. entry, entry, dir)
           if not filter(file) then
