@@ -88,7 +88,7 @@ end
 
 -- Hijack filteredlist for the below functions.
 for _, target in ipairs({
-  { ta.mime_types, 'select_lexer' },
+  { ta.file_types, 'select_lexer' },
   { menu, 'select_command' },
   { io, 'open_recent_file' },
   { ta.bookmarks, 'goto_mark' },
