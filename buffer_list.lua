@@ -71,7 +71,7 @@ end
 
 local function on_selection(list, item, shift, ctrl)
   list:close()
-  if ctrl then tr_gui.switch_to_other_view() end
+  if ctrl then tr_ui.switch_to_other_view() end
   view:goto_buffer(_BUFFERS[item.buffer])
 end
 
@@ -99,7 +99,7 @@ function M.close_buffer(list)
   if not list then error('`list` must be provided', 2) end
   local sel_buffer, name = M.currently_selected_buffer(list)
   if sel_buffer then
-    gui.statusbar_text = 'Closing ' .. name .. '..'
+    ui.statusbar_text = 'Closing ' .. name .. '..'
     local current_pos = buffer.current_pos
     local current_search = list:get_current_search()
     view:goto_buffer(_BUFFERS[sel_buffer])
@@ -110,9 +110,9 @@ function M.close_buffer(list)
       list:set_current_search(current_search)
       buffer.goto_pos(math.min(current_pos, buffer.length))
       buffer.home()
-      gui.statusbar_text = 'Closed ' .. name
+      ui.statusbar_text = 'Closed ' .. name
     else
-      gui.statusbar_text = ''
+      ui.statusbar_text = ''
     end
   end
 end
@@ -133,7 +133,7 @@ function M.show(buffers)
   end
   M.list.items = get_buffer_items()
   M.list:show()
-  gui.statusbar_text = '[Enter] = open, [Ctrl+d] = close selected buffer'
+  ui.statusbar_text = '[Enter] = open, [Ctrl+d] = close selected buffer'
 end
 
 return M

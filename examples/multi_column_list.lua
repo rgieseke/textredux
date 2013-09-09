@@ -16,7 +16,7 @@ local M = {}
 local function on_selection(list, item)
   -- we will get back exactly what we specified, so the below code will print
   -- the IDs we specify further down (1, 2 or 3)
-  gui.statusbar_text = 'You selected ' .. item.id
+  ui.statusbar_text = 'You selected ' .. item.id
 end
 
 function M.show_multi_column_list()

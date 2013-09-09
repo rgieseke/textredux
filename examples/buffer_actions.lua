@@ -26,7 +26,7 @@ local function on_refresh(buffer)
     if ctl then modifiers = modifiers .. ' control' end
     if alt then modifiers = modifiers .. ' alt' end
     if meta then modifiers = modifiers .. ' meta' end
-    gui.statusbar_text = "Selected with modifiers: " .. modifiers
+    ui.statusbar_text = "Selected with modifiers: " .. modifiers
   end)
 
   buffer:add_text('\nTable command: ')
@@ -37,13 +37,13 @@ local function on_refresh(buffer)
   local start_pos = buffer.current_pos
   buffer:add_text('Click here somewhere\nto select a theme',
                   tr_style.action_style)
-  buffer:add_hotspot(start_pos, buffer.current_pos, gui.select_theme)
+  buffer:add_hotspot(start_pos, buffer.current_pos, ui.select_theme)
 end
 
 local function on_keypress(buffer, key, code, shift, ctl, alt, meta)
   -- print all lowercase characters to the statusbar
   if key and string.match(key, '^[a-z]$') then
-    gui.statusbar_text = key
+    ui.statusbar_text = key
     return true
   end
 end
@@ -54,7 +54,7 @@ function M.create_action_buffer()
   buffer.on_keypress = on_keypress
 
   -- bind Control C to 'select command'
-  buffer.keys.cc = _M.textadept.menu.select_command
+  buffer.keys.cc = textadept.menu.select_command
 
   buffer:show()
 end

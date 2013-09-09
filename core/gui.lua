@@ -19,7 +19,7 @@ M.view_split_preference = 'vertical'
 
 function M.switch_to_other_view()
   if #_VIEWS ~= 1 then
-    _G.gui.goto_view(1, true)
+    _G.ui.goto_view(1, true)
   else
     view:split(M.view_split_preference == 'vertical')
   end

@@ -2,7 +2,7 @@ local list = require 'textredux.core.list'
 
 local M = {}
 
-local gui_filteredlist = gui.filteredlist
+local ui_filteredlist = ui.filteredlist
 local current_coroutine
 
 local function convert_multi_column_table(nr_columns, items)
@@ -23,8 +23,8 @@ local function index_of(element, table)
   end
 end
 
-gui.filteredlist = function(title, columns, items, int_return, ...)
-  if not current_coroutine then return gui_filteredlist(title, columns, items, int_return, ...) end
+ui.filteredlist = function(title, columns, items, int_return, ...)
+  if not current_coroutine then return ui_filteredlist(title, columns, items, int_return, ...) end
   local co = current_coroutine
   if columns then
     columns = type(columns) == 'string' and { columns } or columns

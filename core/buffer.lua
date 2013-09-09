@@ -130,12 +130,12 @@ as for the standard Textadept event.
 on_keypress = nil
 
 --[[- A table of key commands for the buffer.
-This is similar to `_M.textadept.keys` works, but allows you to specify key
+This is similar to `textadept.keys` works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
 is the same as for
-[_M.textadept.keys](http://foicica.com/textadept/api/keys.html),
+[textadept.keys](http://foicica.com/textadept/api/keys.html),
 and the values assigned can also be either functions or tables.
-There are differences compared to `_M.textadept.keys` however:
+There are differences compared to `textadept.keys` however:
 
 - It's not possible to specify language specific key bindings. This is
   obviously not applicable for a Textredux buffer.
@@ -580,11 +580,11 @@ local function _on_indicator_release(position, modifiers)
     if _G._VIEWS[cur_view] and cur_view.buffer ~= tr_buf.target then
       local focused_view = _G.view
       if cur_view ~= focused_view then
-        _G.gui.goto_view(_G._VIEWS[cur_view], false)
+        _G.ui.goto_view(_G._VIEWS[cur_view], false)
       end
       _G.buffer:goto_pos(position)
       if _G.view ~= focused_view then
-        _G.gui.goto_view(_G._VIEWS[focused_view], false)
+        _G.ui.goto_view(_G._VIEWS[focused_view], false)
       end
     end
     return true

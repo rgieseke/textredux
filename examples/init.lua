@@ -39,7 +39,7 @@ for k, v in pairs(examples) do
 end
 
 local function on_selection(list, item)
-  gui.statusbar_text = item
+  ui.statusbar_text = item
   examples[item]()
 end
 

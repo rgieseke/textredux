@@ -3,7 +3,7 @@ Handles translation of key presses to Textadept key strings. Hopefully this
 can be removed in the future if Textadept can be modified to export the
 translation functionality.
 
-This code is almost lifted verbatim from _M.textadept.keys, which has the
+This code is almost lifted verbatim from textadept.keys, which has the
 following copyright and license:
 
 Copyright (c) 2007-2013 Mitchell

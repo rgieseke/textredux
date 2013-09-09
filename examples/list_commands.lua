@@ -20,12 +20,12 @@ function M.show_action_list()
 
   -- assign a closure to `5`, which prints the list title to the statusbar
   list.keys['5'] = function(list)
-    gui.statusbar_text = 'A command from ' .. list.title
+    ui.statusbar_text = 'A command from ' .. list.title
   end
 
   -- print the currently selected item when `6` is pressed
   list.keys['6'] = function(list)
-    gui.statusbar_text = 'Currently selected: ' ..
+    ui.statusbar_text = 'Currently selected: ' ..
                           tostring(list:get_current_selection())
   end
 

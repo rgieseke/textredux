@@ -180,7 +180,7 @@ local function get_definition(number, name)
     visible = buffer.style_visible[number],
     changeable = buffer.style_changeable[number],
     hotspot = buffer.style_hot_spot[number],
-    name = name or buffer:get_style_name(number),
+    name = name or buffer.style_name[number],
     number = number
   }
   setmetatable(style, {__concat = style_merge})

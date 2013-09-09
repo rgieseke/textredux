@@ -49,7 +49,7 @@ local tr_list = require 'textredux.core.list'
 local tr_style = require 'textredux.core.style'
 local tr_gui = require 'textredux.core.gui'
 
-local _G, table, io, gui = _G, table, io, gui
+local _G, table, io, ui = _G, table, io, ui
 local ipairs, error, type, assert, pcall =
       ipairs, error, type, assert, pcall
 local string_match, string_sub = string.match, string.sub
@@ -273,9 +273,9 @@ local function chdir(list, directory)
   if not complete then
     local status = 'Number of entries limited to ' ..
                    data.max_files .. ' as per io.SNAPOPEN_MAX'
-    gui.statusbar_text = status
+    ui.statusbar_text = status
   else
-    gui.statusbar_text = ''
+    ui.statusbar_text = ''
   end
 end
 
@@ -283,13 +283,13 @@ local function open_selected_file(path, exists, list, shift, ctrl)
   if not exists then
     local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
     if not file then
-      gui.statusbar_text = 'Could not create ' .. path .. ': ' .. error
+      ui.statusbar_text = 'Could not create ' .. path .. ': ' .. error
       return
     end
     file:close()
   end
   list:close()
-  if ctrl then tr_gui.switch_to_other_view() end
+  if ctrl then tr_ui.switch_to_other_view() end
   io.open_file(path)
 end
 
@@ -432,16 +432,16 @@ function save_buffer_as()
       list:close()
       _G.view:goto_buffer(_G._BUFFERS[buffer], false)
       buffer:save_as(path)
-      gui.statusbar_text = ''
+      ui.statusbar_text = ''
     else
-      gui.statusbar_text = 'File exists (' .. path ..
+      ui.statusbar_text = 'File exists (' .. path ..
                            '): Press enter to overwrite.'
       confirm_path = path
     end
   end
   local filter = { folders = { separator .. '%.$' } }
   select_file(set_file_name, nil, filter, 1)
-  gui.statusbar_text = 'Save file: select file name to save as..'
+  ui.statusbar_text = 'Save file: select file name to save as..'
 
 end
 

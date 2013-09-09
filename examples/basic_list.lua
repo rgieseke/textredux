@@ -16,7 +16,7 @@ function M.show_simple_list()
     'Simple list', -- list title
     { 'one', 'two', 'three' }, -- list items
     function (list, item) -- on selection callback
-      gui.statusbar_text = 'You selected ' .. item
+      ui.statusbar_text = 'You selected ' .. item
     end
   )
 
