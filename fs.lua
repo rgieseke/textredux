@@ -431,7 +431,7 @@ function save_buffer_as()
     if not exists or path == confirm_path then
       list:close()
       _G.view:goto_buffer(_G._BUFFERS[buffer], false)
-      buffer:save_as(path)
+      io.save_file_as(path)
       ui.statusbar_text = ''
     else
       ui.statusbar_text = 'File exists (' .. path ..
@@ -450,7 +450,7 @@ end
 function save_buffer()
   local buffer = _G.buffer
   if buffer.filename then
-    buffer:save()
+    io.save()
   else
     save_buffer_as()
   end
