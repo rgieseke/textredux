@@ -103,7 +103,7 @@ function M.close_buffer(list)
     local current_pos = buffer.current_pos
     local current_search = list:get_current_search()
     view:goto_buffer(_BUFFERS[sel_buffer])
-    local closed = buffer:close()
+    local closed = io.close_buffer()
     list.items = get_buffer_items()
     list:show()
     if closed then
