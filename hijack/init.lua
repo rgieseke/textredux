@@ -9,7 +9,7 @@ How to use
 ----------
 
 After installing the Textredux module into your .textadept/modules directory,
-simple add the following to your .textadept/init.lua file:
+simply add the following to your .textadept/init.lua file:
 
     require 'textredux.hijack'
 
