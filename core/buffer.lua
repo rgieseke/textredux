@@ -300,9 +300,9 @@ the following parameters:
 
 - `buffer`: The buffer instance
 - `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control/Command key was held down.
+- `ctrl`: True if the Control key was held down.
 - `alt`: True if the Alt/option key was held down.
-- `meta`: True if the Control key on Mac OSX was held down.
+- `meta`: True if the Command key on Mac OSX was held down.
 ]]
 function buffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
@@ -565,10 +565,10 @@ local function _on_indicator_release(position, modifiers)
   if not tr_buf then return end
 
   modifiers = modifiers or indicator_modifiers or 0
-  local shift = band(constants.SCMOD_SHIFT, modifiers) ~= 0
-  local ctrl = band(constants.SCMOD_CTRL, modifiers) ~= 0
-  local alt = band(constants.SCMOD_ALT, modifiers) ~= 0
-  local meta = band(constants.SCMOD_META, modifiers) ~= 0
+  local shift = band(constants.MOD_SHIFT, modifiers) ~= 0
+  local ctrl = band(constants.MOD_CTRL, modifiers) ~= 0
+  local alt = band(constants.MOD_ALT, modifiers) ~= 0
+  local meta = band(constants.MOD_META, modifiers) ~= 0
 
   local cur_view = _G.view
 
