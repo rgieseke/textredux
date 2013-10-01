@@ -16,21 +16,21 @@ _M.textredux = require 'textredux'
 
 local M = {}
 
-local basic_list = require 'textredux.examples.basic_list'
-local buffer_actions = require 'textredux.examples.buffer_actions'
-local buffer_indicators = require 'textredux.examples.buffer_indicators'
-local buffer_styling = require 'textredux.examples.buffer_styling'
-local list_commands = require 'textredux.examples.list_commands'
-local multi_column_list = require 'textredux.examples.multi_column_list'
-local styled_list = require 'textredux.examples.styled_list'
+M.basic_list = require 'textredux.examples.basic_list'
+M.buffer_actions = require 'textredux.examples.buffer_actions'
+M.buffer_indicators = require 'textredux.examples.buffer_indicators'
+M.buffer_styling = require 'textredux.examples.buffer_styling'
+M.list_commands = require 'textredux.examples.list_commands'
+M.multi_column_list = require 'textredux.examples.multi_column_list'
+M.styled_list = require 'textredux.examples.styled_list'
 
 examples = {
-  ['Basic list'] = basic_list.show_simple_list,
-  ['Buffer actions'] = buffer_actions.create_action_buffer,
-  ['Buffer styling'] = buffer_styling.create_styled_buffer,
-  ['List commands'] = list_commands.show_action_list,
-  ['Multi column list'] = multi_column_list.show_multi_column_list,
-  ['Styled list'] = styled_list.show_styled_list
+  ['Basic list'] = M.basic_list.show_simple_list,
+  ['Buffer actions'] = M.buffer_actions.create_action_buffer,
+  ['Buffer styling'] = M.buffer_styling.create_styled_buffer,
+  ['List commands'] = M.list_commands.show_action_list,
+  ['Multi column list'] = M.multi_column_list.show_multi_column_list,
+  ['Styled list'] = M.styled_list.show_styled_list
 }
 
 local keys = {}
