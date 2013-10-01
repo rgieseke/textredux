@@ -405,7 +405,7 @@ function buffer:_create_target()
   local target = _G.buffer.new()
   target._textredux = self
   target:set_lexer('text')
-  target.eol_mode = constants.SC_EOL_LF
+  target.eol_mode = constants.EOL_LF
   target:set_save_point()
   target.undo_collection = false
   self.target = target
