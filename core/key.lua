@@ -29,12 +29,7 @@ THE SOFTWARE.
 
 local M = {}
 
--- Settings.
-local ADD = ''
-local CTRL = 'c'..ADD
-local ALT = 'a'..ADD
-local META = 'm'..ADD
-local SHIFT = 's'..ADD
+local CTRL, ALT, META, SHIFT = 'c', not CURSES and 'a' or 'm', 'm', 's'
 
 function M.translate(code, shift, control, alt, meta)
   local key
