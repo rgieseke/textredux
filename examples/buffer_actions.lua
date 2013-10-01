@@ -53,9 +53,9 @@ function M.create_action_buffer()
   buffer.on_refresh = on_refresh
   buffer.on_keypress = on_keypress
 
-  -- bind Control C to simple message box
-  buffer.keys.cc = function()
-    ui.dialogs.msgbox{title='Test', text='Test 1, 2, 3 …'}
+  -- bind Control+T to simple message box
+  buffer.keys.ct = function()
+    ui.dialogs.msgbox{title='Testing', text='Test 1, 2, 3 …'}
   end
 
   buffer:show()
