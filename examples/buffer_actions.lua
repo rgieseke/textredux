@@ -35,9 +35,9 @@ local function on_refresh(buffer)
 
   buffer:add_text('\n\nExplicit hotspot: ')
   local start_pos = buffer.current_pos
-  buffer:add_text('Click here somewhere\nto select a theme',
+  buffer:add_text('Click here somewhere\nto select a command',
                   tr_style.action_style)
-  buffer:add_hotspot(start_pos, buffer.current_pos, ui.select_theme)
+  buffer:add_hotspot(start_pos, buffer.current_pos, textadept.menu.select_command)
 end
 
 local function on_keypress(buffer, key, code, shift, ctl, alt, meta)
