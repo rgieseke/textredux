@@ -25,7 +25,7 @@ end
 
 ui.dialogs.filteredlist = function(options)
   if not current_coroutine then
-    return ui_filteredlist{title=title, columns=columns, items=items}
+    return ui_filteredlist(options)
   end
   local co = current_coroutine
   local title = options.title or ''
