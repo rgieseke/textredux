@@ -55,7 +55,6 @@ local ipairs, error, type, assert, pcall =
 local string_match, string_sub = string.match, string.sub
 local lfs = require 'lfs'
 
-local _CHARSET, WIN32 = _CHARSET, WIN32
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
 local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
 local separator = WIN32 and '\\' or '/'
@@ -196,7 +195,7 @@ local function create_filter(filter)
 end
 
 local function file(path, name, parent)
-  local file, error = fs_attributes(path:iconv(_CHARSET, 'UTF-8'))
+  local file, error = fs_attributes(path)
   if error then file = { mode = 'error' } end
   local suffix = file.mode == 'directory' and separator or ''
   file.path = path
@@ -225,10 +224,9 @@ local function find_files(directory, filter, depth, max_files)
     local dir = table.remove(directories)
     if dir.depth > 1 then files[#files + 1] = dir end
     if dir.depth <= depth then
-      local status, entries, dir_obj = pcall(lfs.dir, dir.path:iconv(_CHARSET, 'UTF-8'))
+      local status, entries, dir_obj = pcall(lfs.dir, dir.path)
       if status then
         for entry in entries, dir_obj do
-          entry = entry:iconv('UTF-8', _CHARSET)
           local file = file(dir.path .. separator .. entry, entry, dir)
           if not filter(file) then
             if file.mode == 'directory' and entry ~= '..' and entry ~= '.' then
@@ -281,7 +279,7 @@ end
 
 local function open_selected_file(path, exists, list, shift, ctrl)
   if not exists then
-    local file, error = io.open(path:iconv(_CHARSET, 'UTF-8'), 'wb')
+    local file, error = io.open(path, 'wb')
     if not file then
       ui.statusbar_text = 'Could not create ' .. path .. ': ' .. error
       return
@@ -396,7 +394,7 @@ function select_file(on_selection, start_directory, filter, depth, max_files)
   list.on_selection = function(list, item, shift, ctrl, alt, meta)
     local path, mode = item.path, item.mode
       if mode == 'link' then
-        mode = lfs.attributes(path:iconv(_CHARSET, 'UTF-8'), 'mode')
+        mode = lfs.attributes(path, 'mode')
       end
       if mode == 'directory' then
         chdir(list, path)
