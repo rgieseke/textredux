@@ -10,7 +10,7 @@ and the option of specifying the buffers to list via a provided function.
 @module textredux.buffer_list
 ]]
 local tr_list = require 'textredux.core.list'
-local tr_gui = require 'textredux.core.gui'
+local tr_gui = require 'textredux.core.ui'
 local L = _L
 
 local M = {}

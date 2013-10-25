@@ -4,7 +4,7 @@ The gui module handles GUI related operations for Textredux.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
 @license MIT (see LICENSE)
-@module textredux.core.gui
+@module textredux.core.ui
 ]]
 local M = {}
 

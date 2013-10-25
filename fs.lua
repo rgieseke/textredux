@@ -47,7 +47,7 @@ on how to define styles.
 
 local tr_list = require 'textredux.core.list'
 local tr_style = require 'textredux.core.style'
-local tr_ui = require 'textredux.core.gui'
+local tr_ui = require 'textredux.core.ui'
 
 local _G, table, io, ui = _G, table, io, ui
 local ipairs, error, type, assert, pcall =
