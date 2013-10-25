@@ -81,13 +81,13 @@ Using styles
 ------------
 
 You typically use a style by inserting text through
-@{_M.textredux.core.buffer}'s text insertion methods, specifying the style.
+@{textredux.core.buffer}'s text insertion methods, specifying the style.
 Please see the example in `examples/buffer_styling.lua` for usage of this.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.core.style
+@module textredux.core.style
 ]]
 
 local _G, pairs, setmetatable, error, tonumber =
@@ -239,7 +239,7 @@ end
 ---
 -- Applies the specified style for the given text range and buffer.
 -- While you could use this directly, you'd typically use the text insertion
--- methods in @{_M.textredux.core.buffer} to style content.
+-- methods in @{textredux.core.buffer} to style content.
 -- @param style The defined style
 -- @param buffer The buffer to apply the style for
 -- @param start_pos The starting position of the style
@@ -252,7 +252,7 @@ end
 ---
 -- Defines the currently used custom styles for the current buffer.
 -- This must be called whenever a buffer with custom styles is switched to.
--- This is automatically done by the @{_M.textredux.core.buffer} class, and thus
+-- This is automatically done by the @{textredux.core.buffer} class, and thus
 -- not something you typically have to worry about.
 function define_styles()
   local buffer_styles = get_buffer_styles()

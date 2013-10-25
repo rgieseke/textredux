@@ -9,11 +9,11 @@ directly to key presses.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
-local tr_style = _M.textredux.core.style
+local tr_style = textredux.core.style
 tr_style.action_style = { back = '#6e6e6e', fore = '#00FFFF' }
 
 local function on_refresh(buffer)
@@ -49,7 +49,7 @@ local function on_keypress(buffer, key, code, shift, ctl, alt, meta)
 end
 
 function M.create_action_buffer()
-  local buffer = _M.textredux.core.buffer.new('Action buffer')
+  local buffer = textredux.core.buffer.new('Action buffer')
   buffer.on_refresh = on_refresh
   buffer.on_keypress = on_keypress
 

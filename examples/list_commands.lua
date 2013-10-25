@@ -7,12 +7,12 @@ table.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
 function M.show_action_list()
-  local list = _M.textredux.core.list.new('Action list (press "4", "5", "6")')
+  local list = textredux.core.list.new('Action list (press "4", "5", "6")')
   list.items = { 'one', 'two', 'three' }
 
   -- assign snapopen user home as a table command to `3`

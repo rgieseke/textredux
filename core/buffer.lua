@@ -3,7 +3,7 @@ The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
 care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
-@{_M.textredux.core.style} module to ensure that styling works, etc.
+@{textredux.core.style} module to ensure that styling works, etc.
 
 How it works
 ------------
@@ -55,7 +55,7 @@ Please see the examples for more hands-on instructions.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.core.buffer
+@module textredux.core.buffer
 ]]
 
 local key = require 'textredux.core.key'
@@ -329,10 +329,10 @@ end
 which accepts optional style, command and indicator parameters.
 @param text The text to add.
 @param style The style to use for the text, as defined using
-@{_M.textredux.core.style}.
+@{textredux.core.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.core.indicator} to use for the added
+@param indicator Optional @{textredux.core.indicator} to use for the added
 text.
 ]]
 function buffer:add_text(text, style, command, indicator)
@@ -349,10 +349,10 @@ end
 which accepts optional style, command and indicator parameters.
 @param text The text to append.
 @param style The style to use for the text, as defined using
-@{_M.textredux.core.style}.
+@{textredux.core.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.core.indicator} to use for the appended
+@param indicator Optional @{textredux.core.indicator} to use for the appended
 text.
 ]]
 function buffer:append_text(text, style, command, indicator)
@@ -370,10 +370,10 @@ which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
 @param text The text to insert.
 @param style The style to use for the text, as defined using
-@{_M.textredux.core.style}.
+@{textredux.core.style}.
 @param command The command to run if the user "selects" this text. See
 @{buffer:add_hotspot} for more information.
-@param indicator Optional @{_M.textredux.core.indicator} to use for the inserted
+@param indicator Optional @{textredux.core.indicator} to use for the inserted
 text.
 ]]
 function buffer:insert_text(pos, text, style, command, indicator)

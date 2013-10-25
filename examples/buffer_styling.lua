@@ -7,11 +7,11 @@ how to define custom styles and use them when inserting content.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
-local tr_style = _M.textredux.core.style
+local tr_style = textredux.core.style
 
 -- define a custom style based on a default style
 tr_style.example_style1 = tr_style.string .. { underline = true }
@@ -35,7 +35,7 @@ local function on_refresh(buffer)
 end
 
 function M.create_styled_buffer()
-  local buffer = _M.textredux.core.buffer.new('Example buffer')
+  local buffer = textredux.core.buffer.new('Example buffer')
   buffer.on_refresh = on_refresh
   buffer:show()
 end

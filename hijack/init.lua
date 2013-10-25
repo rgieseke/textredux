@@ -16,13 +16,13 @@ simply add the following to your .textadept/init.lua file:
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
 @license MIT (see LICENSE)
-@module _M.textredux.hijack
+@module textredux.hijack
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local fl = require 'textredux.hijack.filteredlist'
-local fs = _M.textredux.fs
+local fs = textredux.fs
 
 local unpack = unpack or table.unpack
 
@@ -98,8 +98,8 @@ for _, target in ipairs({
 end
 
 -- Hijack buffer list.
-replacements[ui.switch_buffer] = _M.textredux.buffer_list.show
-ui.switch_buffer = _M.textredux.buffer_list.show
+replacements[ui.switch_buffer] = textredux.buffer_list.show
+ui.switch_buffer = textredux.buffer_list.show
 
 -- Hijack snapopen.
 replacements[io.snapopen] = snapopen_compat

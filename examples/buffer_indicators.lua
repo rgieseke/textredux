@@ -7,10 +7,10 @@ how to define custom indicators and apply them for selected text.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredu = require 'textredux'
+textredu = require 'textredux'
 
 local c = _SCINTILLA.constants
-local indicator = _M.textredux.indicator
+local indicator = textredux.indicator
 
 local indic_red_box = { style = c.INDIC_BOX, fore = '#ff0000' }
 local indic_blue_fill = { style = c.INDIC_ROUNDBOX, fore = '#0000ff' }
@@ -27,7 +27,7 @@ local function on_refresh(buffer)
 end
 
 local function create_indicator_buffer()
-  local buffer = _M.textredux.core.buffer.new('Indicator buffer')
+  local buffer = textredux.core.buffer.new('Indicator buffer')
   buffer.on_refresh = on_refresh
   buffer:show()
 end

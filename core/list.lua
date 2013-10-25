@@ -29,7 +29,7 @@ Please see the various list examples for more hands-on instructions.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.core.list
+@module textredux.core.list
 ]]
 
 local style = require 'textredux.core.style'
@@ -37,7 +37,7 @@ local textredux_buffer = require 'textredux.core.buffer'
 local util_matcher = require 'textredux.util.matcher'
 
 local _G, textredux, string, table, keys, math =
-      _G, _M.textredux, string, table, keys, math
+      _G, textredux, string, table, keys, math
 local ipairs, error, type, setmetatable, select, tostring =
       ipairs, error, type, setmetatable, select, tostring
 local string_rep = string.rep
@@ -62,7 +62,7 @@ match_highlight_style = style.list_match_highlight
 
 --- The default styles to use for different columns. This can be specified
 -- individually for each list as well. Values can either be explicit styles,
--- defined using @{_M.textredux.core.style}, or functions which returns
+-- defined using @{textredux.core.style}, or functions which returns
 -- explicit styles. In the latter case, the function will be invoked with the
 -- corresponding item and column index. The default styles contains styles for
 -- up to three columns, after which the default style will be used.
@@ -126,19 +126,19 @@ The handler will be passed the following parameters:
 ]]
 on_new_selection = nil
 
---- The underlying @{_M.textredux.core.buffer} used by the list.
+--- The underlying @{textredux.core.buffer} used by the list.
 buffer = nil
 
 ---
 -- A table of key commands for the list.
--- This functions almost exactly the same as @{_M.textredux.core.buffer.keys}.
+-- This functions almost exactly the same as @{textredux.core.buffer.keys}.
 -- The one difference is that for function values, the parameter passed will be
 -- a reference to the list instead of a buffer reference.
 keys = nil
 
 --- Callback invoked whenever the list receives a keypress.
 -- This functions almost exactly the sames as
--- @{_M.textredux.core.buffer.on_keypress}.
+-- @{textredux.core.buffer.on_keypress}.
 -- The one difference is that for function values, the first parameter passed
 -- will be a reference to the list instead of a buffer reference.
 --
@@ -148,7 +148,7 @@ keys = nil
 on_keypress = nil
 
 --- A general purpose table that can be used for storing state associated
--- with the list. Just like @{_M.textredux.core.buffer.data}, the `data` table
+-- with the list. Just like @{textredux.core.buffer.data}, the `data` table
 -- is special in the way that it will automatically be cleared whenever the user
 -- closes the buffer associated with the list.
 data = nil

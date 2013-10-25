@@ -34,7 +34,7 @@ you can easily change these by customizing any of the `style_<foo>` entries
 using the Textredux style module. As an example, to make directory entries
 underlined you would do something like the following:
 
-    _M.textredux.core.style.fs_directory = { underline = true }
+    textredux.core.style.fs_directory = { underline = true }
 
 Please see the documentation for the Textredux style module for instructions
 on how to define styles.
@@ -42,7 +42,7 @@ on how to define styles.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.fs
+@module textredux.fs
 ]]
 
 local tr_list = require 'textredux.core.list'

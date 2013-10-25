@@ -9,7 +9,7 @@ which lets you use any arbitrary field in the selection logic.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
@@ -20,7 +20,7 @@ local function on_selection(list, item)
 end
 
 function M.show_multi_column_list()
-  local list = _M.textredux.core.list.new('Multi column list')
+  local list = textredux.core.list.new('Multi column list')
 
   -- Set the headers. This is optional and can be skipped if so desired
   list.headers = { 'Thing', 'Is' }

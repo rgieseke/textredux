@@ -18,7 +18,7 @@
 -- Based on Mitchell's ctags code posted on the
 -- [Textadept wiki](http://foicica.com/wiki/ctags).
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
@@ -53,7 +53,7 @@ function M.goto_symbol()
   end
   p:close()
   if #symbols > 0 then
-    local list = _M.textredux.core.list.new('Go to symbol')
+    local list = textredux.core.list.new('Go to symbol')
     list.keys['esc'] = function(list) list:close() end
     list.items = symbols
     list.on_selection = on_selection

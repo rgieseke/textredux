@@ -7,7 +7,7 @@ and the option of specifying the buffers to list via a provided function.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux.buffer_list
+@module textredux.buffer_list
 ]]
 local tr_list = require 'textredux.core.list'
 local tr_gui = require 'textredux.core.gui'
@@ -24,7 +24,7 @@ You can modifiy this to customise the key bindings to your liking. The key
 bindings are passed directly to the Textredux list, so note that the
 first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
-[list documentation](TODO/textredux/docs/modules/_M.textredux.list.html#keys).
+[list documentation](TODO/textredux/docs/modules/textredux.list.html#keys).
 
 If you like to add a custom key binding for closing a buffer you can bind the
 @{close_buffer} function to a key of your choice. For other actions it's likely

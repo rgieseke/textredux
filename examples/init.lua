@@ -8,11 +8,11 @@ Textadept's command entry to show a list of examples:
 
  Alternatively, you can assign a key in your
 `init.lua`. For example assign `Ctrl-3` to bring up the examples:
-    _M.textredux.examples = require 'textredux.examples'
-    keys['c3'] = _M.textredux.examples.show_examples
+    textredux.examples = require 'textredux.examples'
+    keys['c3'] = textredux.examples.show_examples
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
@@ -44,7 +44,7 @@ local function on_selection(list, item)
 end
 
 function M.show_examples()
-  local list = _M.textredux.core.list.new(
+  local list = textredux.core.list.new(
     'Textredux examples',
     keys,
     on_selection

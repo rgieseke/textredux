@@ -9,11 +9,11 @@ handler specified.
 @license MIT (see LICENSE)
 ]]
 
-_M.textredux = require 'textredux'
+textredux = require 'textredux'
 
 local M = {}
 
-local tr_style = _M.textredux.core.style
+local tr_style = textredux.core.style
 
 -- define some custom styles for use with the list
 tr_style.example_red = { fore = '#FF0000' }
@@ -31,7 +31,7 @@ local function get_item_style(item, column_index)
 end
 
 function M.show_styled_list()
-  local list = _M.textredux.core.list.new('Styled list')
+  local list = textredux.core.list.new('Styled list')
   list.headers = { 'Color', 'Code' }
   list.items = {
     { 'Red', '#FF0000' },

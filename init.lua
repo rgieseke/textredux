@@ -5,14 +5,14 @@ based interfaces.
 
 It currently contains the following modules:
 
-- @{_M.textredux.core}. The core module provides basic components to create
+- @{textredux.core}. The core module provides basic components to create
   text based interfaces.
-- @{_M.textredux.fs}. Contains text based interfaces for file io operations,
+- @{textredux.fs}. Contains text based interfaces for file io operations,
   i.e. open file, save file as well as snapopen functionality.
-- @{_M.textredux.buffer_list}. A text based buffer list replacement, which in
+- @{textredux.buffer_list}. A text based buffer list replacement, which in
   addition to being text based also offers an easy way to close buffers
   directly from the list.
-- @{_M.textredux.hijack}. Hijacks Textadept, replacing all keyboard shortcuts
+- @{textredux.hijack}. Hijacks Textadept, replacing all keyboard shortcuts
   with text based counterparts. Additionally, it replaces the traditional
   filtered list with a Textredux list for a number of operations.
 
@@ -28,11 +28,11 @@ key bindings to the desired functions. As an example, if you would like to use
 the text based file browser and normally opens files using `Ctrl + o`, then the
 following code in your `init.lua` would do the trick:
 
-    _M.textredux = require 'textredux'
-    keys.co = _M.textredux.fs.open_file
+    textredux = require 'textredux'
+    keys.co = textredux.fs.open_file
 
 2) If you can't get enough of text based interfaces and the joy they provide,
-then the @{_M.textredux.hijack} module is for you. Simple place this in your
+then the @{textredux.hijack} module is for you. Simple place this in your
 `init.lua`:
 
     require 'textredux.hijack'
@@ -49,7 +49,7 @@ settings.
 @author Nils Nordman <nino at nordman.org>
 @copyright 2011-2012
 @license MIT (see LICENSE)
-@module _M.textredux
+@module textredux
 ]]
 
 local M = {
