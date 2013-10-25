@@ -27,6 +27,7 @@ M.styled_list = require 'textredux.examples.styled_list'
 examples = {
   ['Basic list'] = M.basic_list.show_simple_list,
   ['Buffer actions'] = M.buffer_actions.create_action_buffer,
+  ['Buffer indicators'] = M.buffer_indicators.create_indicator_buffer,
   ['Buffer styling'] = M.buffer_styling.create_styled_buffer,
   ['List commands'] = M.list_commands.show_action_list,
   ['Multi column list'] = M.multi_column_list.show_multi_column_list,
