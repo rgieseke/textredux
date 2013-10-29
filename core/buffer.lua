@@ -117,9 +117,9 @@ be called. The callback will receive the following parameters:
 - `key`: The "translated key" (same format as for @{keys}).
 - `code`: The key code.
 - `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control/Command key was held down.
-- `alt`: True if the Alt/option key was held down.
-- `meta`: True if the Control key on Mac OSX was held down.
+- `ctrl`: True if the Control key was held down.
+- `alt`: True if the Alt/Option key was held down.
+- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 
 It's similar to the standard Textadept KEYPRESS event (which you can read more
 about [here](http://foicica.com/textadept/api/events.html)).
@@ -301,8 +301,8 @@ the following parameters:
 - `buffer`: The buffer instance
 - `shift`: True if the Shift key was held down.
 - `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/option key was held down.
-- `meta`: True if the Command key on Mac OSX was held down.
+- `alt`: True if the Alt/Option key was held down.
+- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 ]]
 function buffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots

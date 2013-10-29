@@ -361,10 +361,10 @@ The function will be called with following parameters:
 - `path`: The full path of the choosen file (UTF-8 encoded).
 - `exists`: A boolean indicating whether the file exists or not.
 - `list`: A reference to the Textredux list used by browser.
-- `shift`: True if the Shift key was held down when selecting the file.
-- `ctrl`: True if the Control/Command key was held down when selecting the file.
-- `alt`: True if the Alt/option key was held down when selecting the file.
-- `meta`: True if the Control key on Mac OSX was held down when selecting the file.
+- `shift`: True if the Shift key was held down.
+- `ctrl`: True if the Control key was held down.
+- `alt`: True if the Alt/Option key was held down.
+- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 
 The list will not be closed automatically, so close it explicitly using
 `list:close()` if desired.

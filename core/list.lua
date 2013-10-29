@@ -106,9 +106,9 @@ The handler will be passed the following parameters:
 - `list`: the list itself
 - `item`: the item selected
 - `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control/Command key was held down.
-- `alt`: True if the Alt/option key was held down.
-- `meta`: True if the Control key on Mac OSX was held down.
+- `ctrl`: True if the Control key was held down.
+- `alt`: True if the Alt/Option key was held down.
+- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 ]]
 on_selection = nil
 
@@ -120,9 +120,9 @@ The handler will be passed the following parameters:
 - `list`: the list itself
 - `search`: the current search of the list
 - `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control/Command key was held down.
-- `alt`: True if the Alt/option key was held down.
-- `meta`: True if the Control key on Mac OSX was held down.
+- `ctrl`: True if the Control key was held down.
+- `alt`: True if the Alt/Option key was held down.
+- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 ]]
 on_new_selection = nil
 
