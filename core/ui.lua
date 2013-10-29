@@ -1,5 +1,5 @@
 --[[-
-The gui module handles GUI related operations for Textredux.
+The ui module handles UI related operations for Textredux.
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012
