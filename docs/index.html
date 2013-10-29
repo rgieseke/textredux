@@ -64,26 +64,35 @@ git clone https://github.com/rgieseke/textredux.git
 
 <h2 id="Usage"><a href="#Usage">Usage</a></h2>
 
-<p>Having installed the module, there are two ways you can use it.</p>
+<p>Having installed the module, there are two ways you can use it. Note that due to
+Textredux re-using colors defined in your theme file, loading Textredux modules
+should be wrapped using
+<a href="http://foicica.com/textadept/api/events.html#INITIALIZED)">events.INITIALIZED</a>.
+</p>
 
 <p>1) Cherrypick the functionality you want from the different modules by assigning
 key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using <code>Ctrl + o</code>, then the
+the text based file browser and normally opens files using <code>Ctrl-O</code>, then the
 following code in your <code>init.lua</code> would do the trick:</p>
 
 <pre>
-M.textredux = require 'textredux'
-keys.co = _M.textredux.fs.open_file
+events.connect(events.INITIALIZED, function()
+  textredux = require 'textredux'
+  keys.co = textredux.fs.open_file
+end)
 </pre>
 
 <p>2) If you can&rsquo;t get enough of text based interfaces and the joy they provide,
 then the hijack module is for you. Simple place this in your <code>init.lua</code>:</p>
 
-<pre>require 'textredux.hijack'
+<pre>
+events.connect(events.INITIALIZED, function()
+  require 'textredux.hijack'
+end)
 </pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your
-regular key bindings should now use TextRedux where applicable. To get the
+regular key bindings should now use Textredux where applicable. To get the
 regular GUI elements you can click the menu.</p>
 
 <p>Regardless of the approach chosen, the
@@ -91,7 +100,7 @@ regular GUI elements you can click the menu.</p>
 in-depth documentation for the various modules, including customization tips.</p>
 
 <p>Also, make sure to take a brief look at the <a href="tour.html">visual tour</a> for some
-quick tips on using TextRedux.</p>
+quick tips on using Textredux.</p>
 
 <h2 id="Code"><a href="#Code">Code</a></h2>
 

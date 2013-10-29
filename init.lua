@@ -21,21 +21,28 @@ It currently contains the following modules:
 Download and put the Textredux module in your `.textadept/modules/`
 directory.
 
-Having installed it, there are two ways you can use Textredux.
+Having installed it, there are two ways you can use Textredux. Note that due to
+Textredux re-using colors defined in your theme file, loading Textredux modules
+should be wrapped using
+[events.INITIALIZED](http://foicica.com/textadept/api/events.html#INITIALIZED).
 
 1) Cherrypick the functionality you want from the different modules by assigning
 key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using `Ctrl + o`, then the
+the text based file browser and normally opens files using `Ctr-O`, then the
 following code in your `init.lua` would do the trick:
 
-    textredux = require 'textredux'
-    keys.co = textredux.fs.open_file
+    events.connect(events.INITIALIZED, function()
+      textredux = require 'textredux'
+      keys.co = textredux.fs.open_file
+    end)
 
 2) If you can't get enough of text based interfaces and the joy they provide,
 then the @{textredux.hijack} module is for you. Simple place this in your
 `init.lua`:
 
-    require 'textredux.hijack'
+    events.connect(events.INITIALIZED, function()
+      require 'textredux.hijack'
+    end)
 
 As the name suggest, Textredux has now hijacked your environment. All your
 regular key bindings should now use Textredux where applicable. Clicking the

@@ -65,22 +65,29 @@ based interfaces.</p>
 <p>Download and put the Textredux module in your <code>.textadept/modules/</code>
 directory.</p>
 
-<p>Having installed it, there are two ways you can use Textredux.</p>
+<p>Having installed it, there are two ways you can use Textredux. Note that due to
+Textredux re-using colors defined in your theme file, loading Textredux modules
+should be wrapped using
+<a href="http://foicica.com/textadept/api/events.html#INITIALIZED">events.INITIALIZED</a>.</p>
 
 <p>1) Cherrypick the functionality you want from the different modules by assigning
 key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using <code>Ctrl + o</code>, then the
+the text based file browser and normally opens files using <code>Ctr-O</code>, then the
 following code in your <code>init.lua</code> would do the trick:</p>
 
-<pre><code>textredux = require 'textredux'
-keys.co = textredux.fs.open_file
+<pre><code>events.connect(events.INITIALIZED, function()
+  textredux = require 'textredux'
+  keys.co = textredux.fs.open_file
+end)
 </code></pre>
 
 <p>2) If you can't get enough of text based interfaces and the joy they provide,
 then the <a href="../modules/textredux.hijack.html#">textredux.hijack</a> module is for you. Simple place this in your
 <code>init.lua</code>:</p>
 
-<pre><code>require 'textredux.hijack'
+<pre><code>events.connect(events.INITIALIZED, function()
+  require 'textredux.hijack'
+end)
 </code></pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your
