@@ -98,6 +98,18 @@ text insertion functions (<a href="../modules/textredux.core.buffer.html#buffer:
 <a href="../modules/textredux.core.buffer.html#buffer:show">buffer:show</a> to show the buffer, and respond to any interactions using the
 provided callbacks.</p>
 
+<p>If you need to test whether a buffer is a Textredux buffer you can check
+for the <code>_textredux</code> field.</p>
+
+<pre><code>events.connect(events.BUFFER_AFTER_SWITCH, function()
+  local buffer = buffer
+  if buffer._textredux then
+    -- …
+  end
+end)
+</code></pre>
+
+
 <p>Please see the examples for more hands-on instructions.</p>
     <h3>Info:</h3>
     <ul>

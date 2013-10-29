@@ -50,6 +50,17 @@ text insertion functions (@{buffer:add_text}, @{buffer:append_text},
 @{buffer:show} to show the buffer, and respond to any interactions using the
 provided callbacks.
 
+If you need to test whether a buffer is a Textredux buffer you can check
+for the `_textredux` field.
+
+    events.connect(events.BUFFER_AFTER_SWITCH, function()
+      local buffer = buffer
+      if buffer._textredux then
+        -- …
+      end
+    end)
+
+
 Please see the examples for more hands-on instructions.
 
 @author Nils Nordman <nino at nordman.org>
