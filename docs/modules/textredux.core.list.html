@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textredux API Docs</title>
+<link href='http://fonts.googleapis.com/css?family=Bowlby+One+SC' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../ldoc.css">
+
+</head>
+<body>
+
+<div id="sidebar">
+
+
+<ul>
+<li><a href="../index.html">Textredux</a></li>
+</ul>
+<ul>
+<li><a href="../api.html">API Docs</a></li>
+</ul>
+
+<ul class="nowrap">
+<li>Modules</li>
+  <li><a href="../modules/textredux.html">textredux</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
+  <li><a href="../modules/textredux.core.html">core</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
+  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
+  <li><a href="../modules/textredux.fs.html">fs</a></li>
+  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+</ul>
+
+<ul>
+<li>Contents</li>
+  <li><a href="#Functions">Functions</a></li>
+  <li><a href="#Fields">Fields</a></li>
+  <li><a href="#List_instance_fields">List instance fields </a></li>
+</ul>
+
+
+</div>
+
+<div class="container">
+<div class="content">
+<h2><a href='#'>Module textredux.core.list</a></h2>
+
+<p>The list class provides a versatile and extensible text based item listing for
+Textadept, featuring advanced search capabilities and styling.</p>
+<p> It's a
+convenient way of presenting lists to the user for simple selection, but is
+equally well suited for creating advanced list based interfaces.</p>
+
+<h2>Features at a glance</h2>
+
+<ul>
+    <li>Support for multi-column table items, in addition to supporting the simpler
+    case of just listing strings.</li>
+    <li>Fully customizable styling. You can either specify individual styles for
+    different columns, or specify styles for each item dynamically using a
+    callback. If you do neither, you will automatically get sane defaults.</li>
+    <li>Powerful search capabilities. The list class supports both exact matching and
+    fuzzy matching, and will present best matches first. It also supports
+    searching for multiple search strings (any text separated by whitespace is
+    considered to be multiple search strings). Searches are done against all
+    columns.</li>
+</ul>
+
+<h2>How to use</h2>
+
+<p>Create the list using <a href="../modules/textredux.core.list.html#new">new</a>, specify <a href="../modules/textredux.core.list.html#items">items</a> and other fields/callbacks
+(such as <a href="../modules/textredux.core.list.html#on_selection">on_selection</a>) and invoke <a href="../modules/textredux.core.list.html#list:show">list:show</a>.</p>
+
+<p>Please see the various list examples for more hands-on instructions.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2011-2012</li>
+        <li><strong>License</strong>: MIT (see LICENSE)</li>
+        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name nowrap"><a href="#new">new (title, items, on_selection)</a></td>
+	<td class="summary">Creates a new list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#list:show">list:show ()</a></td>
+	<td class="summary">Shows the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#list:close">list:close ()</a></td>
+	<td class="summary">Closes the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#list:get_current_selection">list:get_current_selection ()</a></td>
+	<td class="summary">Returns the currently selected item if any, or nil otherwise.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#list:get_current_search">list:get_current_search ()</a></td>
+	<td class="summary">Returns the current user search if any, or nil otherwise.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#list:set_current_search">list:set_current_search (search)</a></td>
+	<td class="summary">Sets the current user search.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name nowrap"><a href="#header_style">header_style</a></td>
+	<td class="summary">The default style to use for diplaying headers.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#match_highlight_style">match_highlight_style</a></td>
+	<td class="summary">The style to use for indicating matches.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#column_styles">column_styles</a></td>
+	<td class="summary">The default styles to use for different columns.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#search_case_insensitive">search_case_insensitive</a></td>
+	<td class="summary">Whether searches are case insensitive or not.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#search_fuzzy">search_fuzzy</a></td>
+	<td class="summary">Whether fuzzy searching should be in addition to explicit matches.</td>
+	</tr>
+</table>
+<h2><a href="#List_instance_fields">List instance fields </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name nowrap"><a href="#headers">headers</a></td>
+	<td class="summary">Optional headers for the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#items">items</a></td>
+	<td class="summary">A table of items to display in the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#on_selection">on_selection</a></td>
+	<td class="summary">The handler/callback to call when the user has selected an item.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#on_new_selection">on_new_selection</a></td>
+	<td class="summary">The handler/callback to call when the user has typed in text which
+doesn't match any item, and presses <code>&lt;enter&gt;</code>.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#buffer">buffer</a></td>
+	<td class="summary">The underlying <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> used by the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#keys">keys</a></td>
+	<td class="summary">A table of key commands for the list.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#on_keypress">on_keypress</a></td>
+	<td class="summary">Callback invoked whenever the list receives a keypress.</td>
+	</tr>
+	<tr>
+	<td class="name nowrap"><a href="#data">data</a></td>
+	<td class="summary">A general purpose table that can be used for storing state associated
+ with the list.</td>
+	</tr>
+</table>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "new"></a>
+    <strong>new (title, items, on_selection)</strong>
+    </dt>
+    <dd>
+    Creates a new list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         The list title
+        </li>
+        <li><span class="parameter">items</span>
+         The list items, see <a href="../modules/textredux.core.list.html#items">items</a>. Not required, items can be set later
+using the <a href="../modules/textredux.core.list.html#items">items</a> field.
+        </li>
+        <li><span class="parameter">on_selection</span>
+         The on selection handler, see <a href="../modules/textredux.core.list.html#on_selection">on_selection</a>. Not required,
+this can be specified later using the <a href="../modules/textredux.core.list.html#on_selection">on_selection</a> field.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The new list instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "list:show"></a>
+    <strong>list:show ()</strong>
+    </dt>
+    <dd>
+    Shows the list.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "list:close"></a>
+    <strong>list:close ()</strong>
+    </dt>
+    <dd>
+    Closes the list.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "list:get_current_selection"></a>
+    <strong>list:get_current_selection ()</strong>
+    </dt>
+    <dd>
+    Returns the currently selected item if any, or nil otherwise.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "list:get_current_search"></a>
+    <strong>list:get_current_search ()</strong>
+    </dt>
+    <dd>
+    Returns the current user search if any, or nil otherwise.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "list:set_current_search"></a>
+    <strong>list:set_current_search (search)</strong>
+    </dt>
+    <dd>
+    Sets the current user search.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">search</span>
+         The search string to use
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+    <dl class="function">
+    <dt>
+    <a name = "header_style"></a>
+    <strong>header_style</strong>
+    </dt>
+    <dd>
+    The default style to use for diplaying headers.
+ This is by default the <code>style.list_header</code> style. It's possible to override
+ this for a specific list by assigning another value to the instance itself.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "match_highlight_style"></a>
+    <strong>match_highlight_style</strong>
+    </dt>
+    <dd>
+    The style to use for indicating matches.
+ You can turn off highlighing of matches by setting this to nil.
+ It's possible to override this for a specific list by assigning another
+ value to the instance itself. The default value is <code>style.default</code>.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "column_styles"></a>
+    <strong>column_styles</strong>
+    </dt>
+    <dd>
+    The default styles to use for different columns.  This can be specified
+ individually for each list as well. Values can either be explicit styles,
+ defined using <a href="../modules/textredux.core.style.html#">textredux.core.style</a>, or functions which returns
+ explicit styles. In the latter case, the function will be invoked with the
+ corresponding item and column index. The default styles contains styles for
+ up to three columns, after which the default style will be used.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "search_case_insensitive"></a>
+    <strong>search_case_insensitive</strong>
+    </dt>
+    <dd>
+    Whether searches are case insensitive or not.
+ It's possible to override this for a specific list by assigning another
+ value to the instance itself. The default value is <code>true</code>.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "search_fuzzy"></a>
+    <strong>search_fuzzy</strong>
+    </dt>
+    <dd>
+    Whether fuzzy searching should be in addition to explicit matches.
+ It's possible to override this for a specific list by assigning another
+ value to the instance itself. The default value is <code>true</code>.
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="List_instance_fields"></a>List instance fields </h2>
+
+ These can be set only for a list instance, and not globally for the module.
+    <dl class="function">
+    <dt>
+    <a name = "headers"></a>
+    <strong>headers</strong>
+    </dt>
+    <dd>
+    Optional headers for the list.
+ If set, the headers must be a table with the same number of columns as
+ <a href="../modules/textredux.core.list.html#items">items</a>.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "items"></a>
+    <strong>items</strong>
+    </dt>
+    <dd>
+    A table of items to display in the list.
+ Each table item can either be a table itself, in which case the list will
+ be multi column, or a string in which case the list be single column.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "on_selection"></a>
+    <strong>on_selection</strong>
+    </dt>
+    <dd>
+
+<p>The handler/callback to call when the user has selected an item.
+The handler will be passed the following parameters:</p>
+
+<ul>
+    <li><code>list</code>: the list itself</li>
+    <li><code>item</code>: the item selected</li>
+    <li><code>shift</code>: True if the Shift key was held down.</li>
+    <li><code>ctrl</code>: True if the Control/Command key was held down.</li>
+    <li><code>alt</code>: True if the Alt/option key was held down.</li>
+    <li><code>meta</code>: True if the Control key on Mac OSX was held down.</li>
+</ul>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "on_new_selection"></a>
+    <strong>on_new_selection</strong>
+    </dt>
+    <dd>
+
+<p>The handler/callback to call when the user has typed in text which
+doesn't match any item, and presses <code>&lt;enter&gt;</code>. </p>
+
+<p>The handler will be passed the following parameters:</p>
+
+<ul>
+    <li><code>list</code>: the list itself</li>
+    <li><code>search</code>: the current search of the list</li>
+    <li><code>shift</code>: True if the Shift key was held down.</li>
+    <li><code>ctrl</code>: True if the Control/Command key was held down.</li>
+    <li><code>alt</code>: True if the Alt/option key was held down.</li>
+    <li><code>meta</code>: True if the Control key on Mac OSX was held down.</li>
+</ul>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buffer"></a>
+    <strong>buffer</strong>
+    </dt>
+    <dd>
+    The underlying <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> used by the list.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "keys"></a>
+    <strong>keys</strong>
+    </dt>
+    <dd>
+    A table of key commands for the list.
+ This functions almost exactly the same as <a href="../modules/textredux.core.buffer.html#keys">textredux.core.buffer.keys</a>.
+ The one difference is that for function values, the parameter passed will be
+ a reference to the list instead of a buffer reference.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "on_keypress"></a>
+    <strong>on_keypress</strong>
+    </dt>
+    <dd>
+    Callback invoked whenever the list receives a keypress.
+ This functions almost exactly the sames as
+ <a href="../modules/textredux.core.buffer.html#on_keypress">textredux.core.buffer.on_keypress</a>.
+ The one difference is that for function values, the first parameter passed
+ will be a reference to the list instead of a buffer reference.</p>
+
+<p> Please note that by overriding this it's possible to block any key presses
+ from ever reaching the list itself.
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/textredux.core.list.html#keys">keys</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "data"></a>
+    <strong>data</strong>
+    </dt>
+    <dd>
+    A general purpose table that can be used for storing state associated
+ with the list.  Just like <a href="../modules/textredux.core.buffer.html#data">textredux.core.buffer.data</a>, the <code>data</code> table
+ is special in the way that it will automatically be cleared whenever the user
+ closes the buffer associated with the list.
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+<footer class="footer">
+<small>Generated by <a href="http://github.com/stevedonovan/LDoc">LDoc</a></small>
+</footer>
+</div>
+</div>
+
+</body>
+</html>
