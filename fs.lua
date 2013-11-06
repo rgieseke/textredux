@@ -347,6 +347,9 @@ local function create_list(directory, filter, depth, max_files)
   list.column_styles[1] = get_file_style
   list.keys.esc = function() list:close() end
   list.keys.cs = toggle_snap
+  list.keys['~'] = function()
+    if user_home then chdir(list, user_home) end
+  end
   data.directory = directory
   data.filter = filter
   data.depth = depth
