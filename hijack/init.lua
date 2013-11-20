@@ -27,14 +27,14 @@ local fs = textredux.fs
 local unpack = unpack or table.unpack
 
 local function get_id(f)
-    local id = ''
-    if type(f) == 'function' then
-      id = tostring(f)
-    elseif type(f) == 'table' then
-      for i = 1, #f do id = id..tostring(f[i]) end
-    end
-    return id
+  local id = ''
+  if type(f) == 'function' then
+    id = tostring(f)
+  elseif type(f) == 'table' then
+    for i = 1, #f do id = id..tostring(f[i]) end
   end
+  return id
+end
 
 local function patch_keys(replacements)
   local _keys = {}
