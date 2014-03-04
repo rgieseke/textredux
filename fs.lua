@@ -55,6 +55,7 @@ local ipairs, error, type, assert, pcall =
 local string_match, string_sub = string.match, string.sub
 local lfs = require 'lfs'
 
+local WIN32 = WIN32
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
 local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
 local separator = WIN32 and '\\' or '/'
