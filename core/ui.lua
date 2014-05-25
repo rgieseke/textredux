@@ -9,13 +9,11 @@ The ui module handles UI related operations for Textredux.
 ]]
 local M = {}
 
---[[- Specifies the way that Textredux should split views.
-
-Possible values are:
-
-- `'horizontal'` : Prefer horizontal splits.
-- `'vertical'` : Prefer vertical splits.
-]]
+---
+-- Specifies the way that Textredux should split views.
+-- Possible values are:
+-- - `'horizontal'` : Prefer horizontal splits.
+-- - `'vertical'` : Prefer vertical splits.
 M.view_split_preference = 'vertical'
 
 function M.switch_to_other_view()
