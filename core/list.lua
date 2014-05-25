@@ -351,7 +351,7 @@ end
 
 -- Create Textredux buffer to display the list.
 function list:_create_buffer()
-  local reduxbuffer = textredux.buffer.new(self.title)
+  local reduxbuffer = textredux.core.buffer.new(self.title)
   reduxbuffer.on_refresh = function(...) self:_refresh(...) end
   reduxbuffer.on_deleted = function() self.data = {} end
 

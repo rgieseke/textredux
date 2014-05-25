@@ -184,7 +184,7 @@ function M.new(title)
     hotspots = {}
   }
   textreduxbuffers[buf] = true
-  buf.keysmode = 'textredux '..tostring(buf)
+  buf.keys_mode = 'textredux '..tostring(buf)
   keys[buf.keys_mode] = {}
   setmetatable(keys[buf.keys_mode], {__index = keys})
   setmetatable(buf.keys, {__newindex = function(t, k, v)
