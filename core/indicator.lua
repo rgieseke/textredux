@@ -5,7 +5,7 @@
 --[[--
 The indicator module provides support for indicators in your buffers.
 Indicators lets you visually mark a certain text range using various styles and
-colors, and using the event mechanism you can also receive events whenever the
+colors. Using the event mechanism you can also receive events whenever the
 user clicks the marked text.
 
 The indicator definition
@@ -28,92 +28,80 @@ the buffer class where applicable.
   under text works only when two phase drawing is enabled for the buffer (the
   default).
 
+A simple example:
+
+    local reduxindicator = textredux.core.indicator
+    reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
+
 Using indicators
 ----------------
 
 Start with defining your indicators using the format described above. You can
-then  either apply them against a range of text using @{apply}, or pass them to
-one of the text insertion functions in @{textredux.core.buffer}. If you need to
-get the defined indicator number for an indicator, you can retrieve it using
-@{number_for}. Please note that indicator numbers are not necessarily stable
-between buffer switches, so problems may arise if you hold on to an indicator
-number.
+then either apply them against a range of text using apply, or pass them to
+one of the text insertion functions in @{textredux.core.buffer}.
 
-Please see the example `buffer_indicators.lua` for some practical usage.
+    local text = 'Text for a red box indicator\n\n'
+    buffer:add_text(text)
+    reduxindicator.RED_BOX:apply(0, #text)
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2012
-@license MIT (see LICENSE)
+    buffer:add_text(text, nil, nil, reduxindicator.RED_BOX)
+
+Please also see the example `buffer_indicators.lua`.
+
 @module textredux.core.indicator
 ]]
 
 local color = require 'textredux.util.color'
 
-local constants = _SCINTILLA.constants
-local _G = _G
-local setmetatable, pairs = setmetatable, pairs
-
 local M = {}
-local _ENV = M
-if setfenv then setfenv(1, _ENV) end
 
-local indicators = setmetatable({}, {__mode = 'k' })
-
-local function define_indicator(indicator, buffer)
-  local buf_indics = indicators[buffer]
-  if not buf_indics then
-    indicators[buffer] = { next_number = constants.INDIC_MAX }
-    buf_indics = indicators[buffer]
-  end
-
-  local number = buf_indics.next_number
-  if number < 0 then error('Maximum number of indicators exceeded (32)') end
-
-  if indicator.style then buffer.indic_style[number] = indicator.style end
-  if indicator.alpha then buffer.indic_alpha[number] = indicator.alpha end
-  if indicator.outline_alpha then
-    buffer.indic_outline_alpha[number] = indicator.outline_alpha
-  end
-  if indicator.fore then
-    buffer.indic_fore[number] = color.string_to_color(indicator.fore)
-  end
-  if indicator.under then buffer.indic_under[number] = indicator.under end
-  buf_indics[indicator] = number
-  buf_indics.next_number = buf_indics.next_number - 1
-  return number
-end
-
----  Defines the currently used custom indicators for the current buffer.
--- This must be called whenever a buffer with custom indicators is switched to.
--- This is automatically done by the @{textredux.core.buffer} class, and thus
--- not something you typically have to worry about.
-function define_indicators()
-  local buffer = _G.buffer
-  local buf_indics = indicators[buffer] or {}
-  indicators[buffer] = nil
-  for indicator, _ in pairs(buf_indics) do
-    define_indicator(indicator, buffer)
-  end
-end
-
---- Retrieves the indicator number used in the current buffer for the indicator.
--- @param indicator The indicator to retrieve the number for
-function number_for(indicator)
-  local buffer = _G.buffer
-  local buf_indics = indicators[buffer] or {}
-  return buf_indics[indicator] or define_indicator(indicator, buffer)
-end
-
---- Applies the given indicator for the text range specified in the current
+---
+-- Applies the given indicator for the text range specified in the current
 -- buffer.
--- @param indicator The indicator to apply
+-- @param self The indicator to apply
 -- @param position The start position
 -- @param length The length of the range to fill
-function apply(indicator, position, length)
-  local buffer = _G.buffer
-  local number = number_for(indicator)
-  buffer.indicator_current = number
+local function apply(self, position, length)
+  local buffer = buffer
+  buffer.indicator_current = self.number
   buffer:indicator_fill_range(position, length)
 end
+
+-- Called when a new table is added to the indicator module.
+local function define_indicator(t, name, properties)
+  if not properties.number then
+    local number = _SCINTILLA.next_indic_number()
+    properties.number = number
+  end
+  properties.apply = apply
+  rawset(t, name, properties)
+end
+
+-- Called to set indicator styles in a new buffer or view.
+local function activate_indicators()
+  local buffer = buffer
+  for name, properties in pairs(M) do
+    if type(properties) == 'table' then
+      local number = properties.number
+      if properties.style then buffer.indic_style[number] = properties.style end
+      if properties.alpha then buffer.indic_alpha[number] = properties.alpha end
+      if properties.outline_alpha then
+        buffer.indic_outline_alpha[number] = properties.outline_alpha
+      end
+      if properties.fore then
+        buffer.indic_fore[number] = color.string_to_color(properties.fore)
+      end
+      if properties.under then buffer.indic_under[number] = properties.under end
+    end
+  end
+
+end
+
+-- Ensure Textredux indicators are defined after switching buffers or views.
+events.connect(events.BUFFER_NEW, activate_indicators)
+events.connect(events.VIEW_NEW, activate_indicators)
+events.connect(events.VIEW_AFTER_SWITCH, activate_indicators)
+
+setmetatable(M, {__newindex=define_indicator})
 
 return M
