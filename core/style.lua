@@ -5,12 +5,58 @@
 --[[--
 The style module lets you define and use custom, non-lexer-based styles.
 
+What's a style?
+---------------
+
+Textredux styling provides an abstraction layer over the lexer based style
+creation. A style is thus just a table with certain properties, almost exactly
+the same as for style created for a lexer or theme. Please see the documentation
+for
+[lexer.style](http://foicica.com/textadept/api/lexer.html#Styles.and.Styling)
+for information about the available fields. Colors should be defined in the
+standard `'#rrggbb'` notation.
+
+Defining styles
+---------------
+
+You define a new style by assigning a table with its properties to the module:
+
+    local reduxstyle = require 'textredux.core.style'
+    reduxstyle.foo_header = { italic = true, fore = '#680000' }
+
+As has been previously said, it's often a good idea to base your custom styles
+on an existing default style. Similarily to defining a lexer style in Textadept
+you can achieve this by concatenating styles:
+
+    reduxstyle.foo_header = style.string .. { underline = true }
+
+*NB:* Watch out for the mistake of assigning the style to a local variable:
+
+    local header = reduxstyle.string .. { underline = true }
+
+This will _not_ work, as the style is not correctly defined with the style
+module, necessary to ensure styles are correctly defined when new buffers
+are created.
+
+In order to avoid name clashes, it's suggested that you name any custom styles
+by prefixing their name with the name of your module. E.g. if your module is
+named `awesome`, then name your style something like `style.awesome_style`.
+
+Using styles
+------------
+
+You typically use a style by inserting text through
+@{textredux.core.buffer}'s text insertion methods, specifying the style.
+Please see also the example in `examples/buffer_styling.lua`.
+
+  reduxbuffer:add_text('Foo header text', reduxstyle.foo_header)
+
 The default styles
 ------------------
 
 Textredux piggybacks on the default lexer styles defined by a user's theme,
-and makes them available for your Textredux interface. The big benefit of this
-is that by using those styles, or by basing your custom styles on them, your
+and makes them available for your Textredux interfaces. The big benefit of this
+is that by using those styles or basing your custom styles on them, your
 interface stands a much higher chance of blending in well with the color scheme
 used. As an example, your custom style with cyan foreground text might look
 great with your own dark theme, but may be pretty near invisible for some user
@@ -45,66 +91,47 @@ available are these:
 - style.indentguide
 - style.calltip
 
-What's a style?
----------------
-
-Textredux styling has been made to resemble the lexer based style creation.
-A style is thus just a table with certain properties, almost exactly the same
-as for style created for a lexer or theme. Please see the documentation for
-[lexer.style](http://foicica.com/textadept/api/lexer.html#style)
-for information about the fields. The one exception compared to lexer styles
-is that colors are specified using the standard `'#rrggbb'` notation instead of
-the lexer styles' `bgr` notation. This is what you use to create custom styles
-(see below), and also what you get when accessing any already existing styles.
-
-Defining styles
----------------
-
-You define a new style by assigning the style to the style module, like so:
-
-    style.foo_header = { italic = true, fore = '#680000' }
-
-As has been previously said, it's often a good idea to base your custom styles
-on an existing default style. Similarily to defining a lexer style in Textadept
-you can achieve this by concatenating styles:
-
-    style.foo_header = style.string .. { underline = true }
-
-*NB:* Watch out for the mistake of not assigning the style to the style module:
-
-    local header = style.string .. { underline = true }
-
-This will _not_ work, as the style is not correctly defined with the style
-module.
-
-In order to avoid name clashes, it's suggested that you name any custom styles
-by prefixing their name with the name of your module. E.g. if your module is
-named `awesome`, then name your style something like `style.awesome_style`.
-
-Using styles
-------------
-
-You typically use a style by inserting text through
-@{textredux.core.buffer}'s text insertion methods, specifying the style.
-Please see the example in `examples/buffer_styling.lua` for usage of this.
-
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.core.style
 ]]
 
-local _G, pairs, setmetatable, error, tonumber =
-      _G, pairs, setmetatable, error, tonumber
-local string_format = string.format
-
 local M = {}
-local _ENV = M
-if setfenv then setfenv(1, _ENV) end
 
--- The largest available style number
-local STYLE_MAX = 127
+local color = require 'textredux.util.color'
+local string_to_color = color.string_to_color
+local color_to_string = color.color_to_string
 
+local STYLE_LASTPREDEFINED = buffer.STYLE_LASTPREDEFINED
+local STYLE_MAX = buffer.STYLE_MAX
+
+---
+-- Applies a style.
+-- Attached to each style defined in the module.
+-- @param self The Style
+-- @param start_pos The start position
+-- @param length The number of chars to style
+local function apply(self, start_pos, length)
+  local buffer = buffer
+  buffer:start_styling(start_pos, 0xff)
+  buffer:set_styling(length, self.number)
+end
+
+
+-- Copy a table.
+local function table_copy(table)
+  local new = {}
+  for k, v in pairs(table) do new[k] = v end
+  return new
+end
+
+-- Overwrite fields in first style table with fields from second style table.
+local function style_merge(s1, s2)
+  local new = table_copy(s1)
+  for k, v in pairs(s2) do new[k] = v end
+  new.number = nil
+  return new
+end
+
+-- Pre-defined style numbers.
 local default_styles = {
   nothing = 0,
   whitespace = 1,
@@ -129,47 +156,20 @@ local default_styles = {
   indentguide = 37,
   calltip = 38
 }
-local styles = {}
-local buffer_styles = {}
-setmetatable(buffer_styles, { __mode = 'k' })
 
-local function table_copy(table)
-  local new = {}
-  for k, v in pairs(table) do new[k] = v end
-  return new
+-- Number of pre-defined styles. Used to calculate new style numbers.
+local count_default_styles = 0
+for _, _ in pairs(default_styles) do
+  count_default_styles = count_default_styles + 1
 end
 
-local function style_merge(s1, s2)
-  local new = table_copy(s1)
-  for k, v in pairs(s2) do new[k] = v end
-  new.number = nil
-  return new
-end
-
-local function string_to_color(rgb)
-  if not rgb then return nil end
-  local r, g, b = rgb:match('^#?(%x%x)(%x%x)(%x%x)$')
-  if not r then error("Invalid color specification '" .. rgb .. "'", 2) end
-  return tonumber(b .. g .. r, 16)
-end
-
-local function color_to_string(color)
-  local hex = string_format('%.6x', color)
-  local b, g, r = hex:match('^(%x%x)(%x%x)(%x%x)$')
-  if not r then return '?' end
-  return '#' .. r .. g .. b
-end
-
---
 -- Gets a style definition for the specified style (number).
--- @param number The style number to get the definition for
--- @param name (Optional) name of the style if known
--- @return a style definition (table)
+-- Returns a style definition (table)
 local function get_definition(number, name)
   if number < 0 or number > STYLE_MAX then
     error('invalid style number "'.. number .. '"', 2)
   end
-  local buffer = _G.buffer
+  local buffer = buffer
   local style = {
     font = buffer.style_font[number],
     size = buffer.style_size[number],
@@ -185,111 +185,68 @@ local function get_definition(number, name)
     changeable = buffer.style_changeable[number],
     hotspot = buffer.style_hot_spot[number],
     name = name or buffer.style_name[number],
-    number = number
+    number = number,
+    apply = apply
   }
-  setmetatable(style, {__concat = style_merge})
-  return style
+  return setmetatable(style, {__concat=style_merge})
 end
 
-local function set_style_property(table, number, value)
-  if value ~= nil then table[number] = value end
+-- Add the pre-defined lexer styles to the module.
+for name, number in pairs(default_styles) do
+  M[name] = get_definition(number, name)
 end
 
---
--- Defines a style using the specified style number.
--- @param number The style number that should be used for the style
--- @param style The style definition
-local function define_style(number, style)
-  local buffer = _G.buffer
-  set_style_property(buffer.style_size, number, style.size)
-  set_style_property(buffer.style_bold, number, style.bold)
-  set_style_property(buffer.style_italic, number, style.italic)
-  set_style_property(buffer.style_underline, number, style.underline)
-  set_style_property(buffer.style_fore, number, string_to_color(style.fore))
-  set_style_property(buffer.style_back, number, string_to_color(style.back))
-  set_style_property(buffer.style_eol_filled, number, style.eolfilled)
-  set_style_property(buffer.style_character_set, number, style.characterset)
-  set_style_property(buffer.style_case, number, style.case)
-  set_style_property(buffer.style_visible, number, style.visible)
-  set_style_property(buffer.style_changeable, number, style.changeable)
-  set_style_property(buffer.style_hot_spot, number, style.hotspot)
-  set_style_property(buffer.style_font, number, style.font)
+-- Defines a new style using the given table of style properties.
+-- @param name The style name that should be used for the style
+-- @param properties The table describing the style
+local function define_style(t, name, properties)
+  local properties = table_copy(properties)
+  local count = 0
+  for k, v in pairs(M) do
+    if type(v) == 'table' then count = count + 1 end
+  end
+  local number = STYLE_LASTPREDEFINED + count - count_default_styles + 1
+  if (number > STYLE_MAX) then error('Maximum style number exceeded') end
+  properties.number = number
+  properties.apply = apply
+  properties.name = name
+  rawset(t, name, properties)
 end
 
-local function get_buffer_styles()
-  local buffer = _G.buffer
-  local styles = buffer_styles[buffer]
-  if styles then return styles end
-  styles = { _last_number = STYLE_MAX + 1 }
-  buffer_styles[buffer] = styles
-  return styles
+-- Set a property if it is set.
+local function set_style_property(t, number, value)
+  if value ~= nil then t[number] = value end
 end
 
---
--- Retrieves the style number used for the specified style
--- in the current buffer. The style will automatically be
--- defined in the current buffer if it isn't already.
--- @param style The style definition to get the style number for.
-local function get_style_number(style)
-  if style.number then return style.number end -- a default style
-  local styles = get_buffer_styles()
-  if styles[style.name] then return styles[style.name] end
-  styles._last_number = styles._last_number - 1
-  define_style(styles._last_number, style)
-  styles[style.name] = styles._last_number
-  return styles._last_number
-end
-
----
--- Applies the specified style for the given text range and buffer.
--- While you could use this directly, you'd typically use the text insertion
--- methods in @{textredux.core.buffer} to style content.
--- @param style The defined style
--- @param buffer The buffer to apply the style for
--- @param start_pos The starting position of the style
--- @param length The number of positions to style
-function apply(style, buffer, start_pos, length)
-  buffer:start_styling(start_pos, 0xff)
-  buffer:set_styling(length, get_style_number(style))
-end
-
----
--- Defines the currently used custom styles for the current buffer.
--- This must be called whenever a buffer with custom styles is switched to.
--- This is automatically done by the @{textredux.core.buffer} class, and thus
--- not something you typically have to worry about.
-function define_styles()
-  local buffer_styles = get_buffer_styles()
-  for name, number in pairs(buffer_styles) do
-    local style = styles[name]
-    if style then
-      define_style(number, style)
+-- Activate Textredux styles in a buffer.
+local function activate_styles()
+  if not buffer._textredux then return end
+  for k, v in pairs(M) do
+    if type(v) == 'table' then
+      if v.number > STYLE_LASTPREDEFINED then
+        set_style_property(buffer.style_size, v.number, v.size)
+        set_style_property(buffer.style_bold, v.number, v.bold)
+        set_style_property(buffer.style_italic, v.number, v.italic)
+        set_style_property(buffer.style_underline, v.number, v.underline)
+        set_style_property(buffer.style_fore, v.number, string_to_color(v.fore))
+        set_style_property(buffer.style_back, v.number, string_to_color(v.back))
+        set_style_property(buffer.style_eol_filled, v.number, v.eolfilled)
+        set_style_property(buffer.style_character_set, v.number, v.characterset)
+        set_style_property(buffer.style_case, v.number, v.case)
+        set_style_property(buffer.style_visible, v.number, v.visible)
+        set_style_property(buffer.style_changeable, v.number, v.changeable)
+        set_style_property(buffer.style_hot_spot, v.number, v.hotspot)
+        set_style_property(buffer.style_font, v.number, v.font)
+      end
     end
   end
 end
 
----
--- Gets a list of currently defined styles.
--- @return a table of style definitions
-local function get_current_styles()
-  local buffer_styles = {}
-  for name, number in pairs(default_styles) do
-    buffer_styles[#buffer_styles + 1] = styles[name]
-  end
-  return buffer_styles
-end
+-- Ensure Textredux styles are defined after switching buffers or views.
+events.connect(events.BUFFER_AFTER_SWITCH, activate_styles)
+events.connect(events.VIEW_NEW, activate_styles)
+events.connect(events.VIEW_AFTER_SWITCH, activate_styles)
 
-local function set_style(_, name, style)
-  style = table_copy(style)
-  style.name = name
-  style.number = nil -- ignore any style number set since this is a new style
-  setmetatable(style, {__concat = style_merge})
-  styles[name] = style
-end
+setmetatable(M, {__newindex=define_style, __concat=style_merge})
 
-for name, number in pairs(default_styles) do
-  styles[name] = get_definition(number, name)
-end
-
-setmetatable(M, {__index = styles, __newindex = set_style})
 return M
