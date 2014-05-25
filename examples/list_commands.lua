@@ -28,7 +28,6 @@ function M.show_action_list()
     ui.statusbar_text = 'Currently selected: ' ..
                           tostring(list:get_current_selection())
   end
-
   list:show()
 end
 

@@ -42,6 +42,7 @@ function M.show_styled_list()
   -- to use dynamically, and for the second column we'll always use the custom
   -- style `style.example_code`.
   list.column_styles = { get_item_style, tr_style.example_code }
+  list.match_highlight_style = tr_style.class
   list:show()
 end
 

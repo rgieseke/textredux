@@ -1,15 +1,17 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[
 This directory contains a few examples that show how to build text based
 interfaces with the modules in `textredux.core`.
 
-Provided that Textredux is installed you can paste the following line in
+When Textredux is installed you can paste the following line in
 Textadept's command entry to show a list of examples:
-    examples = require 'textredux.examples'; examples.show_examples()
 
- Alternatively, you can assign a key in your
-`init.lua`. For example assign `Ctrl-3` to bring up the examples:
-    textredux.examples = require 'textredux.examples'
-    keys['c3'] = textredux.examples.show_examples
+    examples = require('textredux.examples').show_examples()
+
+to select from a list of examples.
 ]]
 
 textredux = require 'textredux'
@@ -25,13 +27,13 @@ M.multi_column_list = require 'textredux.examples.multi_column_list'
 M.styled_list = require 'textredux.examples.styled_list'
 
 examples = {
-  ['Basic list'] = M.basic_list.show_simple_list,
-  ['Buffer actions'] = M.buffer_actions.create_action_buffer,
-  ['Buffer indicators'] = M.buffer_indicators.create_indicator_buffer,
   ['Buffer styling'] = M.buffer_styling.create_styled_buffer,
+  ['Basic list'] = M.basic_list.show_simple_list,
+  ['Buffer indicators'] = M.buffer_indicators.create_indicator_buffer,
+  ['Styled list'] = M.styled_list.show_styled_list,
   ['List commands'] = M.list_commands.show_action_list,
   ['Multi column list'] = M.multi_column_list.show_multi_column_list,
-  ['Styled list'] = M.styled_list.show_styled_list
+  ['Buffer actions'] = M.buffer_actions.create_action_buffer
 }
 
 local keys = {}
