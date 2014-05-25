@@ -40,7 +40,6 @@
 <ul>
 <li>Contents</li>
   <li><a href="#Functions">Functions</a></li>
-  <li><a href="#Fields">Fields</a></li>
   <li><a href="#Instance_fields">Instance fields </a></li>
 </ul>
 
@@ -182,21 +181,13 @@ which accepts optional style, command and indicator parameters.</td>
 <a href="http://foicica.com/textadept/api/buffer.html#insert_text">buffer:insert_text</a>
 which accepts optional style, command and indicator parameters.</td>
 	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#reduxbuffer:newline">reduxbuffer:newline ()</a></td>
-	<td class="summary">Override for
-<a href="http://foicica.com/textadept/api/buffer.html#new_line">buffer:new_line</a>.</td>
-	</tr>
 </table>
-<h2><a href="#Fields">Fields</a></h2>
+<h2><a href="#Instance_fields">Instance fields </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer.read_only">reduxbuffer.read_only</a></td>
 	<td class="summary">Whether the buffer should be marked as read only.</td>
 	</tr>
-</table>
-<h2><a href="#Instance_fields">Instance fields </a></h2>
-<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer.on_deleted">reduxbuffer.on_deleted</a></td>
 	<td class="summary">Callback invoked whenever the target buffer is deleted.</td>
@@ -211,8 +202,8 @@ which accepts optional style, command and indicator parameters.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer.data">reduxbuffer.data</a></td>
-	<td class="summary">A general purpose table that can be used for storing state associated
- with the buffer.</td>
+	<td class="summary">A general purpose table that can be used for storing state associated with the
+buffer.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer.target">reduxbuffer.target</a></td>
@@ -258,9 +249,9 @@ which accepts optional style, command and indicator parameters.</td>
     </dt>
     <dd>
     Shows the buffer.
- If the target buffer doesn't exist, due to it either not having been created
- yet or having been deleted, it is automatically created. Upon the return,
- the buffer is showing and set as the global buffer.
+If the target buffer doesn't exist, due to it either not having been created
+yet or having been deleted, it is automatically created. Upon the return, the
+buffer is showing and set as the global buffer.
 
 
 
@@ -441,10 +432,6 @@ the following parameters:</p>
 
 <ul>
     <li><code>buffer</code>: The buffer instance</li>
-    <li><code>shift</code>: True if the Shift key was held down.</li>
-    <li><code>ctrl</code>: True if the Control key was held down.</li>
-    <li><code>alt</code>: True if the Alt/Option key was held down.</li>
-    <li><code>meta</code>: True if the Command key on Mac OS X was held down.</li>
 </ul>
 
         </li>
@@ -560,26 +547,10 @@ text.
 
 
 </dd>
-    <dt>
-    <a name = "reduxbuffer:newline"></a>
-    <strong>reduxbuffer:newline ()</strong>
-    </dt>
-    <dd>
-    Override for
-<a href="http://foicica.com/textadept/api/buffer.html#new_line">buffer:new_line</a>.
-A Textredux buffer will always have eol mode set to LF, so it's also possible,
-and arguably easier, to just insert a newline using the <code>\n</code> escape via any
-of the other text insertion functions.
-
-
-
-
-
-
-
-</dd>
 </dl>
-    <h2><a name="Fields"></a>Fields</h2>
+    <h2><a name="Instance_fields"></a>Instance fields </h2>
+          These can be set for a buffer instance, and not
+ globally for the module.
     <dl class="function">
     <dt>
     <a name = "reduxbuffer.read_only"></a>
@@ -599,11 +570,6 @@ mode before invoking the <a href="../modules/textredux.core.buffer.html#reduxbuf
 
 
 </dd>
-</dl>
-    <h2><a name="Instance_fields"></a>Instance fields </h2>
-          These can be set only for a buffer instance, and not
- globally for the module.
-    <dl class="function">
     <dt>
     <a name = "reduxbuffer.on_deleted"></a>
     <strong>reduxbuffer.on_deleted</strong>
@@ -665,9 +631,9 @@ and the values assigned can also be either functions or tables.
     <strong>reduxbuffer.data</strong>
     </dt>
     <dd>
-    A general purpose table that can be used for storing state associated
- with the buffer.  The <code>data</code> table is special in the way that it will
- automatically be cleared whenever the user closes the buffer.
+    A general purpose table that can be used for storing state associated with the
+buffer.  The <code>data</code> table is special in the way that it will  automatically
+be cleared whenever the user closes the buffer.
 
 
 
@@ -682,7 +648,7 @@ and the values assigned can also be either functions or tables.
     </dt>
     <dd>
     The target buffer, if any.
- This holds a reference to the target buffer, when present.
+This holds a reference to the target buffer, when present.
 
 
 
