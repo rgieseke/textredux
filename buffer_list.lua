@@ -34,7 +34,6 @@ that you want to obtain the currently selected buffer - you can use the
 ]]
 M.keys = {
   cd = function(list) M.close_buffer(list) end, -- Default for `close buffer`
-  esc = function(list) list:close() end -- Escape closes list by default
 }
 
 local buffer_source
