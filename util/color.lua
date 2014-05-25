@@ -10,6 +10,8 @@ The color module provides utility functions for color handling.
 
 local M = {}
 
+---
+-- Convert color in '#rrggbb' format to 'bbggrr'.
 function M.string_to_color(rgb)
   if not rgb then return nil end
   local r, g, b = rgb:match('^#?(%x%x)(%x%x)(%x%x)$')
@@ -17,8 +19,10 @@ function M.string_to_color(rgb)
   return tonumber(b .. g .. r, 16)
 end
 
+---
+-- Convert color in hex 'bbggrr' format to string '#rrggbb'
 function M.color_to_string(color)
-  local hex = string_format('%.6x', color)
+  local hex = string.format('%.6x', color)
   local b, g, r = hex:match('^(%x%x)(%x%x)(%x%x)$')
   if not r then return '?' end
   return '#' .. r .. g .. b
