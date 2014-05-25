@@ -37,6 +37,10 @@
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
+<ul>
+<li>Contents</li>
+  <li><a href="#Functions">Functions</a></li>
+</ul>
 
 
 </div>
@@ -44,37 +48,76 @@
 <div class="container">
 <div class="content">
 
-<h2>Module <code>textredux.hijack</code></h2>
-<p>The hijack module provides the easiest, and most invasive, way of getting
-Textredux functionality for Textadept.</p>
+<h2>Module <code>textredux.util.color</code></h2>
+<p>The color module provides utility functions for color handling.</p>
 <p>
-<p> It's a one-stop setup in the way that
-you don't really have to configure anything else to use the functionality of
-Textredux  - the hijack module inserts itself anywhere it can and will
-automatically integrate with your existing key bindings.</p>
-
-<h2>How to use</h2>
-
-<p>After installing the Textredux module into your .textadept/modules directory,
-simply add the following to your .textadept/init.lua file:</p>
-
-<pre><code>require 'textredux.hijack'
-</code></pre>
 
 </p>
-    <h3>Info:</h3>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#string_to_color">string_to_color (rgb)</a></td>
+	<td class="summary">Convert color in '#rrggbb' format to 'bbggrr'.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#color_to_string">color_to_string (color)</a></td>
+	<td class="summary">Convert color in hex 'bbggrr' format to string '#rrggbb'</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "string_to_color"></a>
+    <strong>string_to_color (rgb)</strong>
+    </dt>
+    <dd>
+    Convert color in '#rrggbb' format to 'bbggrr'.
+
+
+    <h3>Parameters:</h3>
     <ul>
-        <li><strong>Copyright</strong>: 2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+        <li><span class="parameter">rgb</span>
+
+
+
+        </li>
     </ul>
 
 
 
-<br/>
-<br/>
 
 
+</dd>
+    <dt>
+    <a name = "color_to_string"></a>
+    <strong>color_to_string (color)</strong>
+    </dt>
+    <dd>
+    Convert color in hex 'bbggrr' format to string '#rrggbb'
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
 
 
 <footer class="footer">

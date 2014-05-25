@@ -23,20 +23,23 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
 <li>Contents</li>
-  <li><a href="#Functions">Functions</a></li>
+  <li><a href="#Local_Functions">Local Functions</a></li>
 </ul>
 
 
@@ -44,17 +47,63 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.core.style</a></h2>
 
+<h2>Module <code>textredux.core.style</code></h2>
 <p>The style module lets you define and use custom, non-lexer-based styles.</p>
 <p>
 
 
+<h2>What's a style?</h2>
+
+<p>Textredux styling provides an abstraction layer over the lexer based style
+creation. A style is thus just a table with certain properties, almost exactly
+the same as for style created for a lexer or theme. Please see the documentation
+for
+<a href="http://foicica.com/textadept/api/lexer.html#Styles.and.Styling">lexer.style</a>
+for information about the available fields. Colors should be defined in the
+standard <code>'#rrggbb'</code> notation.</p>
+
+<h2>Defining styles</h2>
+
+<p>You define a new style by assigning a table with its properties to the module:</p>
+
+<pre><code>local reduxstyle = require 'textredux.core.style'
+reduxstyle.foo_header = { italic = true, fore = '#680000' }
+</code></pre>
+
+<p>As has been previously said, it's often a good idea to base your custom styles
+on an existing default style. Similarily to defining a lexer style in Textadept
+you can achieve this by concatenating styles:</p>
+
+<pre><code>reduxstyle.foo_header = style.string .. { underline = true }
+</code></pre>
+
+<p><em>NB:</em> Watch out for the mistake of assigning the style to a local variable:</p>
+
+<pre><code>local header = reduxstyle.string .. { underline = true }
+</code></pre>
+
+<p>This will <em>not</em> work, as the style is not correctly defined with the style
+module, necessary to ensure styles are correctly defined when new buffers
+are created.</p>
+
+<p>In order to avoid name clashes, it's suggested that you name any custom styles
+by prefixing their name with the name of your module. E.g. if your module is
+named <code>awesome</code>, then name your style something like <code>style.awesome_style</code>.</p>
+
+<h2>Using styles</h2>
+
+<p>You typically use a style by inserting text through
+<a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>'s text insertion methods, specifying the style.
+Please see also the example in <code>examples/buffer_styling.lua</code>.</p>
+
+<p>  reduxbuffer:add<em>text('Foo header text', reduxstyle.foo</em>header)</p>
+
 <h2>The default styles</h2>
 
 <p>Textredux piggybacks on the default lexer styles defined by a user's theme,
-and makes them available for your Textredux interface. The big benefit of this
-is that by using those styles, or by basing your custom styles on them, your
+and makes them available for your Textredux interfaces. The big benefit of this
+is that by using those styles or basing your custom styles on them, your
 interface stands a much higher chance of blending in well with the color scheme
 used. As an example, your custom style with cyan foreground text might look
 great with your own dark theme, but may be pretty near invisible for some user
@@ -91,113 +140,44 @@ available are these:</p>
     <li>style.calltip</li>
 </ul>
 
-<h2>What's a style?</h2>
-
-<p>Textredux styling has been made to resemble the lexer based style creation.
-A style is thus just a table with certain properties, almost exactly the same
-as for style created for a lexer or theme. Please see the documentation for
-<a href="http://foicica.com/textadept/api/lexer.html#style">lexer.style</a>
-for information about the fields. The one exception compared to lexer styles
-is that colors are specified using the standard <code>'#rrggbb'</code> notation instead of
-the lexer styles' <code>bgr</code> notation. This is what you use to create custom styles
-(see below), and also what you get when accessing any already existing styles.</p>
-
-<h2>Defining styles</h2>
-
-<p>You define a new style by assigning the style to the style module, like so:</p>
-
-<pre><code>style.foo_header = { italic = true, fore = '#680000' }
-</code></pre>
-
-<p>As has been previously said, it's often a good idea to base your custom styles
-on an existing default style. Similarily to defining a lexer style in Textadept
-you can achieve this by concatenating styles:</p>
-
-<pre><code>style.foo_header = style.string .. { underline = true }
-</code></pre>
-
-<p><em>NB:</em> Watch out for the mistake of not assigning the style to the style module:</p>
-
-<pre><code>local header = style.string .. { underline = true }
-</code></pre>
-
-<p>This will <em>not</em> work, as the style is not correctly defined with the style
-module.</p>
-
-<p>In order to avoid name clashes, it's suggested that you name any custom styles
-by prefixing their name with the name of your module. E.g. if your module is
-named <code>awesome</code>, then name your style something like <code>style.awesome_style</code>.</p>
-
-<h2>Using styles</h2>
-
-<p>You typically use a style by inserting text through
-<a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>'s text insertion methods, specifying the style.
-Please see the example in <code>examples/buffer_styling.lua</code> for usage of this.</p>
-
 </p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2011-2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
-<h2><a href="#Functions">Functions</a></h2>
+<h2><a href="#Local_Functions">Local Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#apply">apply (style, buffer, start_pos, length)</a></td>
-	<td class="summary">Applies the specified style for the given text range and buffer.</td>
-	</tr>
-	<tr>
-	<td class="name nowrap"><a href="#define_styles">define_styles ()</a></td>
-	<td class="summary">Defines the currently used custom styles for the current buffer.</td>
+	<td class="name" nowrap><a href="#apply">apply (self, start_pos, length)</a></td>
+	<td class="summary">Applies a style.</td>
 	</tr>
 </table>
 
+<br/>
+<br/>
 
-    <h2><a name="Functions"></a>Functions</h2>
+
+    <h2><a name="Local_Functions"></a>Local Functions</h2>
     <dl class="function">
     <dt>
     <a name = "apply"></a>
-    <strong>apply (style, buffer, start_pos, length)</strong>
+    <strong>apply (self, start_pos, length)</strong>
     </dt>
     <dd>
-    Applies the specified style for the given text range and buffer.
- While you could use this directly, you'd typically use the text insertion
- methods in <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> to style content.
+    Applies a style.
+ Attached to each style defined in the module.
+
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">style</span>
-         The defined style
-        </li>
-        <li><span class="parameter">buffer</span>
-         The buffer to apply the style for
+        <li><span class="parameter">self</span>
+         The Style
         </li>
         <li><span class="parameter">start_pos</span>
-         The starting position of the style
+         The start position
         </li>
         <li><span class="parameter">length</span>
-         The number of positions to style
+         The number of chars to style
         </li>
     </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "define_styles"></a>
-    <strong>define_styles ()</strong>
-    </dt>
-    <dd>
-    Defines the currently used custom styles for the current buffer.
- This must be called whenever a buffer with custom styles is switched to.
- This is automatically done by the <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> class, and thus
- not something you typically have to worry about.
-
 
 
 

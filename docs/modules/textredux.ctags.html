@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textredux API Docs</title>
+<link href='http://fonts.googleapis.com/css?family=Bowlby+One+SC' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../ldoc.css">
+
+</head>
+<body>
+
+<div id="sidebar">
+
+
+<ul>
+<li><a href="../index.html">Textredux</a></li>
+</ul>
+<ul>
+<li><a href="../api.html">API Docs</a></li>
+</ul>
+
+<ul class="nowrap">
+<li>Modules</li>
+  <li><a href="../modules/textredux.html">textredux</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
+</ul>
+
+<ul>
+<li>Contents</li>
+  <li><a href="#Functions">Functions</a></li>
+  <li><a href="#Tables">Tables</a></li>
+  <li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+</div>
+
+<div class="container">
+<div class="content">
+
+<h2>Module <code>textredux.ctags</code></h2>
+<p>Displays a filtered list of symbols (functions, variables, …) in the current
+document using <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a>.</p>
+<p>
+
+
+<h2>Usage</h2>
+
+<p>In your init.lua:</p>
+
+<pre><code>events.connect(events.INITIALIZED, function()
+  local ctags = require 'textredux.ctags'
+  keys.cg = ctags.goto_symbol -- Ctrl+G
+end)
+</code></pre>
+
+<h2>Requirements</h2>
+
+<p>Exuberant Ctags needs to be installed and is available in the
+usual package managers.</p>
+
+<p>Debian/Ubuntu:</p>
+
+<pre><code>sudo apt-get install exuberant-ctags
+</code></pre>
+
+<p>Homebrew on OS X:</p>
+
+<pre><code>brew install ctags
+</code></pre>
+
+<p>Note that it is possible to add support for additional filetypes in your
+<code>~/.ctags</code>, for example LaTeX:</p>
+
+<pre><code>--langdef=latex
+--langmap=latex:.tex
+--regex-latex=/\\label\{([^}]*)\}/\1/l,label/
+--regex-latex=/\\section\{([^}]*)\}/\1/s,section/
+--regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
+--regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
+--regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
+--regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
+--regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
+</code></pre>
+
+<p>This module is based on Mitchell's ctags code posted on the
+<a href="http://foicica.com/wiki/ctags">Textadept wiki</a>.</p>
+
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#goto_symbol">goto_symbol ()</a></td>
+	<td class="summary">Goes to the selected symbol in a filtered list dialog.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#styles">styles</a></td>
+	<td class="summary">Mappings from Ctags kind to Textredux styles.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#CTAGS">CTAGS</a></td>
+	<td class="summary">Path and options for the ctags call can be defined in the <code>CTAGS</code>
+ field.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "goto_symbol"></a>
+    <strong>goto_symbol ()</strong>
+    </dt>
+    <dd>
+    Goes to the selected symbol in a filtered list dialog.
+ Requires <a href="(http://ctags.sourceforge.net/">ctags</a> to be installed.
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Tables"></a>Tables</h2>
+    <dl class="function">
+    <dt>
+    <a name = "styles"></a>
+    <strong>styles</strong>
+    </dt>
+    <dd>
+    Mappings from Ctags kind to Textredux styles.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">class</span>
+
+
+
+        </li>
+        <li><span class="parameter">enum</span>
+
+
+
+        </li>
+        <li><span class="parameter">enumerator</span>
+
+
+
+        </li>
+        <li><span class="parameter">[</span>
+
+
+
+        </li>
+        <li><span class="parameter">macro</span>
+
+
+
+        </li>
+        <li><span class="parameter">namespace</span>
+
+
+
+        </li>
+        <li><span class="parameter">typedef</span>
+
+
+
+        </li>
+        <li><span class="parameter">variable</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+    <dl class="function">
+    <dt>
+    <a name = "CTAGS"></a>
+    <strong>CTAGS</strong>
+    </dt>
+    <dd>
+    Path and options for the ctags call can be defined in the <code>CTAGS</code>
+ field.
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+<footer class="footer">
+<small>Generated by <a href="http://github.com/stevedonovan/LDoc">LDoc</a></small>
+</footer>
+</div>
+</div>
+
+</body>
+</html>

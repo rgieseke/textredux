@@ -23,20 +23,23 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
 <li>Contents</li>
-  <li><a href="#Functions">Functions</a></li>
+  <li><a href="#Local_Functions">Local Functions</a></li>
 </ul>
 
 
@@ -44,11 +47,11 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.core.indicator</a></h2>
 
+<h2>Module <code>textredux.core.indicator</code></h2>
 <p>The indicator module provides support for indicators in your buffers.</p>
 <p>Indicators lets you visually mark a certain text range using various styles and
-colors, and using the event mechanism you can also receive events whenever the
+colors. Using the event mechanism you can also receive events whenever the
 user clicks the marked text.</p>
 
 <h2>The indicator definition</h2>
@@ -72,91 +75,55 @@ the buffer class where applicable.</p>
     default).</li>
 </ul>
 
+<p>A simple example:</p>
+
+<pre><code>local reduxindicator = textredux.core.indicator
+reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
+</code></pre>
+
 <h2>Using indicators</h2>
 
 <p>Start with defining your indicators using the format described above. You can
-then  either apply them against a range of text using <a href="../modules/textredux.core.indicator.html#apply">apply</a>, or pass them to
-one of the text insertion functions in <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>. If you need to
-get the defined indicator number for an indicator, you can retrieve it using
-<a href="../modules/textredux.core.indicator.html#number_for">number_for</a>. Please note that indicator numbers are not necessarily stable
-between buffer switches, so problems may arise if you hold on to an indicator
-number.</p>
+then either apply them against a range of text using apply, or pass them to
+one of the text insertion functions in <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>.</p>
 
-<p>Please see the example <code>buffer_indicators.lua</code> for some practical usage.</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
+<pre><code>local text = 'Text for a red box indicator\n\n'
+buffer:add_text(text)
+reduxindicator.RED_BOX:apply(0, #text)
+
+buffer:add_text(text, nil, nil, reduxindicator.RED_BOX)
+</code></pre>
+
+<p>Please also see the example <code>buffer_indicators.lua</code>.</p>
 
 
-<h2><a href="#Functions">Functions</a></h2>
+<h2><a href="#Local_Functions">Local Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#define_indicators">define_indicators ()</a></td>
-	<td class="summary">Defines the currently used custom indicators for the current buffer.</td>
-	</tr>
-	<tr>
-	<td class="name nowrap"><a href="#number_for">number_for (indicator)</a></td>
-	<td class="summary">Retrieves the indicator number used in the current buffer for the indicator.</td>
-	</tr>
-	<tr>
-	<td class="name nowrap"><a href="#apply">apply (indicator, position, length)</a></td>
+	<td class="name" nowrap><a href="#apply">apply (self, position, length)</a></td>
 	<td class="summary">Applies the given indicator for the text range specified in the current
  buffer.</td>
 	</tr>
 </table>
 
+<br/>
+<br/>
 
-    <h2><a name="Functions"></a>Functions</h2>
+
+    <h2><a name="Local_Functions"></a>Local Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "define_indicators"></a>
-    <strong>define_indicators ()</strong>
-    </dt>
-    <dd>
-    Defines the currently used custom indicators for the current buffer.
- This must be called whenever a buffer with custom indicators is switched to.
- This is automatically done by the <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> class, and thus
- not something you typically have to worry about.
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "number_for"></a>
-    <strong>number_for (indicator)</strong>
-    </dt>
-    <dd>
-    Retrieves the indicator number used in the current buffer for the indicator.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">indicator</span>
-         The indicator to retrieve the number for
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "apply"></a>
-    <strong>apply (indicator, position, length)</strong>
+    <strong>apply (self, position, length)</strong>
     </dt>
     <dd>
     Applies the given indicator for the text range specified in the current
  buffer.
 
+
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">indicator</span>
+        <li><span class="parameter">self</span>
          The indicator to apply
         </li>
         <li><span class="parameter">position</span>

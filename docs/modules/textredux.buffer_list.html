@@ -23,15 +23,18 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
@@ -46,50 +49,47 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.buffer_list</a></h2>
 
+<h2>Module <code>textredux.buffer_list</code></h2>
 <p>The buffer list module provides a text based replacement for the standard
 Textadept buffer list.</p>
 <p> Two differences compared to the stock one is the ability
 to close a buffer directly from the buffer list (bound to <code>Ctrl + d</code> by default),
 and the option of specifying the buffers to list via a provided function.</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2011-2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#currently_selected_buffer">currently_selected_buffer (list)</a></td>
+	<td class="name" nowrap><a href="#currently_selected_buffer">currently_selected_buffer (list)</a></td>
 	<td class="summary">Returns the currently selected buffer in the list.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#close_buffer">close_buffer (list)</a></td>
+	<td class="name" nowrap><a href="#close_buffer">close_buffer (list)</a></td>
 	<td class="summary">Closes the currently selected buffer in the buffer list.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#show">show (buffers)</a></td>
+	<td class="name" nowrap><a href="#show">show (buffers)</a></td>
 	<td class="summary">Shows a list of the specified buffers, or _G.BUFFERS it not specified.</td>
 	</tr>
 </table>
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#keys">keys</a></td>
+	<td class="name" nowrap><a href="#keys">keys</a></td>
 	<td class="summary">The key bindings for the buffer list.</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#list">list</a></td>
+	<td class="name" nowrap><a href="#list">list</a></td>
 	<td class="summary">The Textredux list instance used by the buffer list.</td>
 	</tr>
 </table>
+
+<br/>
+<br/>
 
 
     <h2><a name="Functions"></a>Functions</h2>
@@ -100,6 +100,7 @@ and the option of specifying the buffers to list via a provided function.</p>
     </dt>
     <dd>
     Returns the currently selected buffer in the list.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -128,6 +129,7 @@ provided, then the global list is used automatically.
     <dd>
     Closes the currently selected buffer in the buffer list.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">list</span>
@@ -149,6 +151,7 @@ automatically used.
     </dt>
     <dd>
     Shows a list of the specified buffers, or _G.BUFFERS it not specified.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -184,13 +187,11 @@ You can read more about the Textredux list's keys in the
 that you want to obtain the currently selected buffer - you can use the
 <a href="../modules/textredux.buffer_list.html#currently_selected_buffer">currently_selected_buffer</a> function for that.
 
+
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">cd</span>
         Default for <code>close buffer</code>
-        </li>
-        <li><span class="parameter">esc</span>
-        Escape closes list by default
         </li>
     </ul>
 
@@ -208,6 +209,7 @@ that you want to obtain the currently selected buffer - you can use the
     </dt>
     <dd>
     The Textredux list instance used by the buffer list.
+
 
 
 

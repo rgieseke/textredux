@@ -23,15 +23,18 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 
@@ -40,22 +43,22 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.core</a></h2>
 
+<h2>Module <code>textredux.core</code></h2>
 <p>The Textredux core module allows you to easily create text based interfaces
 for the <a href="http://foicica.com/textadept/">Textadept</a> editor.</p>
-<p>It currently consists of 4 components:</p>
+<p>It currently consists of the following components:</p>
 
 <ul>
+    <li><p>A <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> class that supports custom styling, buffer
+    specific key bindings, hotspot support and generally makes it easy to
+    create a text based interface buffer by taking care of the background
+    gruntwork required.</p></li>
     <li><p>A <a href="../modules/textredux.core.style.html#">textredux.core.style</a> module that let's you easily define custom
     styles, as well as leveraging the default styles already provided by the
     user's theme.</p></li>
     <li><p>A <a href="../modules/textredux.core.indicator.html#">textredux.core.indicator</a> module that provides a convenient way of
     using indicators in your buffers.</p></li>
-    <li><p>A <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a> class that supports custom styling, buffer
-    specific key bindings, hotspot support and generally makes it easy to
-    create a text based interface buffer by taking care of the background
-    gruntwork required.</p></li>
     <li><p>A <a href="../modules/textredux.core.list.html#">textredux.core.list</a> class that provides a versatile and extensible
     text based item listing for Textadept, featuring advanced search capabilities
     and styling.</p></li>
@@ -73,20 +76,17 @@ either do</p>
 can also optionally require just the modules that you want by something
 similar to</p>
 
-<pre><code>local tr_style = require 'textredux.core.style'
-local tr_buffer = require 'textredux.core.style'
+<pre><code>local reduxstyle = require 'textredux.core.style'
+local reduxbuffer = require 'textredux.core.style'
 </code></pre>
 
 <p>The examples provide an overview on how to use the various components and their
 features, and the documentation for each component provide more in depth details.</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2011-2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
+
+<br/>
+<br/>
 
 
 

@@ -23,15 +23,18 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
@@ -46,14 +49,47 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.core.buffer</a></h2>
 
+<h2>Module <code>textredux.core.buffer</code></h2>
 <p>The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support.</p>
 <p> It takes
 care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
 <a href="../modules/textredux.core.style.html#">textredux.core.style</a> module to ensure that styling works, etc.</p>
+
+<h2>How to use</h2>
+
+<p>You create a new Textredux buffer by calling <a href="../modules/textredux.core.buffer.html#new">new</a>, passing the buffer
+title. You specify an <a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler for the buffer, which is responsible
+for actually inserting the content in the buffer, along with any custom styles
+and hotspot handlers. You specify any custom key bindings using <a href="../modules/textredux.core.buffer.html#reduxbuffer.keys">keys</a>
+and/or hook any other handlers of interest. In the
+<a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler, you add the actual text using any of the extended
+text insertion functions (<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_text">buffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#reduxbuffer:append_text">buffer:append_text</a>,
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:insert_text">buffer:insert_text</a>). You invoke
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a> to show the buffer, and respond to any interactions using the
+provided callbacks.</p>
+
+<pre><code>local reduxbuffer = textredux.core.buffer.new('Example buffer')
+reduxbuffer.on_refresh = function(buf)
+  buf:add_text('Textredux!')
+end
+reduxbuffer:show()
+</code></pre>
+
+<p>If you need to test whether a Textadept buffer is a Textredux buffer you can
+check for the <code>_textredux</code> field.</p>
+
+<pre><code>events.connect(events.BUFFER_AFTER_SWITCH, function()
+  local buffer = buffer
+  if buffer._textredux then
+    -- …
+  end
+end)
+</code></pre>
+
+<p>Please see the examples for more hands-on instructions.</p>
 
 <h2>How it works</h2>
 
@@ -72,115 +108,82 @@ buffer will expose all the functions and attributes of the Textadept buffer,
 making it possible to use the Textredux buffer in just the same way as you
 would a Textadept buffer (i.e. invoking any of the ordinary buffer methods,
 setting attributes, etc.). The Textredux buffer takes care of creating the
-target buffer automatically if needed whenever you invoke <a href="../modules/textredux.core.buffer.html#buffer:show">buffer:show</a>.
+target buffer automatically if needed whenever you invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a>.
 When the target buffer does not exist, for instance as the result of the user
 closing it, any attempt to invoke any of the ordinary buffer methods will
 raise an error. You can check explicitly whether the target exists by using the
-<a href="../modules/textredux.core.buffer.html#buffer:is_attached">buffer:is_attached</a> function. However, this is not something you will have to
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:is_attached">buffer:is_attached</a> function. However, this is not something you will have to
 worry much about in practice, since you'll typically interact with the buffer
 as part of a refresh, key press, etc., where the target buffer will always
 exist.</p>
 
 <p>In short, you don't have to worry about creating buffers, detecting whether the
-buffer was closed, etc., as long as you remember to invoke <a href="../modules/textredux.core.buffer.html#buffer:show">buffer:show</a> and
+buffer was closed, etc., as long as you remember to invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a> and
 perform your work within the callbacks.</p>
-
-<h2>How to use</h2>
-
-<p>You create a new Textredux buffer by calling <a href="../modules/textredux.core.buffer.html#new">new</a>, passing the buffer
-title. You specify an <a href="../modules/textredux.core.buffer.html#on_refresh">on_refresh</a> handler for the buffer, which is responsible
-for actually inserting the content in the buffer, along with any custom styles
-and hotspot handlers. You specify any custom key bindings using either <a href="../modules/textredux.core.buffer.html#keys">keys</a>
-or <a href="../modules/textredux.core.buffer.html#on_keypress">on_keypress</a>, and/or hook any other handlers of interest. In the
-<a href="../modules/textredux.core.buffer.html#on_refresh">on_refresh</a> handler, you add the actual text using any of the extended
-text insertion functions (<a href="../modules/textredux.core.buffer.html#buffer:add_text">buffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#buffer:append_text">buffer:append_text</a>,
-<a href="../modules/textredux.core.buffer.html#buffer:insert_text">buffer:insert_text</a> or possibly <a href="../modules/textredux.core.buffer.html#buffer:newline">buffer:newline</a>). You invoke
-<a href="../modules/textredux.core.buffer.html#buffer:show">buffer:show</a> to show the buffer, and respond to any interactions using the
-provided callbacks.</p>
-
-<p>If you need to test whether a buffer is a Textredux buffer you can check
-for the <code>_textredux</code> field.</p>
-
-<pre><code>events.connect(events.BUFFER_AFTER_SWITCH, function()
-  local buffer = buffer
-  if buffer._textredux then
-    -- …
-  end
-end)
-</code></pre>
-
-
-<p>Please see the examples for more hands-on instructions.</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2011-2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#new">new (title)</a></td>
+	<td class="name" nowrap><a href="#new">new (title)</a></td>
 	<td class="summary">Creates and returns a new textredux buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:show">buffer:show ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:show">reduxbuffer:show ()</a></td>
 	<td class="summary">Shows the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:close">buffer:close ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:close">reduxbuffer:close ()</a></td>
 	<td class="summary">Closes the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:update">buffer:update (callback)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:update">reduxbuffer:update (callback)</a></td>
 	<td class="summary">Performs an update of the buffer contents.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:refresh">buffer:refresh ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:refresh">reduxbuffer:refresh ()</a></td>
 	<td class="summary">Refreshes the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:set_title">buffer:set_title (title)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:set_title">reduxbuffer:set_title (title)</a></td>
 	<td class="summary">Updates the title of the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:is_attached">buffer:is_attached ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:is_attached">reduxbuffer:is_attached ()</a></td>
 	<td class="summary">Checks whether a target buffer currently exists.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:is_showing">buffer:is_showing ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:is_showing">reduxbuffer:is_showing ()</a></td>
 	<td class="summary">Checks whether the buffer is currently showing in any view.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:is_active">buffer:is_active ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:is_active">reduxbuffer:is_active ()</a></td>
 	<td class="summary">Checks whether the buffer is currently active, i.e.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:add_hotspot">buffer:add_hotspot (start_pos, end_pos, command)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:add_hotspot">reduxbuffer:add_hotspot (start_pos, end_pos, command)</a></td>
 	<td class="summary">Adds a hotspot for the given text range.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:add_text">buffer:add_text (text, style, command, indicator)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:add_text">reduxbuffer:add_text (text, style, command, indicator)</a></td>
 	<td class="summary">Override for
 <a href="http://foicica.com/textadept/api/buffer.html#add_text">buffer:add_text</a>
 which accepts optional style, command and indicator parameters.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:append_text">buffer:append_text (text, style, command, indicator)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:append_text">reduxbuffer:append_text (text, style, command, indicator)</a></td>
 	<td class="summary">Override for
 <a href="http://foicica.com/textadept/api/buffer.html#append_text">buffer:append_text</a>
 which accepts optional style, command and indicator parameters.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:insert_text">buffer:insert_text (pos, text, style, command, indicator)</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:insert_text">reduxbuffer:insert_text (pos, text, style, command, indicator)</a></td>
 	<td class="summary">Override for
 <a href="http://foicica.com/textadept/api/buffer.html#insert_text">buffer:insert_text</a>
 which accepts optional style, command and indicator parameters.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#buffer:newline">buffer:newline ()</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer:newline">reduxbuffer:newline ()</a></td>
 	<td class="summary">Override for
 <a href="http://foicica.com/textadept/api/buffer.html#new_line">buffer:new_line</a>.</td>
 	</tr>
@@ -188,38 +191,41 @@ which accepts optional style, command and indicator parameters.</td>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#read_only">read_only</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.read_only">reduxbuffer.read_only</a></td>
 	<td class="summary">Whether the buffer should be marked as read only.</td>
 	</tr>
 </table>
 <h2><a href="#Instance_fields">Instance fields </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#on_deleted">on_deleted</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.on_deleted">reduxbuffer.on_deleted</a></td>
 	<td class="summary">Callback invoked whenever the target buffer is deleted.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#on_refresh">on_refresh</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.on_refresh">reduxbuffer.on_refresh</a></td>
 	<td class="summary">Callback invoked whenever the buffer should refresh.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#on_keypress">on_keypress</a></td>
-	<td class="summary">Callback invoked whenever the buffer receives a keypress.</td>
-	</tr>
-	<tr>
-	<td class="name nowrap"><a href="#keys">keys</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.keys">reduxbuffer.keys</a></td>
 	<td class="summary">A table of key commands for the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#data">data</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.data">reduxbuffer.data</a></td>
 	<td class="summary">A general purpose table that can be used for storing state associated
  with the buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#target">target</a></td>
+	<td class="name" nowrap><a href="#reduxbuffer.target">reduxbuffer.target</a></td>
 	<td class="summary">The target buffer, if any.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#reduxbuffer.origin_buffer">reduxbuffer.origin_buffer</a></td>
+	<td class="summary">The buffer open when a Textredux buffer was shown.</td>
+	</tr>
 </table>
+
+<br/>
+<br/>
 
 
     <h2><a name="Functions"></a>Functions</h2>
@@ -231,6 +237,7 @@ which accepts optional style, command and indicator parameters.</td>
     <dd>
     Creates and returns a new textredux buffer.  The buffer will not be attached
  upon the return.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -246,8 +253,8 @@ which accepts optional style, command and indicator parameters.</td>
 
 </dd>
     <dt>
-    <a name = "buffer:show"></a>
-    <strong>buffer:show ()</strong>
+    <a name = "reduxbuffer:show"></a>
+    <strong>reduxbuffer:show ()</strong>
     </dt>
     <dd>
     Shows the buffer.
@@ -260,10 +267,11 @@ which accepts optional style, command and indicator parameters.</td>
 
 
 
+
 </dd>
     <dt>
-    <a name = "buffer:close"></a>
-    <strong>buffer:close ()</strong>
+    <a name = "reduxbuffer:close"></a>
+    <strong>reduxbuffer:close ()</strong>
     </dt>
     <dd>
     Closes the buffer.
@@ -273,16 +281,18 @@ which accepts optional style, command and indicator parameters.</td>
 
 
 
+
 </dd>
     <dt>
-    <a name = "buffer:update"></a>
-    <strong>buffer:update (callback)</strong>
+    <a name = "reduxbuffer:update"></a>
+    <strong>reduxbuffer:update (callback)</strong>
     </dt>
     <dd>
     Performs an update of the buffer contents.
 You invoke this with a callback that will do the actual update. This function
 takes care of ensuring that the target is writable, and handles setting the
 save point, etc.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -298,19 +308,20 @@ will receive the buffer instance as its sole parameter.
 
 </dd>
     <dt>
-    <a name = "buffer:refresh"></a>
-    <strong>buffer:refresh ()</strong>
+    <a name = "reduxbuffer:refresh"></a>
+    <strong>reduxbuffer:refresh ()</strong>
     </dt>
     <dd>
     Refreshes the buffer.
 A refresh works by ensuring that it's possible to write to the buffer and
-invoking the <a href="../modules/textredux.core.buffer.html#on_refresh">on_refresh</a> handler. After the refresh is complete, the
-<a href="../modules/textredux.core.buffer.html#read_only">read_only</a> state is reset to whatever it was before the refresh, and a save
+invoking the <a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler. After the refresh is complete, the
+<a href="../modules/textredux.core.buffer.html#reduxbuffer.read_only">read_only</a> state is reset to whatever it was before the refresh, and a save
 point is set.</p>
 
 <p>Please note that a refresh will clear all content, along with hotspots, etc.
-If you want to perform smaller updates please use the <a href="../modules/textredux.core.buffer.html#buffer:update">buffer:update</a> function
+If you want to perform smaller updates please use the <a href="../modules/textredux.core.buffer.html#reduxbuffer:update">buffer:update</a> function
 instead.
+
 
 
 
@@ -319,11 +330,12 @@ instead.
 
 </dd>
     <dt>
-    <a name = "buffer:set_title"></a>
-    <strong>buffer:set_title (title)</strong>
+    <a name = "reduxbuffer:set_title"></a>
+    <strong>reduxbuffer:set_title (title)</strong>
     </dt>
     <dd>
     Updates the title of the buffer.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -340,11 +352,12 @@ instead.
 
 </dd>
     <dt>
-    <a name = "buffer:is_attached"></a>
-    <strong>buffer:is_attached ()</strong>
+    <a name = "reduxbuffer:is_attached"></a>
+    <strong>reduxbuffer:is_attached ()</strong>
     </dt>
     <dd>
     Checks whether a target buffer currently exists.
+
 
 
     <h3>Returns:</h3>
@@ -358,11 +371,12 @@ instead.
 
 </dd>
     <dt>
-    <a name = "buffer:is_showing"></a>
-    <strong>buffer:is_showing ()</strong>
+    <a name = "reduxbuffer:is_showing"></a>
+    <strong>reduxbuffer:is_showing ()</strong>
     </dt>
     <dd>
     Checks whether the buffer is currently showing in any view.
+
 
 
     <h3>Returns:</h3>
@@ -376,11 +390,12 @@ instead.
 
 </dd>
     <dt>
-    <a name = "buffer:is_active"></a>
-    <strong>buffer:is_active ()</strong>
+    <a name = "reduxbuffer:is_active"></a>
+    <strong>reduxbuffer:is_active ()</strong>
     </dt>
     <dd>
     Checks whether the buffer is currently active, i.e.  the current buffer.
+
 
 
     <h3>Returns:</h3>
@@ -394,19 +409,20 @@ instead.
 
 </dd>
     <dt>
-    <a name = "buffer:add_hotspot"></a>
-    <strong>buffer:add_hotspot (start_pos, end_pos, command)</strong>
+    <a name = "reduxbuffer:add_hotspot"></a>
+    <strong>reduxbuffer:add_hotspot (start_pos, end_pos, command)</strong>
     </dt>
     <dd>
     Adds a hotspot for the given text range.
 Hotspots allows you to specify the behaviour for when the user selects
 certain text. Besides using this function directly, it's also possible and
 in many cases more convenient to add a hotspot when using any of the text
-insertion functions (<a href="../modules/textredux.core.buffer.html#buffer:add_text">buffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#buffer:append_text">buffer:append_text</a>,
-<a href="../modules/textredux.core.buffer.html#buffer:insert_text">buffer:insert_text</a>). Note that the range given is interpreted as being
+insertion functions (<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_text">buffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#reduxbuffer:append_text">buffer:append_text</a>,
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:insert_text">buffer:insert_text</a>). Note that the range given is interpreted as being
 half closed, i.e. <code>[start_pos, end_pos)</code>.</p>
 
 <p><em>NB</em>: Please note that all hotspots are cleared as part of a refresh.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -419,7 +435,7 @@ hotspot.
         </li>
         <li><span class="parameter">command</span>
 
-<p> The command to execute. Similarily to <a href="../modules/textredux.core.buffer.html#keys">keys</a>, command can be
+<p> The command to execute. Similarily to <a href="../modules/textredux.core.buffer.html#reduxbuffer.keys">keys</a>, command can be
 either a function or a table. When the command is a function, it will be passed
 the following parameters:</p>
 
@@ -428,7 +444,7 @@ the following parameters:</p>
     <li><code>shift</code>: True if the Shift key was held down.</li>
     <li><code>ctrl</code>: True if the Control key was held down.</li>
     <li><code>alt</code>: True if the Alt/Option key was held down.</li>
-    <li><code>meta</code>: True if the Command/Meta key on Mac OS X/Curses was held down.</li>
+    <li><code>meta</code>: True if the Command key on Mac OS X was held down.</li>
 </ul>
 
         </li>
@@ -440,13 +456,14 @@ the following parameters:</p>
 
 </dd>
     <dt>
-    <a name = "buffer:add_text"></a>
-    <strong>buffer:add_text (text, style, command, indicator)</strong>
+    <a name = "reduxbuffer:add_text"></a>
+    <strong>reduxbuffer:add_text (text, style, command, indicator)</strong>
     </dt>
     <dd>
     Override for
 <a href="http://foicica.com/textadept/api/buffer.html#add_text">buffer:add_text</a>
 which accepts optional style, command and indicator parameters.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -459,7 +476,7 @@ which accepts optional style, command and indicator parameters.
         </li>
         <li><span class="parameter">command</span>
          The command to run if the user "selects" this text. See
-<a href="../modules/textredux.core.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_hotspot">buffer:add_hotspot</a> for more information.
         </li>
         <li><span class="parameter">indicator</span>
          Optional <a href="../modules/textredux.core.indicator.html#">textredux.core.indicator</a> to use for the added
@@ -473,13 +490,14 @@ text.
 
 </dd>
     <dt>
-    <a name = "buffer:append_text"></a>
-    <strong>buffer:append_text (text, style, command, indicator)</strong>
+    <a name = "reduxbuffer:append_text"></a>
+    <strong>reduxbuffer:append_text (text, style, command, indicator)</strong>
     </dt>
     <dd>
     Override for
 <a href="http://foicica.com/textadept/api/buffer.html#append_text">buffer:append_text</a>
 which accepts optional style, command and indicator parameters.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -492,7 +510,7 @@ which accepts optional style, command and indicator parameters.
         </li>
         <li><span class="parameter">command</span>
          The command to run if the user "selects" this text. See
-<a href="../modules/textredux.core.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_hotspot">buffer:add_hotspot</a> for more information.
         </li>
         <li><span class="parameter">indicator</span>
          Optional <a href="../modules/textredux.core.indicator.html#">textredux.core.indicator</a> to use for the appended
@@ -506,13 +524,14 @@ text.
 
 </dd>
     <dt>
-    <a name = "buffer:insert_text"></a>
-    <strong>buffer:insert_text (pos, text, style, command, indicator)</strong>
+    <a name = "reduxbuffer:insert_text"></a>
+    <strong>reduxbuffer:insert_text (pos, text, style, command, indicator)</strong>
     </dt>
     <dd>
     Override for
 <a href="http://foicica.com/textadept/api/buffer.html#insert_text">buffer:insert_text</a>
 which accepts optional style, command and indicator parameters.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -528,7 +547,7 @@ which accepts optional style, command and indicator parameters.
         </li>
         <li><span class="parameter">command</span>
          The command to run if the user "selects" this text. See
-<a href="../modules/textredux.core.buffer.html#buffer:add_hotspot">buffer:add_hotspot</a> for more information.
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_hotspot">buffer:add_hotspot</a> for more information.
         </li>
         <li><span class="parameter">indicator</span>
          Optional <a href="../modules/textredux.core.indicator.html#">textredux.core.indicator</a> to use for the inserted
@@ -542,8 +561,8 @@ text.
 
 </dd>
     <dt>
-    <a name = "buffer:newline"></a>
-    <strong>buffer:newline ()</strong>
+    <a name = "reduxbuffer:newline"></a>
+    <strong>reduxbuffer:newline ()</strong>
     </dt>
     <dd>
     Override for
@@ -557,20 +576,22 @@ of the other text insertion functions.
 
 
 
+
 </dd>
 </dl>
     <h2><a name="Fields"></a>Fields</h2>
     <dl class="function">
     <dt>
-    <a name = "read_only"></a>
-    <strong>read_only</strong>
+    <a name = "reduxbuffer.read_only"></a>
+    <strong>reduxbuffer.read_only</strong>
     </dt>
     <dd>
     Whether the buffer should be marked as read only.
 The default is true but can be changed on a buffer to buffer basis. Any call to
-<a href="../modules/textredux.core.buffer.html#buffer:refresh">buffer:refresh</a> will automatically take care of setting the buffer to write
-mode before invoking the <a href="../modules/textredux.core.buffer.html#on_refresh">on_refresh</a> handler, and will restore the
-<a href="../modules/textredux.core.buffer.html#read_only">read_only</a> state afterwards.
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:refresh">buffer:refresh</a> will automatically take care of setting the buffer to write
+mode before invoking the <a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler, and will restore the
+<a href="../modules/textredux.core.buffer.html#reduxbuffer.read_only">read_only</a> state afterwards.
+
 
 
 
@@ -584,8 +605,8 @@ mode before invoking the <a href="../modules/textredux.core.buffer.html#on_refre
  globally for the module.
     <dl class="function">
     <dt>
-    <a name = "on_deleted"></a>
-    <strong>on_deleted</strong>
+    <a name = "reduxbuffer.on_deleted"></a>
+    <strong>reduxbuffer.on_deleted</strong>
     </dt>
     <dd>
     Callback invoked whenever the target buffer is deleted.
@@ -596,10 +617,11 @@ mode before invoking the <a href="../modules/textredux.core.buffer.html#on_refre
 
 
 
+
 </dd>
     <dt>
-    <a name = "on_refresh"></a>
-    <strong>on_refresh</strong>
+    <a name = "reduxbuffer.on_refresh"></a>
+    <strong>reduxbuffer.on_refresh</strong>
     </dt>
     <dd>
     Callback invoked whenever the buffer should refresh.
@@ -611,89 +633,36 @@ The callback will be invoked with the buffer as the sole parameter.
 
 
 
+
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/textredux.core.buffer.html#buffer:refresh">buffer:refresh</a>
+         <a href="../modules/textredux.core.buffer.html#reduxbuffer:refresh">buffer:refresh</a>
     </ul>
 
 
 </dd>
     <dt>
-    <a name = "on_keypress"></a>
-    <strong>on_keypress</strong>
-    </dt>
-    <dd>
-    Callback invoked whenever the buffer receives a keypress.
-Please note that if there is any key command defined in <a href="../modules/textredux.core.buffer.html#keys">keys</a> matching
-the keypress, that key command will be invoked and this callback will never
-be called. The callback will receive the following parameters:</p>
-
-<ul>
-    <li><code>buffer</code>: The buffer instance.</li>
-    <li><code>key</code>: The "translated key" (same format as for <a href="../modules/textredux.core.buffer.html#keys">keys</a>).</li>
-    <li><code>code</code>: The key code.</li>
-    <li><code>shift</code>: True if the Shift key was held down.</li>
-    <li><code>ctrl</code>: True if the Control key was held down.</li>
-    <li><code>alt</code>: True if the Alt/Option key was held down.</li>
-    <li><code>meta</code>: True if the Command/Meta key on Mac OS X/Curses was held down.</li>
-</ul>
-
-<p>It's similar to the standard Textadept KEYPRESS event (which you can read more
-about <a href="http://foicica.com/textadept/api/events.html">here</a>).
-The return value determines whether the key press should be propagated, just
-as for the standard Textadept event.
-
-
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/textredux.core.buffer.html#keys">keys</a>
-    </ul>
-
-
-</dd>
-    <dt>
-    <a name = "keys"></a>
-    <strong>keys</strong>
+    <a name = "reduxbuffer.keys"></a>
+    <strong>reduxbuffer.keys</strong>
     </dt>
     <dd>
     A table of key commands for the buffer.
-This is similar to <code>textadept.keys</code> works, but allows you to specify key
+This is simply a mode in <code>textadept.keys</code> works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
 is the same as for
 <a href="http://foicica.com/textadept/api/keys.html">textadept.keys</a>,
 and the values assigned can also be either functions or tables.
-There are differences compared to <code>textadept.keys</code> however:</p>
-
-<ul>
-    <li>It's not possible to specify language specific key bindings. This is
-    obviously not applicable for a Textredux buffer.</li>
-    <li>It's not possible to specify keychain sequences.</li>
-    <li>For function values, the buffer instance is passed as the first argument.</li>
-    <li>For table values, buffer or view references will not be magically fixed.
-    This means that you should not use either of the above in a table command,
-    unless you enjoy the occasional segfault.</li>
-</ul>
-
-<p>In short, only explicit simple mappings are supported. Defining a key command
-for a certain key means that key presses are never propagated any further for
-that particular key. Key commands take preference over any <a href="../modules/textredux.core.buffer.html#on_keypress">on_keypress</a>
-callback, so any such callback will never be called if a key command matches.
 
 
 
 
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/textredux.core.buffer.html#on_keypress">on_keypress</a>
-    </ul>
+
 
 
 </dd>
     <dt>
-    <a name = "data"></a>
-    <strong>data</strong>
+    <a name = "reduxbuffer.data"></a>
+    <strong>reduxbuffer.data</strong>
     </dt>
     <dd>
     A general purpose table that can be used for storing state associated
@@ -705,14 +674,31 @@ callback, so any such callback will never be called if a key command matches.
 
 
 
+
 </dd>
     <dt>
-    <a name = "target"></a>
-    <strong>target</strong>
+    <a name = "reduxbuffer.target"></a>
+    <strong>reduxbuffer.target</strong>
     </dt>
     <dd>
     The target buffer, if any.
  This holds a reference to the target buffer, when present.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "reduxbuffer.origin_buffer"></a>
+    <strong>reduxbuffer.origin_buffer</strong>
+    </dt>
+    <dd>
+    The buffer open when a Textredux buffer was shown.
+ Stored to be able to go back to after closing the Textredux buffer.
+
 
 
 

@@ -23,15 +23,18 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
@@ -44,27 +47,24 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.core.ui</a></h2>
 
+<h2>Module <code>textredux.core.ui</code></h2>
 <p>The ui module handles UI related operations for Textredux.</p>
 <p>
 
 </p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#view_split_preference">view_split_preference</a></td>
+	<td class="name" nowrap><a href="#view_split_preference">view_split_preference</a></td>
 	<td class="summary">Specifies the way that Textredux should split views.</td>
 	</tr>
 </table>
+
+<br/>
+<br/>
 
 
     <h2><a name="Fields"></a>Fields</h2>
@@ -74,15 +74,10 @@
     <strong>view_split_preference</strong>
     </dt>
     <dd>
-
-<p>Specifies the way that Textredux should split views. </p>
-
-<p>Possible values are:</p>
-
-<ul>
-    <li><code>'horizontal'</code> : Prefer horizontal splits.</li>
-    <li><code>'vertical'</code> : Prefer vertical splits.</li>
-</ul>
+    Specifies the way that Textredux should split views.
+ Possible values are:
+ - <code>'horizontal'</code> : Prefer horizontal splits.
+ - <code>'vertical'</code> : Prefer vertical splits.
 
 
 

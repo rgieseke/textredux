@@ -23,15 +23,18 @@
 <ul class="nowrap">
 <li>Modules</li>
   <li><a href="../modules/textredux.html">textredux</a></li>
-  <li><a href="../modules/textredux.buffer_list.html">buffer_list</a></li>
-  <li><a href="../modules/textredux.core.html">core</a></li>
-  <li><a href="../modules/textredux.core.buffer.html">core.buffer</a></li>
-  <li><a href="../modules/textredux.core.indicator.html">core.indicator</a></li>
-  <li><a href="../modules/textredux.core.list.html">core.list</a></li>
-  <li><a href="../modules/textredux.core.style.html">core.style</a></li>
-  <li><a href="../modules/textredux.core.ui.html">core.ui</a></li>
-  <li><a href="../modules/textredux.fs.html">fs</a></li>
-  <li><a href="../modules/textredux.hijack.html">hijack</a></li>
+  <li><a href="../modules/textredux.fs.html">textredux.fs</a></li>
+  <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
+  <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
+  <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
+  <li><a href="../modules/textredux.core.html">textredux.core</a></li>
+  <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
+  <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
+  <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
+  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
+  <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
+  <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
 <ul>
@@ -45,8 +48,8 @@
 
 <div class="container">
 <div class="content">
-<h2><a href='#'>Module textredux.fs</a></h2>
 
+<h2>Module <code>textredux.fs</code></h2>
 <p>textredux.fs provides file system related functions and a text based file
 browser for Textadept.</p>
 <p>It features traditional directory browsing, snapopen functionality, completely
@@ -85,34 +88,28 @@ underlined you would do something like the following:</p>
 
 <p>Please see the documentation for the Textredux style module for instructions
 on how to define styles.</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2011-2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#select_file">select_file (on_selection, start_directory, filter, depth, max_files)</a></td>
+	<td class="name" nowrap><a href="#select_file">select_file (on_selection, start_directory, filter, depth, max_files)</a></td>
 	<td class="summary">Opens a file browser and lets the user choose a file.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#open_file">open_file (start_directory)</a></td>
-	<td class="summary">Opens the specified directory for browsing.</td>
-	</tr>
-	<tr>
-	<td class="name nowrap"><a href="#save_buffer_as">save_buffer_as ()</a></td>
+	<td class="name" nowrap><a href="#save_buffer_as">save_buffer_as ()</a></td>
 	<td class="summary">Saves the current buffer under a new name.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#save_buffer">save_buffer ()</a></td>
+	<td class="name" nowrap><a href="#save_buffer">save_buffer ()</a></td>
 	<td class="summary">Saves the current buffer.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#snapopen">snapopen (directory, filter, exclude_FILTER, depth)</a></td>
+	<td class="name" nowrap><a href="#open_file">open_file (start_directory)</a></td>
+	<td class="summary">Opens the specified directory for browsing.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#snapopen">snapopen (directory, filter, exclude_FILTER, depth)</a></td>
 	<td class="summary">Opens a list of files in the specified directory, according to the given
 parameters.</td>
 	</tr>
@@ -120,30 +117,33 @@ parameters.</td>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_directory">tr_style.fs_directory</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_directory">tr_style.fs_directory</a></td>
 	<td class="summary">The style used for directory entries.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_file">tr_style.fs_file</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_file">tr_style.fs_file</a></td>
 	<td class="summary">The style used for ordinary file entries.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_link">tr_style.fs_link</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_link">tr_style.fs_link</a></td>
 	<td class="summary">The style used for link entries.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_socket">tr_style.fs_socket</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_socket">tr_style.fs_socket</a></td>
 	<td class="summary">The style used for socket entries.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_pipe">tr_style.fs_pipe</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_pipe">tr_style.fs_pipe</a></td>
 	<td class="summary">The style used for pipe entries.</td>
 	</tr>
 	<tr>
-	<td class="name nowrap"><a href="#tr_style.fs_device">tr_style.fs_device</a></td>
+	<td class="name" nowrap><a href="#tr_style.fs_device">tr_style.fs_device</a></td>
 	<td class="summary">The style used for pipe entries.</td>
 	</tr>
 </table>
+
+<br/>
+<br/>
 
 
     <h2><a name="Functions"></a>Functions</h2>
@@ -154,6 +154,7 @@ parameters.</td>
     </dt>
     <dd>
     Opens a file browser and lets the user choose a file.
+
 
     <h3>Parameters:</h3>
     <ul>
@@ -200,31 +201,13 @@ Defaults to 10000 if not specified.
 
 </dd>
     <dt>
-    <a name = "open_file"></a>
-    <strong>open_file (start_directory)</strong>
-    </dt>
-    <dd>
-    Opens the specified directory for browsing.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">start_directory</span>
-         The directory to open, in UTF-8 encoding
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "save_buffer_as"></a>
     <strong>save_buffer_as ()</strong>
     </dt>
     <dd>
     Saves the current buffer under a new name.
  Open a browser and lets the user select a name.
+
 
 
 
@@ -240,6 +223,27 @@ Defaults to 10000 if not specified.
     Saves the current buffer.
  Prompts the users for a filename if it's a new, previously unsaved buffer.
 
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "open_file"></a>
+    <strong>open_file (start_directory)</strong>
+    </dt>
+    <dd>
+    Opens the specified directory for browsing.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">start_directory</span>
+         The directory to open, in UTF-8 encoding
+        </li>
+    </ul>
 
 
 
@@ -270,6 +274,7 @@ The main differences are:</p>
         <li><code>hidden</code>: Whether the path denotes a hidden file.</li>
     </ul></li>
 </ul>
+
 
 
 
@@ -313,6 +318,7 @@ if not specified.
 
 
 
+
 </dd>
     <dt>
     <a name = "tr_style.fs_file"></a>
@@ -320,6 +326,7 @@ if not specified.
     </dt>
     <dd>
     The style used for ordinary file entries.
+
 
 
 
@@ -339,6 +346,7 @@ if not specified.
 
 
 
+
 </dd>
     <dt>
     <a name = "tr_style.fs_socket"></a>
@@ -346,6 +354,7 @@ if not specified.
     </dt>
     <dd>
     The style used for socket entries.
+
 
 
 
@@ -365,6 +374,7 @@ if not specified.
 
 
 
+
 </dd>
     <dt>
     <a name = "tr_style.fs_device"></a>
@@ -372,6 +382,7 @@ if not specified.
     </dt>
     <dd>
     The style used for pipe entries.
+
 
 
 

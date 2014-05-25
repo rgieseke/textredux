@@ -37,6 +37,10 @@
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
+<ul>
+<li>Contents</li>
+  <li><a href="#Functions">Functions</a></li>
+</ul>
 
 
 </div>
@@ -44,37 +48,54 @@
 <div class="container">
 <div class="content">
 
-<h2>Module <code>textredux.hijack</code></h2>
-<p>The hijack module provides the easiest, and most invasive, way of getting
-Textredux functionality for Textadept.</p>
+<h2>Module <code>textredux.util.matcher</code></h2>
+<p>The matcher module provides easy and advanced matching of strings.</p>
 <p>
-<p> It's a one-stop setup in the way that
-you don't really have to configure anything else to use the functionality of
-Textredux  - the hijack module inserts itself anywhere it can and will
-automatically integrate with your existing key bindings.</p>
-
-<h2>How to use</h2>
-
-<p>After installing the Textredux module into your .textadept/modules directory,
-simply add the following to your .textadept/init.lua file:</p>
-
-<pre><code>require 'textredux.hijack'
-</code></pre>
 
 </p>
-    <h3>Info:</h3>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#_matchers_for_search">_matchers_for_search (search_string)</a></td>
+	<td class="summary">Creates matches for the specified search</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "_matchers_for_search"></a>
+    <strong>_matchers_for_search (search_string)</strong>
+    </dt>
+    <dd>
+    Creates matches for the specified search
+
+
+    <h3>Parameters:</h3>
     <ul>
-        <li><strong>Copyright</strong>: 2012</li>
-        <li><strong>License</strong>: MIT (see LICENSE)</li>
-        <li><strong>Author</strong>: Nils Nordman <nino at nordman.org></li>
+        <li><span class="parameter">search_string</span>
+         The search string
+        </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        A table of matcher functions, each taking a line as parameter and
+ returning a score (or nil for no match).
+    </ol>
 
 
-<br/>
-<br/>
 
 
+</dd>
+</dl>
 
 
 <footer class="footer">
