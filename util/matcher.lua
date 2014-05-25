@@ -8,13 +8,9 @@ The matcher module provides easy and advanced matching of strings.
 @module textredux.util.matcher
 ]]
 
-local _G, string, table, math = _G, string, table, math
-local ipairs, type, setmetatable, tostring, append =
-      ipairs, type, setmetatable, tostring, table.insert
+local append = table.insert
 
-local matcher = {}
-local _ENV = matcher
-if setfenv then setfenv(1, _ENV) end
+local M = {}
 
 --[[ Constructs a new matcher.
 @param candidates The candidates to consider for matching. A table of either
@@ -24,12 +20,12 @@ Defaults to `true`.
 @param search_fuzzy Whether fuzzy searching should be used in addition to
 explicit matching. Defaults to `true`.
 ]]
-function new(candidates, search_case_insensitive, search_fuzzy)
+function M.new(candidates, search_case_insensitive, search_fuzzy)
   local m = {
     search_case_insensitive = search_case_insensitive,
     search_fuzzy = search_fuzzy
   }
-  setmetatable(m, { __index = matcher })
+  setmetatable(m, { __index = M })
   m:_set_candidates(candidates)
   return m
 end
@@ -60,7 +56,7 @@ following fields:
   `end_pos`: The end position of the best match
   `1..n`: Tables of matching positions with the field start_pos and length
 ]]
-function matcher:explain(search, text)
+function M:explain(search, text)
   if not search or #search == 0 then return {} end
   if self.search_case_insensitive then
     search = search:lower()
@@ -96,7 +92,7 @@ end
 -- Matches search against the candidates.
 -- @param search The search string to match
 -- @return A table of matching candidates, ordered by relevance.
-function matcher:match(search)
+function M:match(search)
   if not search or #search == 0 then return self.candidates end
   local cache = self.cache
   if self.search_case_insensitive then search = search:lower() end
@@ -124,7 +120,7 @@ function matcher:match(search)
   return matching_candidates
 end
 
-function matcher:_set_candidates(candidates)
+function M:_set_candidates(candidates)
   self.candidates = candidates
   self.cache = {
     lines = {},
@@ -164,7 +160,7 @@ end
 -- @param search_string The search string
 -- @return A table of matcher functions, each taking a line as parameter and
 -- returning a score (or nil for no match).
-function matcher:_matchers_for_search(search_string)
+function M:_matchers_for_search(search_string)
   local fuzzy = self.search_fuzzy
   local fuzzy_penalty = self.fuzzy_score_penalty
   local groups = {}
@@ -190,4 +186,4 @@ function matcher:_matchers_for_search(search_string)
   return matchers
 end
 
-return matcher
+return M
