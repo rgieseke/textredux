@@ -50,9 +50,6 @@ local tr_list = require 'textredux.core.list'
 local tr_style = require 'textredux.core.style'
 local tr_ui = require 'textredux.core.ui'
 
-local _G, table, io, ui = _G, table, io, ui
-local ipairs, error, type, assert, pcall =
-      ipairs, error, type, assert, pcall
 local string_match, string_sub = string.match, string.sub
 local lfs = require 'lfs'
 
@@ -63,8 +60,6 @@ local separator = WIN32 and '\\' or '/'
 local updir_pattern = '%.%.?$'
 
 local M = {}
-local _ENV = M
-if setfenv then setfenv(1, _ENV) end
 
 --- The style used for directory entries.
 tr_style.fs_directory = tr_style.keyword
@@ -98,7 +93,7 @@ local file_styles = {
 local DEFAULT_DEPTH = 99
 
 -- Splits a path into its components
-function split_path(path)
+local function split_path(path)
   local parts = {}
   for part in path:gmatch('[^' .. separator .. ']+') do
     parts[#parts + 1] = part
@@ -107,13 +102,13 @@ function split_path(path)
 end
 
 -- Joins path components into a path
-function join_path(components)
+local function join_path(components)
   local start = WIN32 and '' or separator
   return start .. table.concat(components, separator)
 end
 
 -- Returns the dir part of path
-function dirname(path)
+local function dirname(path)
   local parts = split_path(path)
   table.remove(parts)
   local dir = join_path(parts)
@@ -121,14 +116,14 @@ function dirname(path)
   return dir
 end
 
-function basename(path)
+local function basename(path)
   local parts = split_path(path)
   return parts[#parts]
 end
 
 -- Normalizes the path. This will deconstruct and reconstruct the
 -- path's components, while removing any relative parent references
-function normalize_path(path)
+local function normalize_path(path)
   local parts = split_path(path)
   local normalized = {}
   for _, part in ipairs(parts) do
@@ -147,7 +142,7 @@ end
 -- Normalizes a path denoting a directory. This will do the same as
 -- normalize_path, but will in addition ensure that the path ends
 -- with a trailing separator
-function normalize_dir_path(directory)
+local function normalize_dir_path(directory)
   local path = normalize_path(directory)
   return string_sub(path, -1) == separator and path or path .. separator
 end
@@ -293,17 +288,6 @@ local function open_selected_file(path, exists, list, shift, ctrl)
   io.open_file(path)
 end
 
-function on_keypress(list, key, code, shift, ctl, alt, meta)
-  if ctl or alt or meta or not key then return end
-  if key == '\b' and not list:get_current_search() then
-    local parent = dirname(list.data.directory)
-    if parent ~= list.data.directory then
-      chdir(list, parent)
-      return true
-    end
-  end
-end
-
 local function get_initial_directory()
   local filename = _G.buffer.filename
   if filename then return dirname(filename) end
@@ -345,13 +329,34 @@ end
 local function create_list(directory, filter, depth, max_files)
   local list = tr_list.new(directory)
   local data = list.data
-  list.on_keypress = on_keypress
   list.column_styles[1] = get_file_style
-  list.keys.esc = function() list:close() end
   list.keys.cs = toggle_snap
   list.keys['~'] = function()
     if user_home then chdir(list, user_home) end
   end
+  list.keys['\b'] = function()
+    local search = list:get_current_search()
+    if not search then
+      local parent = dirname(list.data.directory)
+      if parent ~= list.data.directory then
+        chdir(list, parent)
+        return true
+      end
+    else
+      list:set_current_search(search:sub(1, -2))
+    end
+  end
+  list.keys['\n'] = function()
+    local search = list:get_current_search()
+    if #list.buffer.data.matching_items > 0 then
+      list.buffer._on_user_select(list.buffer, list.buffer.current_pos)
+    elseif #search > 0 then
+      if list.on_new_selection then
+        list:on_new_selection(search)
+      end
+    end
+  end
+
   data.directory = directory
   data.filter = filter
   data.depth = depth
@@ -385,7 +390,7 @@ same as for Textadept's
 @param max_files The maximum number of files to scan and display in the list.
 Defaults to 10000 if not specified.
 ]]
-function select_file(on_selection, start_directory, filter, depth, max_files)
+function M.select_file(on_selection, start_directory, filter, depth, max_files)
   start_directory = start_directory or get_initial_directory()
   if not filter then filter = {}
   elseif type(filter) == 'string' then filter = { filter } end
@@ -417,16 +422,9 @@ function select_file(on_selection, start_directory, filter, depth, max_files)
   chdir(list, start_directory)
 end
 
---- Opens the specified directory for browsing.
--- @param start_directory The directory to open, in UTF-8 encoding
-function open_file(start_directory)
-  local filter = { folders = { separator .. '%.$' } }
-  select_file(open_selected_file, start_directory, filter, 1, io.SNAPOPEN_MAX)
-end
-
 --- Saves the current buffer under a new name.
 -- Open a browser and lets the user select a name.
-function save_buffer_as()
+function M.save_buffer_as()
   local buffer = _G.buffer
   local confirm_path
 
@@ -443,14 +441,14 @@ function save_buffer_as()
     end
   end
   local filter = { folders = { separator .. '%.$' } }
-  select_file(set_file_name, nil, filter, 1)
+  M.select_file(set_file_name, nil, filter, 1)
   ui.statusbar_text = 'Save file: select file name to save as..'
 
 end
 
 --- Saves the current buffer.
 -- Prompts the users for a filename if it's a new, previously unsaved buffer.
-function save_buffer()
+function M.save_buffer()
   local buffer = _G.buffer
   if buffer.filename then
     io.save()
@@ -458,6 +456,14 @@ function save_buffer()
     save_buffer_as()
   end
 end
+
+--- Opens the specified directory for browsing.
+-- @param start_directory The directory to open, in UTF-8 encoding
+function M.open_file(start_directory)
+  local filter = { folders = { separator .. '%.$' } }
+  M.select_file(open_selected_file, start_directory, filter, 1, io.SNAPOPEN_MAX)
+end
+
 
 --[[-
 Opens a list of files in the specified directory, according to the given
@@ -484,7 +490,7 @@ to snapopen.FILTER if not specified.
 @param depth The number of directory levels to scan. Defaults to DEFAULT_DEPTH
 if not specified.
 ]]
-function snapopen(directory, filter, exclude_FILTER, depth)
+function M.snapopen(directory, filter, exclude_FILTER, depth)
   if not directory then error('directory not specified', 2) end
   if not depth then depth = DEFAULT_DEPTH end
   filter = filter or {}
@@ -501,7 +507,7 @@ function snapopen(directory, filter, exclude_FILTER, depth)
     end
   end
 
-  select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
+  M.select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
 end
 
 return M
