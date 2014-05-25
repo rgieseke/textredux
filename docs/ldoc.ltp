@@ -80,13 +80,11 @@
 
 <div class="container">
 <div class="content">
-#if module then
-<h2><a href='#'>$(ldoc.module_typename(module)) $(module.name)</a></h2>
-# end
 
 # if ldoc.body then -- verbatim HTML as contents; 'non-code' entries
     $(ldoc.body)
 # elseif module then -- module documentation
+<h2>$(ldoc.module_typename(module)) <code>$(module.name)</code></h2>
 <p>$(M(module.summary,module))</p>
 <p>$(M(module.description,module))</p>
 #   if module.usage then
@@ -101,7 +99,7 @@
 #   if module.info then
     <h3>Info:</h3>
     <ul>
-#     for tag, value in ldoc.pairs(module.info) do
+#     for tag, value in module.info:iter() do
         <li><strong>$(tag)</strong>: $(M(value,module))</li>
 #     end
     </ul>
@@ -115,12 +113,15 @@
 <table class="function_list">
 #  for item in items() do
 	<tr>
-	<td class="name $(nowrap)"><a href="#$(item.name)">$(display_name(item))</a></td>
+	<td class="name" $(nowrap)><a href="#$(item.name)">$(display_name(item))</a></td>
 	<td class="summary">$(M(item.summary,item))</td>
 	</tr>
 #  end -- for items
 </table>
 #end -- for kinds
+
+<br/>
+<br/>
 
 #end -- if not no_summary
 
@@ -148,13 +149,31 @@
     <dd>
     $(M(ldoc.descript(item),item))
 
+#   if ldoc.custom_tags then
+#    for custom in iter(ldoc.custom_tags) do
+#     local tag = item.tags[custom[1]]
+#     if tag and not custom.hidden then
+#      local li,il = use_li(tag)
+    <h3>$(custom.title or custom[1]):</h3>
+    <ul>
+#      for value in iter(tag) do
+         $(li)$(custom.format and custom.format(value) or M(value))$(il)
+#      end -- for
+#     end -- if tag
+    </ul>
+#    end -- iter tags
+#   end
+
 #  if show_parms and item.params and #item.params > 0 then
-    <h3>$(module.kinds:type_of(item).subnames):</h3>
+#    local subnames = module.kinds:type_of(item).subnames
+#    if subnames then
+    <h3>$(subnames):</h3>
+#    end
     <ul>
 #   for parm in iter(item.params) do
 #     local param,sublist = item:subparam(parm)
 #     if sublist then
-        <li><span class="parameter">$(sublist)</span>$(M(item.params[sublist],item))
+        <li><span class="parameter">$(sublist)</span>$(M(item.params.map[sublist],item))
         <ul>
 #     end
 #     for p in iter(param) do
@@ -163,9 +182,12 @@
 #       if tp ~= '' then
             <span class="types">$(tp)</span>
 #       end
-        $(M(item.params[p],item))
+        $(M(item.params.map[p],item))
 #       if def then
          (<em>default</em> $(def))
+#       end
+#       if item:readonly(p) then
+          <em>readonly</em>
 #       end
         </li>
 #     end
@@ -235,13 +257,20 @@
 
 # else -- if module; project-level contents
 
+# if ldoc.description then
+  <h2>$(M(ldoc.description,nil))</h2>
+# end
+# if ldoc.full_description then
+  <p>$(M(ldoc.full_description,nil))</p>
+# end
+
 # for kind, mods in ldoc.kinds() do
-<h2><a href="#$(kind)">$(kind)</a></h2>
+<h2>$(kind)</h2>
 # kind = kind:lower()
 <table class="module_list">
 # for m in mods() do
 	<tr>
-		<td class="name $(nowrap)"><a href="$(no_spaces(kind))/$(m.name).html">$(m.name)</a></td>
+		<td class="name"  $(nowrap)><a href="$(no_spaces(kind))/$(m.name).html">$(m.name)</a></td>
 		<td class="summary">$(M(m.summary,m))</td>
 	</tr>
 #  end -- for modules

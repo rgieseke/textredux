@@ -1,7 +1,15 @@
 -- ldoc configuration file
 title = 'Textredux API Docs'
 project = 'Textredux'
-file = {'../init.lua', '../fs.lua', '../buffer_list.lua', '../core', '../hijack'}
+file = {
+  '../init.lua',
+  '../fs.lua',
+  '../ctags.lua',
+  '../buffer_list.lua',
+  '../core',
+  '../hijack',
+  '../util'
+}
 format = 'markdown'
 style = true
 backtick_references = false
