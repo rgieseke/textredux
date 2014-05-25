@@ -1,4 +1,9 @@
+--[[
+Filtered list wrapper.
+]]
+
 local list = require 'textredux.core.list'
+local tr_style = require 'textredux.core.style'
 
 local M = {}
 
@@ -44,10 +49,12 @@ ui.dialogs.filteredlist = function(options)
     l:close()
     coroutine.resume(co, 1, value)
   end
+  l.match_highlight_style = tr_style['function']
   l:show()
   return coroutine.yield()
 end
 
+-- Wrap
 function M.wrap(func)
   return function(...)
     current_coroutine = coroutine.create(func)
