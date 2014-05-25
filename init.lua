@@ -13,6 +13,8 @@ It currently contains the following modules:
   text based interfaces.
 - @{textredux.fs}. Contains text based interfaces for file io operations,
   i.e. open file, save file as well as snapopen functionality.
+- @{textredux.ctags}. Displays a filtered list of symbols (functions,
+  variables, …) in the current document using Exuberat Ctags.
 - @{textredux.buffer_list}. A text based buffer list replacement, which in
   addition to being text based also offers an easy way to close buffers
   directly from the list.
