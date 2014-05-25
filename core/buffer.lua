@@ -75,29 +75,20 @@ perform your work within the callbacks.
 @module textredux.core.buffer
 ]]
 
-local key = require 'textredux.core.key'
 local tr_style = require 'textredux.core.style'
 local tr_indicator = require 'textredux.core.indicator'
 
-local _G = _G
-local error, setmetatable, ipairs, pairs, tostring, error,
-      rawget, rawset, type, xpcall, select =
-      error, setmetatable, ipairs, pairs, tostring, error,
-      rawget, rawset, type, xpcall, select
-local events, table = events, table
 local constants = _SCINTILLA.constants
 local huge = math.huge
 local band = bit32.band
 
-local buffer = {}
-local _ENV = buffer
-if setfenv then setfenv(1, _ENV) end
-
 local default_style = tr_style.default
-local hotspot_indicator = { style = constants.INDIC_HIDDEN }
-local __newindex, __index
 local tr_buffers = setmetatable({}, { __mode = 'k' })
-local origin_buffers  = setmetatable({}, { __mode = 'kv' })
+
+local M = {}
+local reduxbuffer = {}
+
+tr_indicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
 
 --[[- Whether the buffer should be marked as read only.
 The default is true but can be changed on a buffer to buffer basis. Any call to
@@ -105,7 +96,7 @@ The default is true but can be changed on a buffer to buffer basis. Any call to
 mode before invoking the @{on_refresh} handler, and will restore the
 @{read_only} state afterwards.
 ]]
-read_only = true
+reduxbuffer.read_only = true
 
 --- Instance fields. These can be set only for a buffer instance, and not
 -- globally for the module.
@@ -114,7 +105,7 @@ read_only = true
 ---
 -- Callback invoked whenever the target buffer is deleted.
 -- The callback has the following with the following parameters: `buffer`
-on_deleted = nil
+reduxbuffer.on_deleted = nil
 
 --[[- Callback invoked whenever the buffer should refresh.
 This should be set for each buffer. It is this callback that is responsible
@@ -123,108 +114,116 @@ is invoked, any previous buffer content will be cleared.
 The callback will be invoked with the buffer as the sole parameter.
 @see buffer:refresh
 ]]
-on_refresh = nil
-
---[[- Callback invoked whenever the buffer receives a keypress.
-Please note that if there is any key command defined in @{keys} matching
-the keypress, that key command will be invoked and this callback will never
-be called. The callback will receive the following parameters:
-
-- `buffer`: The buffer instance.
-- `key`: The "translated key" (same format as for @{keys}).
-- `code`: The key code.
-- `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
-
-It's similar to the standard Textadept KEYPRESS event (which you can read more
-about [here](http://foicica.com/textadept/api/events.html)).
-The return value determines whether the key press should be propagated, just
-as for the standard Textadept event.
-@see keys
-]]
-on_keypress = nil
+reduxbuffer.on_refresh = nil
 
 --[[- A table of key commands for the buffer.
-This is similar to `textadept.keys` works, but allows you to specify key
+This is simply a mode in `textadept.keys` works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
 is the same as for
 [textadept.keys](http://foicica.com/textadept/api/keys.html),
 and the values assigned can also be either functions or tables.
-There are differences compared to `textadept.keys` however:
-
-- It's not possible to specify language specific key bindings. This is
-  obviously not applicable for a Textredux buffer.
-- It's not possible to specify keychain sequences.
-- For function values, the buffer instance is passed as the first argument.
-- For table values, buffer or view references will not be magically fixed.
-  This means that you should not use either of the above in a table command,
-  unless you enjoy the occasional segfault.
-
-In short, only explicit simple mappings are supported. Defining a key command
-for a certain key means that key presses are never propagated any further for
-that particular key. Key commands take preference over any @{on_keypress}
-callback, so any such callback will never be called if a key command matches.
-@see on_keypress
 ]]
-keys = nil
+reduxbuffer.keys = nil
 
 ---
 -- A general purpose table that can be used for storing state associated
 -- with the buffer. The `data` table is special in the way that it will
 -- automatically be cleared whenever the user closes the buffer.
-data = nil
+reduxbuffer.data = nil
 
 --- The target buffer, if any.
 -- This holds a reference to the target buffer, when present.
-target = nil
+reduxbuffer.target = nil
+
+--- The buffer open when a Textredux buffer was shown.
+-- Stored to be able to go back to after closing the Textredux buffer.
+reduxbuffer.origin_buffer = nil
 
 ---
 -- @section end
+
+local function __index(t, k)
+  local value = rawget(t, k)
+  if value then return value end
+  if rawget(reduxbuffer, k) then return rawget(reduxbuffer, k) end
+  local target = rawget(t, 'target')
+  if target then
+    value = target[k]
+    if type(value) == 'function' then
+      return function(_, ...)
+        return value(target, ...)
+      end
+    else
+      return value
+    end
+  end
+end
+
+local function __newindex(t, k, v)
+  if rawget(t, target) and rawget(t, target, k) then
+    rawset(t.target, k, v)
+  elseif rawget(reduxbuffer, k) then
+    rawset(t, k, v)
+  else
+    rawset(t, k, v)
+  end
+end
 
 ---
 -- Creates and returns a new textredux buffer. The buffer will not be attached
 -- upon the return.
 -- @param title The title of the buffer. This will be displayed as the buffer's
 -- title in the Textadept top bar.
-function new(title)
+function M.new(title)
   local buf = {
     title = title,
     data = {},
     keys = {},
-    hotspots = {},
-    fields = {
-      target = 1,
-      on_keypress = 1,
-      on_refresh = 1,
-      on_deleted = 1,
-      read_only = 1,
-    },
+    hotspots = {}
   }
-  setmetatable(buf, {__index = __index, __newindex = __newindex})
   tr_buffers[buf] = true
-  return buf
+  buf.key_mode = 'textredux_'..tostring(buf)
+  keys[buf.key_mode] = {}
+  setmetatable(keys[buf.key_mode], {__index = keys})
+  setmetatable(buf.keys, {__newindex = function(t, k, v)
+    -- Add to keys mode.
+    rawset(keys[buf.key_mode], k, v)
+  end})
+  buf.keys.esc = function() buf:close() end
+  buf.keys['\n'] = function() buf:_on_user_select(buf.current_pos) end
+  buf.keys['c\n'] = function() buf:_on_user_select(buf.current_pos, nil, false) end
+  return setmetatable(buf, {__index = __index, __newindex = __newindex})
 end
+
+local function set_keys_mode()
+  if buffer._textredux then
+    keys.MODE = buffer._textredux.key_mode
+  else
+    keys.MODE = nil
+  end
+end
+events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
+events.connect(events.VIEW_AFTER_SWITCH, set_keys_mode)
 
 --- Shows the buffer.
 -- If the target buffer doesn't exist, due to it either not having been created
 -- yet or having been deleted, it is automatically created. Upon the return,
 -- the buffer is showing and set as the global buffer.
-function buffer:show()
-  local origin_buffer = _G.buffer
+function reduxbuffer:show()
+  local origin_buffer = buffer
   if not self:is_attached() then self:_create_target() end
-  _G.view:goto_buffer(_G._BUFFERS[self.target], false)
-  if origin_buffer ~= _G.buffer then
-    origin_buffers[self] = origin_buffer
+  view:goto_buffer(_BUFFERS[self.target], false)
+  if origin_buffer ~= buffer then
+    self.origin_buffer = origin_buffer
+    self.origin_key_mode = keys.MODE
   end
 end
 
 --- Closes the buffer.
-function buffer:close()
+function reduxbuffer:close()
   if self:is_attached() then
     self:show()
-    self.target:delete()
+    io.close_buffer()
   end
 end
 
@@ -235,7 +234,7 @@ save point, etc.
 @param callback The callback to invoke to perform the update. The callback
 will receive the buffer instance as its sole parameter.
 ]]
-function buffer:update(callback)
+function reduxbuffer:update(callback)
   if not self:is_attached() then error("Can't refresh: not attached", 2) end
   self.target.read_only = false
   callback(self)
@@ -253,7 +252,7 @@ Please note that a refresh will clear all content, along with hotspots, etc.
 If you want to perform smaller updates please use the @{buffer:update} function
 instead.
 ]]
-function buffer:refresh()
+function reduxbuffer:refresh()
   self:update(function()
     self.hotspots = {}
     self:clear_all()
@@ -264,7 +263,7 @@ end
 ---
 -- Updates the title of the buffer.
 --
-function buffer:set_title(title)
+function reduxbuffer:set_title(title)
   self.title = title
   if self:is_attached() then
     -- there's currently an issue with how TA handles the titlebar update -
@@ -277,16 +276,16 @@ end
 ---
 -- Checks whether a target buffer currently exists.
 -- @return true if the target buffer exists and false otherwise
-function buffer:is_attached()
+function reduxbuffer:is_attached()
   return self.target ~= nil
 end
 
 ---
 -- Checks whether the buffer is currently showing in any view.
 -- @return true if the buffer is showing and false otherwise
-function buffer:is_showing()
+function reduxbuffer:is_showing()
   if not self.target then return false end
-  for i, view in ipairs(_G._VIEWS) do
+  for i, view in ipairs(_VIEWS) do
     if view.buffer == self.target then return true end
   end
   return false
@@ -295,8 +294,8 @@ end
 ---
 -- Checks whether the buffer is currently active, i.e. the current buffer.
 -- @return true if the buffer is active and false otherwise
-function buffer:is_active()
-  return self.target and self.target == _G.buffer
+function reduxbuffer:is_active()
+  return self.target and self.target == buffer
 end
 
 --[[- Adds a hotspot for the given text range.
@@ -319,9 +318,9 @@ the following parameters:
 - `shift`: True if the Shift key was held down.
 - `ctrl`: True if the Control key was held down.
 - `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
+- `meta`: True if the Command key on Mac OS X was held down.
 ]]
-function buffer:add_hotspot(start_pos, end_pos, command)
+function reduxbuffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
   local target = self.target
   local start_line = target:line_from_position(start_pos)
@@ -336,7 +335,7 @@ function buffer:add_hotspot(start_pos, end_pos, command)
     hotspots[i] = current_spots
   end
   local length = end_pos - start_pos
-  tr_indicator.apply(hotspot_indicator, start_pos, length)
+  tr_indicator.HOTSPOT:apply(start_pos, length)
 end
 
 -- Add styling and hotspot support to buffer text insertion functions.
@@ -352,13 +351,13 @@ which accepts optional style, command and indicator parameters.
 @param indicator Optional @{textredux.core.indicator} to use for the added
 text.
 ]]
-function buffer:add_text(text, style, command, indicator)
+function reduxbuffer:add_text(text, style, command, indicator)
   text = tostring(text)
   local insert_pos = self.target.current_pos
   self.target:add_text(text)
-  self:_set_style(insert_pos, #text, style)
+  if style then style:apply(insert_pos, #text) end
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
-  if indicator then tr_indicator.apply(indicator, insert_pos, #text) end
+  if indicator then indicator:apply(insert_pos, #text) end
 end
 
 --[[- Override for
@@ -372,13 +371,13 @@ which accepts optional style, command and indicator parameters.
 @param indicator Optional @{textredux.core.indicator} to use for the appended
 text.
 ]]
-function buffer:append_text(text, style, command, indicator)
+function reduxbuffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
   text = tostring(text)
   self.target:append_text(text)
-  self:_set_style(insert_pos, #text, style)
+  if style then style:apply(insert_pos, #text) end
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
-  if indicator then tr_indicator.apply(indicator, insert_pos, #text) end
+  if indicator then indicator:apply(insert_pos, #text) end
 end
 
 --[[- Override for
@@ -393,12 +392,12 @@ which accepts optional style, command and indicator parameters.
 @param indicator Optional @{textredux.core.indicator} to use for the inserted
 text.
 ]]
-function buffer:insert_text(pos, text, style, command, indicator)
+function reduxbuffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
-  self:_set_style(pos, #text, style)
+  if style then style:apply(pos, #text) end
   if command then self:add_hotspot(pos, pos + #text, command) end
-  if indicator then tr_indicator.apply(indicator, pos, #text) end
+  if indicator then indicator:apply(pos, #text) end
 end
 
 --[[-
@@ -408,18 +407,14 @@ A Textredux buffer will always have eol mode set to LF, so it's also possible,
 and arguably easier, to just insert a newline using the `\n` escape via any
 of the other text insertion functions.
 ]]
-function buffer:newline()
+function reduxbuffer:newline()
   self:add_text('\n', tr_style.whitespace)
 end
 
 -- Begin private code.
 
-function buffer:_set_style(pos, length, style)
-  tr_style.apply(style or default_style, self.target, pos, length)
-end
-
-function buffer:_create_target()
-  local target = _G.buffer.new()
+function reduxbuffer:_create_target()
+  local target = buffer.new()
   target._textredux = self
   target:set_lexer('text')
   target.eol_mode = constants.EOL_LF
@@ -429,7 +424,7 @@ function buffer:_create_target()
   self:set_title(self.title)
 end
 
-function buffer:_call_hook(hook, ...)
+function reduxbuffer:_call_hook(hook, ...)
   local callback = self[hook]
   if not callback then return end
   return callback(self, ...)
@@ -439,34 +434,7 @@ local function emit_error(error)
   events.emit(events.ERROR, error)
 end
 
-function __index(tr_buf, k)
-  local value = rawget(buffer, k)
-  if value then return value end
-  if tr_buf.fields[k] then return nil end
-  local target = rawget(tr_buf, 'target')
-  if target then
-    value = target[k]
-    if type(value) == 'function' then
-      return function(_, ...)
-        return value(target, ...)
-      end
-    else
-      return value
-    end
-  end
-end
-
-function __newindex(tr_buf, k, v)
-  if tr_buf.fields[k] then
-    rawset(tr_buf, k, v)
-  elseif tr_buf.target then
-    tr_buf.target[k] = v
-  else
-    error("'=': Unknown field '" .. k .. "', perhaps invoke :show() first?", 2)
-  end
-end
-
-local function invoke_command(command, buffer, shift, ctl, alt, meta)
+local function invoke_command(command, buffer)
   local f = command
   local args = { buffer, shift, ctl, alt, meta }
   if type(command) == 'table' then
@@ -476,132 +444,81 @@ local function invoke_command(command, buffer, shift, ctl, alt, meta)
   xpcall(f, emit_error, table.unpack(args))
 end
 
-function buffer:_restore_origin_buffer()
-  local origin_buffer = origin_buffers[self]
+function reduxbuffer:_restore_origin_buffer()
+  local origin_buffer = self.origin_buffer
   if origin_buffer then
-    local buf_index = _G._BUFFERS[origin_buffer]
-    if buf_index and origin_buffer ~= _G.buffer then
-      _G.view:goto_buffer(buf_index, false)
+    local buf_index = _BUFFERS[origin_buffer]
+    if buf_index and origin_buffer ~= buffer then
+      view:goto_buffer(buf_index, false)
+      keys.MODE = self.origin_key_mode
     end
   end
 end
 
 -- Event hooks.
-function buffer:_on_target_deleted()
-  self.target = nil
-  self.data = {}
-  self:_restore_origin_buffer()
-  self:_call_hook('on_deleted')
-end
 
-function buffer:_on_user_select(position, shift, ctrl, alt, meta)
+function reduxbuffer:_on_user_select(position)
   local target = self.target
   local cur_line = target:line_from_position(position)
   local spots = self.hotspots[cur_line]
   if not spots then return end
   for _, spot in ipairs(spots) do
     if position >= spot.start_pos and position < spot.end_pos then
-      invoke_command(spot.command, self, shift, ctrl, alt, meta)
+      invoke_command(spot.command, self)
       return true
     end
   end
 end
 
 local function _on_buffer_deleted()
-  local ta_buffers = _G._BUFFERS
   for tr_buf, _ in pairs(tr_buffers) do
-    if tr_buf:is_attached() and not ta_buffers[tr_buf.target] then
-      tr_buf:_on_target_deleted()
+    if tr_buf:is_attached() and not _BUFFERS[tr_buf.target] then
+      tr_buf.target = nil
+      tr_buf.data = {}
+      -- Return to previous buffer.
+      tr_buf:_restore_origin_buffer()
       break
     end
   end
 end
 
 local function _on_buffer_after_switch()
-  local tr_buf = _G.buffer._textredux
-  if tr_buf then
-    tr_style.define_styles()
-    tr_indicator.define_indicators()
-    tr_buf:refresh()
+  local reduxbuffer = buffer._textredux
+  if reduxbuffer then
+    reduxbuffer:refresh()
   end
 end
 
-local function _on_new_view()
-  local tr_buf = _G.buffer._textredux
-  if tr_buf then
-    local tmp_buf = _G.buffer.new()
-    tmp_buf:delete()
-    tr_buf:show()
-  end
-end
-
--- We close all textredux buffer upon quit - they won't restore properly anyway
+-- We close all Textredux buffer upon quit - they won't restore properly anyway
 -- and it's annoying to have empty non-functioning buffers upon start.
 local function _on_quit()
-  local buffers = {}
-  for tr_buf,_ in pairs(tr_buffers) do buffers[#buffers + 1] = tr_buf end
-  for _, tr_buf in ipairs(buffers) do
-    tr_buf:close()
+  for idx, buffer in ipairs(_BUFFERS) do
+    if buffer._textredux then
+      view:goto_buffer(idx)
+      io.close_buffer()
+    end
   end
 end
 
-local function _on_keypress(code, shift, ctl, alt, meta)
-  local tr_buf = _G.buffer._textredux
-  if not tr_buf then return end
-  local key = key.translate(code, shift, ctl, alt, meta)
-
-  if key and key:match('[\r\n]') and
-     tr_buf:_on_user_select(tr_buf.current_pos, shift, ctl, alt, meta) then
-    return true
-  end
-
-  local command = tr_buf.keys[key]
-  if command then
-    invoke_command(command, tr_buf, shift, ctl, alt, meta)
-    return true
-  end
-  return tr_buf:_call_hook('on_keypress', key, code, shift, ctl, alt, meta)
-end
-
---[[ Mouse support.. The stack has the following issues:
-
-- Modifiers are not reported correctly (ctrl pressed reports as ctrl+alt)
-- Doing buffer switches in the action results in the new buffer recieving
-  button up and setting a selection.
-- Scintilla docs says indicator release event gets modifiers - we do not.
-]]
-local indicator_modifiers
-
-local function _on_indicator_click(position, modifiers)
-  if not _G.buffer._textredux then return end
-  indicator_modifiers = modifiers
-end
-
+-- Mouse support.
 local function _on_indicator_release(position, modifiers)
-  local tr_buf = _G.buffer._textredux
+  local tr_buf = buffer._textredux
   if not tr_buf then return end
 
-  modifiers = modifiers or indicator_modifiers or 0
-  local shift = band(constants.MOD_SHIFT, modifiers) ~= 0
-  local ctrl = band(constants.MOD_CTRL, modifiers) ~= 0
-  local alt = band(constants.MOD_ALT, modifiers) ~= 0
-  local meta = band(constants.MOD_META, modifiers) ~= 0
-
-  local cur_view = _G.view
-
+  local cur_view = view
   if tr_buf:_on_user_select(position, shift, ctrl, alt, meta) then
-    -- if the view's buffer was switched as a result of the select, the new
-    -- buffer will get a weird selection (see issue above). Work around that
+    -- If the view's buffer was switched as a result of the select, the new
+    -- buffer will get a weird selection. Work around that
     -- somewhat by setting the buffer's position to the position it will get
-    -- upon the return
-    if _G._VIEWS[cur_view] and cur_view.buffer ~= tr_buf.target then
-      local focused_view = _G.view
+    -- upon the return. This will change a position already set in the callback.
+    if _VIEWS[cur_view] and cur_view.buffer ~= tr_buf.target then
+      local focused_view = view
       if cur_view ~= focused_view then
-        _G.ui.goto_view(_G._VIEWS[cur_view], false)
+        ui.goto_view(_VIEWS[cur_view], false)
       end
-      _G.buffer:goto_pos(position)
-      if _G.view ~= focused_view then
-        _G.ui.goto_view(_G._VIEWS[focused_view], false)
+      buffer:goto_pos(position)
+      if view ~= focused_view then
+        ui.goto_view(_VIEWS[focused_view], false)
       end
     end
     return true
@@ -610,10 +527,7 @@ end
 
 events.connect(events.BUFFER_DELETED, _on_buffer_deleted)
 events.connect(events.BUFFER_AFTER_SWITCH, _on_buffer_after_switch)
-events.connect(events.KEYPRESS, _on_keypress, 1)
-events.connect(events.INDICATOR_CLICK, _on_indicator_click)
 events.connect(events.INDICATOR_RELEASE, _on_indicator_release)
-events.connect(events.VIEW_NEW, _on_new_view)
 events.connect(events.QUIT, _on_quit, 1)
 
-return buffer
+return M
