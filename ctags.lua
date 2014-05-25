@@ -1,44 +1,96 @@
--- For supported filetypes, displays a filtered list with symbols
--- in the current document using
--- [Exuberant Ctags](http://ctags.sourceforge.net/).
--- Note that it is possible to add support for additional filetypes, for
--- example for LaTeX:
--- In `~/.ctags`:
---
---     --langdef=latex
---     --langmap=latex:.tex
---     --regex-latex=/\\label\{([^}]*)\}/\1/l,label/
---     --regex-latex=/\\section\{([^}]*)\}/\1/s,section/
---     --regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
---     --regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
---     --regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
---     --regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
---     --regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
---
--- Based on Mitchell's ctags code posted on the
--- [Textadept wiki](http://foicica.com/wiki/ctags).
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
+--[[--
+Displays a filtered list of symbols (functions, variables, …) in the current
+document using [Exuberant Ctags](http://ctags.sourceforge.net/).
+
+Usage
+-----
+
+In your init.lua:
+
+    events.connect(events.INITIALIZED, function()
+      local ctags = require 'textredux.ctags'
+      keys.cg = ctags.goto_symbol -- Ctrl+G
+    end)
+
+Requirements
+------------
+
+Exuberant Ctags needs to be installed and is available in the
+usual package managers.
+
+Debian/Ubuntu:
+
+    sudo apt-get install exuberant-ctags
+
+Homebrew on OS X:
+
+    brew install ctags
+
+Note that it is possible to add support for additional filetypes in your
+`~/.ctags`, for example LaTeX:
+
+    --langdef=latex
+    --langmap=latex:.tex
+    --regex-latex=/\\label\{([^}]*)\}/\1/l,label/
+    --regex-latex=/\\section\{([^}]*)\}/\1/s,section/
+    --regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
+    --regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
+    --regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
+    --regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
+    --regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
+
+This module is based on Mitchell's ctags code posted on the
+[Textadept wiki](http://foicica.com/wiki/ctags).
+
+@module textredux.ctags
+]]
 
 textredux = require 'textredux'
 
 local M = {}
 
--- Path and options for the ctags utility can be defined in the `CTAGS`
--- field.
-if WIN32 then
-  M.CTAGS = '"c:\\program files\\ctags\\ctags.exe" --sort=yes --fields=+K-f'
-else
-  M.CTAGS = 'ctags --sort=yes --fields=+K-f'
-end
+local reduxstyle = textredux.core.style
 
+---
+-- Path and options for the ctags call can be defined in the `CTAGS`
+-- field.
+M.CTAGS = 'ctags --sort=yes --fields=+K-f'
+
+---
+-- Mappings from Ctags kind to Textredux styles.
+M.styles = {
+  class = reduxstyle.class,
+  enum = reduxstyle['type'],
+  enumerator = reduxstyle['type'],
+  ['function'] = reduxstyle['function'],
+  macro = reduxstyle.operator,
+  namespace = reduxstyle.preproc,
+  typedef = reduxstyle.keyword,
+  variable = reduxstyle.variable
+}
+
+-- Close the Textredux list and jump to the selected line in the origin buffer.
 local function on_selection(list, item)
   local line = item[3]
   if line then
+    ui.statusbar_text = line
     list:close()
-    _G.buffer:goto_line(tonumber(line) - 1)
-    _G.buffer:vertical_centre_caret()
+    buffer:goto_line(tonumber(line) - 1)
+    buffer:vertical_centre_caret()
   end
 end
 
+-- Return color for Ctags kind.
+local function get_item_style(item, column_index)
+  -- Use a capture to find fields like `function namespace:…`.
+  local kind = item[2]:match('(%a+)%s?')
+  return M.styles[kind] or reduxstyle.default
+end
+
+---
 -- Goes to the selected symbol in a filtered list dialog.
 -- Requires [ctags]((http://ctags.sourceforge.net/)) to be installed.
 function M.goto_symbol()
@@ -54,9 +106,9 @@ function M.goto_symbol()
   p:close()
   if #symbols > 0 then
     local list = textredux.core.list.new('Go to symbol')
-    list.keys['esc'] = function(list) list:close() end
     list.items = symbols
     list.on_selection = on_selection
+    list.column_styles = { reduxstyle.default, get_item_style }
     list:show()
   end
 end
