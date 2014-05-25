@@ -1,4 +1,8 @@
---[[-
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
+--[[--
 The Textredux module allows you to easily create text based interfaces for the
 [Textadept](http://foicica.com/textadept/) editor and offers a set of text
 based interfaces.
@@ -53,9 +57,6 @@ menu will open the standard dialogs.
 Please see the module documentation for the various modules for configurable
 settings.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux
 ]]
 

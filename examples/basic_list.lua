@@ -1,5 +1,8 @@
 --[[--
 Very basic example on how to use the list class.
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
 
 @author Nils Nordman <nino at nordman.org>
 @copyright 2012

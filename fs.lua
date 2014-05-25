@@ -1,3 +1,7 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 textredux.fs provides file system related functions and a text based file
 browser for Textadept.
@@ -39,9 +43,6 @@ underlined you would do something like the following:
 Please see the documentation for the Textredux style module for instructions
 on how to define styles.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.fs
 ]]
 

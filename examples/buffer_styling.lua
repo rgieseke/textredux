@@ -1,10 +1,10 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 Example on how to use custom styling with a TextUI buffer. This example shows
 how to define custom styles and use them when inserting content.
-
-@author Nils Nordman <nino at nordman.org>
-@copyright 2012
-@license MIT (see LICENSE)
 ]]
 
 textredux = require 'textredux'

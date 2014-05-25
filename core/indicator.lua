@@ -1,3 +1,7 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 The indicator module provides support for indicators in your buffers.
 Indicators lets you visually mark a certain text range using various styles and

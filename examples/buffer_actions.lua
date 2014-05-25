@@ -1,12 +1,12 @@
---[[--
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
+--[[
 Example on various ways to make the buffer interactive, that is responding to
 user input. This example illustrates the use of implicit and explicit hotspots
 using either function or table commands, as well as key commands and responding
 directly to key presses.
-
-@author Nils Nordman <nino at nordman.org>
-@copyright 2012
-@license MIT (see LICENSE)
 ]]
 
 textredux = require 'textredux'

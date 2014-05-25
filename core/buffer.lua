@@ -1,3 +1,7 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 The buffer class wraps a Textadept buffer, and extends it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
@@ -63,9 +67,6 @@ for the `_textredux` field.
 
 Please see the examples for more hands-on instructions.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.core.buffer
 ]]
 

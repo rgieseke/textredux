@@ -1,3 +1,7 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 The Textredux core module allows you to easily create text based interfaces
 for the [Textadept](http://foicica.com/textadept/) editor.
@@ -38,9 +42,6 @@ similar to
 The examples provide an overview on how to use the various components and their
 features, and the documentation for each component provide more in depth details.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.core
 ]]
 

@@ -1,3 +1,7 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 The list class provides a versatile and extensible text based item listing for
 Textadept, featuring advanced search capabilities and styling. It's a
@@ -26,9 +30,6 @@ Create the list using @{new}, specify @{items} and other fields/callbacks
 
 Please see the various list examples for more hands-on instructions.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.core.list
 ]]
 

@@ -1,12 +1,13 @@
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
 --[[--
 The buffer list module provides a text based replacement for the standard
 Textadept buffer list. Two differences compared to the stock one is the ability
 to close a buffer directly from the buffer list (bound to `Ctrl + d` by default),
 and the option of specifying the buffers to list via a provided function.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
 @module textredux.buffer_list
 ]]
 local tr_list = require 'textredux.core.list'

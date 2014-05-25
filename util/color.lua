@@ -1,10 +1,11 @@
---[[
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
+--[[--
 The color module provides utility functions for color handling.
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2011-2012
-@license MIT (see LICENSE)
-@module textredux.util.matcher
+@module textredux.util.color
 ]]
 
 local M = {}

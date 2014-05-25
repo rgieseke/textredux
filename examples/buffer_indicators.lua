@@ -1,10 +1,10 @@
 --[[--
 Example on how to use indicators with a Textredux buffer. This example shows
 how to define custom indicators and apply them for selected text.
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
 
-@author Nils Nordman <nino at nordman.org>
-@copyright 2012
-@license MIT (see LICENSE)
 ]]
 
 local textredux = require 'textredux'
