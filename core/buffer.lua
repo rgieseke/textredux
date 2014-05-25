@@ -398,16 +398,6 @@ function reduxbuffer:insert_text(pos, text, style, command, indicator)
   if indicator then indicator:apply(pos, #text) end
 end
 
---[[-- Override for
-[buffer:new_line](http://foicica.com/textadept/api/buffer.html#new_line).
-A Textredux buffer will always have eol mode set to LF, so it's also possible,
-and arguably easier, to just insert a newline using the `\n` escape via any
-of the other text insertion functions.
-]]
-function reduxbuffer:newline()
-  self:add_text('\n', reduxstyle.whitespace)
-end
-
 -- Begin private code.
 
 -- Create a new buffer and store in the `target` attribute
