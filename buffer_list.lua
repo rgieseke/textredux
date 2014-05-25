@@ -12,7 +12,6 @@ and the option of specifying the buffers to list via a provided function.
 ]]
 local tr_list = require 'textredux.core.list'
 local tr_gui = require 'textredux.core.ui'
-local L = _L
 
 local M = {}
 
@@ -46,7 +45,7 @@ end
 
 local function buffer_title(buffer)
   local title = (buffer.filename or ''):match('[\\/]([^/\\]+)$')
-  return title or buffer.filename or buffer._type or L['Untitled']
+  return title or buffer.filename or buffer._type or _L['Untitled']
 end
 
 local function buffer_directory(buffer)
