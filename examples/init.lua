@@ -14,9 +14,9 @@ Textadept's command entry to show a list of examples:
 to select from a list of examples.
 ]]
 
-textredux = require 'textredux'
-
 local M = {}
+
+local textredux = require 'textredux'
 
 M.basic_list = require 'textredux.examples.basic_list'
 M.buffer_actions = require 'textredux.examples.buffer_actions'

@@ -4,21 +4,21 @@
 
 -- Very basic example on how to use the list class.
 
-textredux = require 'textredux'
-
 local M = {}
+
+local textredux = require 'textredux'
 
 function M.show_simple_list()
   -- Create the list.
   local list = textredux.core.list.new(
     'Simple list', -- list title
-    { 'one', 'two', 'three' }, -- list items
+    {'one', 'two', 'three'}, -- list items
     function (list, item) -- on selection callback
       ui.statusbar_text = 'You selected ' .. item
     end
   )
 
-  -- Show the list
+  -- Show the list.
   list:show()
 end
 

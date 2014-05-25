@@ -8,16 +8,16 @@ how to define custom indicators and apply them for selected text. Additionally,
 available indicator styles are listed.
 ]]
 
+local M = {}
+
 local textredux = require 'textredux'
 local reduxstyle = require 'textredux.core.style'
 
-local M = {}
-
-local c = _SCINTILLA.constants
+local constants = _SCINTILLA.constants
 local indicator = textredux.core.indicator
 
-indicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
-indicator.BLUE_FILL = {style = c.INDIC_ROUNDBOX, fore = '#0000ff'}
+indicator.RED_BOX = {style = constants.INDIC_BOX, fore = '#ff0000'}
+indicator.BLUE_FILL = {style = constants.INDIC_ROUNDBOX, fore = '#0000ff'}
 
 local indicator_styles = {
   INDIC_PLAIN = 'An underline',
@@ -40,7 +40,7 @@ local indicator_styles = {
     'language input composition'
 }
  for k, v in pairs(indicator_styles) do
-  indicator[k] = {style = c[k]}
+  indicator[k] = {style = constants[k]}
 end
 
 local function on_refresh(buffer)

@@ -9,22 +9,24 @@ using either function or table commands, as well as key commands and responding
 directly to key presses.
 ]]
 
-textredux = require 'textredux'
-
 local M = {}
 
-local tr_style = textredux.core.style
-tr_style.action_style = { back = '#6e6e6e', fore = '#00FFFF' }
+local textredux = require 'textredux'
+
+local reduxstyle = textredux.core.style
+reduxstyle.action_style = reduxstyle['function']..{underline = true}
 
 local function on_refresh(buffer)
+  buffer:add_text('Press Ctrl-T to show a message box.')
+  buffer:add_text('\n\n')
   buffer:add_text('Table command: ')
-  buffer:add_text('Snapopen user home', tr_style.action_style,
+  buffer:add_text('Snapopen user home', reduxstyle.action_style,
                   { io.snapopen, _USERHOME })
 
   buffer:add_text('\n\nExplicit hotspot: ')
   local start_pos = buffer.current_pos
-  buffer:add_text('Click here somewhere\nto select a command',
-                  tr_style.action_style)
+  buffer:add_text('Click here somewhere\nto show the command selection list',
+                  reduxstyle.action_style)
   buffer:add_hotspot(start_pos, buffer.current_pos, textadept.menu.select_command)
 end
 
@@ -32,9 +34,9 @@ function M.create_action_buffer()
   local buffer = textredux.core.buffer.new('Action buffer')
   buffer.on_refresh = on_refresh
 
-  -- bind Control+T to simple message box
+  -- Bind Control+T to show a simple message box.
   buffer.keys.ct = function()
-    ui.dialogs.msgbox{title='Testing', text='Test 1, 2, 3 …'}
+    ui.dialogs.msgbox{title='Testredux', text='Test 1, 2, 3!'}
   end
 
   buffer:show()
