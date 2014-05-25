@@ -75,22 +75,26 @@ perform your work within the callbacks.
 @module textredux.core.buffer
 ]]
 
-local tr_style = require 'textredux.core.style'
-local tr_indicator = require 'textredux.core.indicator'
+local M = {}
+local textreduxbuffers = setmetatable({}, { __mode = 'k' })
+
+local reduxstyle = require('textredux.core.style')
+local reduxindicator = require('textredux.core.indicator')
 
 local constants = _SCINTILLA.constants
 local huge = math.huge
 local band = bit32.band
 
-local default_style = tr_style.default
-local tr_buffers = setmetatable({}, { __mode = 'k' })
+-- Style for selectable and clickable items.
+reduxindicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
 
-local M = {}
 local reduxbuffer = {}
 
-tr_indicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
+--- Instance fields. These can be set for a buffer instance, and not
+-- globally for the module.
+-- @section instance
 
---[[- Whether the buffer should be marked as read only.
+--[[-- Whether the buffer should be marked as read only.
 The default is true but can be changed on a buffer to buffer basis. Any call to
 @{buffer:refresh} will automatically take care of setting the buffer to write
 mode before invoking the @{on_refresh} handler, and will restore the
@@ -98,16 +102,12 @@ mode before invoking the @{on_refresh} handler, and will restore the
 ]]
 reduxbuffer.read_only = true
 
---- Instance fields. These can be set only for a buffer instance, and not
--- globally for the module.
--- @section instance
-
 ---
 -- Callback invoked whenever the target buffer is deleted.
 -- The callback has the following with the following parameters: `buffer`
 reduxbuffer.on_deleted = nil
 
---[[- Callback invoked whenever the buffer should refresh.
+--[[-- Callback invoked whenever the buffer should refresh.
 This should be set for each buffer. It is this callback that is responsible
 for actually inserting any content into the buffer. Before this callback
 is invoked, any previous buffer content will be cleared.
@@ -116,7 +116,7 @@ The callback will be invoked with the buffer as the sole parameter.
 ]]
 reduxbuffer.on_refresh = nil
 
---[[- A table of key commands for the buffer.
+--[[-- A table of key commands for the buffer.
 This is simply a mode in `textadept.keys` works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
 is the same as for
@@ -125,14 +125,16 @@ and the values assigned can also be either functions or tables.
 ]]
 reduxbuffer.keys = nil
 
----
--- A general purpose table that can be used for storing state associated
--- with the buffer. The `data` table is special in the way that it will
--- automatically be cleared whenever the user closes the buffer.
+--[[--
+A general purpose table that can be used for storing state associated with the
+buffer. The `data` table is special in the way that it will  automatically
+be cleared whenever the user closes the buffer.
+]]
 reduxbuffer.data = nil
 
---- The target buffer, if any.
--- This holds a reference to the target buffer, when present.
+--[[--- The target buffer, if any.
+This holds a reference to the target buffer, when present.
+]]
 reduxbuffer.target = nil
 
 --- The buffer open when a Textredux buffer was shown.
@@ -142,6 +144,7 @@ reduxbuffer.origin_buffer = nil
 ---
 -- @section end
 
+-- Look up values in the reduxbuffer table or the built-in buffer.
 local function __index(t, k)
   local value = rawget(t, k)
   if value then return value end
@@ -159,11 +162,10 @@ local function __index(t, k)
   end
 end
 
+-- Set values in the built-in buffer or the instance.
 local function __newindex(t, k, v)
   if rawget(t, target) and rawget(t, target, k) then
     rawset(t.target, k, v)
-  elseif rawget(reduxbuffer, k) then
-    rawset(t, k, v)
   else
     rawset(t, k, v)
   end
@@ -181,23 +183,24 @@ function M.new(title)
     keys = {},
     hotspots = {}
   }
-  tr_buffers[buf] = true
-  buf.key_mode = 'textredux_'..tostring(buf)
-  keys[buf.key_mode] = {}
-  setmetatable(keys[buf.key_mode], {__index = keys})
+  textreduxbuffers[buf] = true
+  buf.keysmode = 'textredux '..tostring(buf)
+  keys[buf.keys_mode] = {}
+  setmetatable(keys[buf.keys_mode], {__index = keys})
   setmetatable(buf.keys, {__newindex = function(t, k, v)
     -- Add to keys mode.
-    rawset(keys[buf.key_mode], k, v)
+    rawset(keys[buf.keys_mode], k, v)
   end})
   buf.keys.esc = function() buf:close() end
   buf.keys['\n'] = function() buf:_on_user_select(buf.current_pos) end
-  buf.keys['c\n'] = function() buf:_on_user_select(buf.current_pos, nil, false) end
   return setmetatable(buf, {__index = __index, __newindex = __newindex})
 end
 
+-- Activate Textredux key mode on buffer or view switch. Otherwise activate
+-- the default mode.
 local function set_keys_mode()
   if buffer._textredux then
-    keys.MODE = buffer._textredux.key_mode
+    keys.MODE = buffer._textredux.keys_mode
   else
     keys.MODE = nil
   end
@@ -205,10 +208,11 @@ end
 events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
 events.connect(events.VIEW_AFTER_SWITCH, set_keys_mode)
 
---- Shows the buffer.
--- If the target buffer doesn't exist, due to it either not having been created
--- yet or having been deleted, it is automatically created. Upon the return,
--- the buffer is showing and set as the global buffer.
+--[[-- Shows the buffer.
+If the target buffer doesn't exist, due to it either not having been created
+yet or having been deleted, it is automatically created. Upon the return, the
+buffer is showing and set as the global buffer.
+]]
 function reduxbuffer:show()
   local origin_buffer = buffer
   if not self:is_attached() then self:_create_target() end
@@ -227,7 +231,7 @@ function reduxbuffer:close()
   end
 end
 
---[[- Performs an update of the buffer contents.
+--[[-- Performs an update of the buffer contents.
 You invoke this with a callback that will do the actual update. This function
 takes care of ensuring that the target is writable, and handles setting the
 save point, etc.
@@ -242,7 +246,7 @@ function reduxbuffer:update(callback)
   self:set_save_point()
 end
 
---[[- Refreshes the buffer.
+--[[-- Refreshes the buffer.
 A refresh works by ensuring that it's possible to write to the buffer and
 invoking the @{on_refresh} handler. After the refresh is complete, the
 @{read_only} state is reset to whatever it was before the refresh, and a save
@@ -260,9 +264,7 @@ function reduxbuffer:refresh()
   end)
 end
 
----
--- Updates the title of the buffer.
---
+--- Updates the title of the buffer.
 function reduxbuffer:set_title(title)
   self.title = title
   if self:is_attached() then
@@ -298,7 +300,7 @@ function reduxbuffer:is_active()
   return self.target and self.target == buffer
 end
 
---[[- Adds a hotspot for the given text range.
+--[[-- Adds a hotspot for the given text range.
 Hotspots allows you to specify the behaviour for when the user selects
 certain text. Besides using this function directly, it's also possible and
 in many cases more convenient to add a hotspot when using any of the text
@@ -315,10 +317,6 @@ either a function or a table. When the command is a function, it will be passed
 the following parameters:
 
 - `buffer`: The buffer instance
-- `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command key on Mac OS X was held down.
 ]]
 function reduxbuffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
@@ -335,12 +333,12 @@ function reduxbuffer:add_hotspot(start_pos, end_pos, command)
     hotspots[i] = current_spots
   end
   local length = end_pos - start_pos
-  tr_indicator.HOTSPOT:apply(start_pos, length)
+  reduxindicator.HOTSPOT:apply(start_pos, length)
 end
 
 -- Add styling and hotspot support to buffer text insertion functions.
 
---[[- Override for
+--[[-- Override for
 [buffer:add_text](http://foicica.com/textadept/api/buffer.html#add_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to add.
@@ -360,7 +358,7 @@ function reduxbuffer:add_text(text, style, command, indicator)
   if indicator then indicator:apply(insert_pos, #text) end
 end
 
---[[- Override for
+--[[-- Override for
 [buffer:append_text](http://foicica.com/textadept/api/buffer.html#append_text)
 which accepts optional style, command and indicator parameters.
 @param text The text to append.
@@ -380,7 +378,7 @@ function reduxbuffer:append_text(text, style, command, indicator)
   if indicator then indicator:apply(insert_pos, #text) end
 end
 
---[[- Override for
+--[[-- Override for
 [buffer:insert_text](http://foicica.com/textadept/api/buffer.html#insert_text)
 which accepts optional style, command and indicator parameters.
 @param pos The position to insert text at or `-1` for the current position.
@@ -400,19 +398,19 @@ function reduxbuffer:insert_text(pos, text, style, command, indicator)
   if indicator then indicator:apply(pos, #text) end
 end
 
---[[-
-Override for
+--[[-- Override for
 [buffer:new_line](http://foicica.com/textadept/api/buffer.html#new_line).
 A Textredux buffer will always have eol mode set to LF, so it's also possible,
 and arguably easier, to just insert a newline using the `\n` escape via any
 of the other text insertion functions.
 ]]
 function reduxbuffer:newline()
-  self:add_text('\n', tr_style.whitespace)
+  self:add_text('\n', reduxstyle.whitespace)
 end
 
 -- Begin private code.
 
+-- Create a new buffer and store in the `target` attribute
 function reduxbuffer:_create_target()
   local target = buffer.new()
   target._textredux = self
@@ -424,6 +422,7 @@ function reduxbuffer:_create_target()
   self:set_title(self.title)
 end
 
+-- Call hook.
 function reduxbuffer:_call_hook(hook, ...)
   local callback = self[hook]
   if not callback then return end
@@ -434,6 +433,7 @@ local function emit_error(error)
   events.emit(events.ERROR, error)
 end
 
+-- Invoke command.
 local function invoke_command(command, buffer)
   local f = command
   local args = { buffer, shift, ctl, alt, meta }
@@ -444,11 +444,12 @@ local function invoke_command(command, buffer)
   xpcall(f, emit_error, table.unpack(args))
 end
 
+-- Return to the buffer in which the Textredux buffer was opened.
 function reduxbuffer:_restore_origin_buffer()
   local origin_buffer = self.origin_buffer
   if origin_buffer then
     local buf_index = _BUFFERS[origin_buffer]
-    if buf_index and origin_buffer ~= buffer then
+    if buf_index and originbuffer ~= buffer then
       view:goto_buffer(buf_index, false)
       keys.MODE = self.origin_key_mode
     end
@@ -457,6 +458,7 @@ end
 
 -- Event hooks.
 
+-- Called on pressing enter or clicking an item.
 function reduxbuffer:_on_user_select(position)
   local target = self.target
   local cur_line = target:line_from_position(position)
@@ -470,13 +472,14 @@ function reduxbuffer:_on_user_select(position)
   end
 end
 
+-- Called when closing a buffer.
 local function _on_buffer_deleted()
-  for tr_buf, _ in pairs(tr_buffers) do
-    if tr_buf:is_attached() and not _BUFFERS[tr_buf.target] then
-      tr_buf.target = nil
-      tr_buf.data = {}
+  for buf, _ in pairs(textreduxbuffers) do
+    if buf:is_attached() and not _BUFFERS[buf.target] then
+      buf.target = nil
+      buf.data = {}
       -- Return to previous buffer.
-      tr_buf:_restore_origin_buffer()
+      buf:_restore_origin_buffer()
       break
     end
   end

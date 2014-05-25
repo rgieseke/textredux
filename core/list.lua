@@ -33,28 +33,27 @@ Features at a glance
 @module textredux.core.list
 ]]
 
-local tr_style = require 'textredux.core.style'
-local textredux_buffer = require 'textredux.core.buffer'
+local reduxstyle = require 'textredux.core.style'
 local util_matcher = require 'textredux.util.matcher'
 
 local string_rep = string.rep
 
 local M = {}
 local list = {}
-tr_style.list_header = { fore = '#5E5E5E', underline = true }
+reduxstyle.list_header = { fore = '#5E5E5E', underline = true }
 
-tr_style.list_match_highlight = tr_style.number
+reduxstyle.list_match_highlight = reduxstyle.number
 
 --- The default style to use for diplaying headers.
 -- This is by default the `style.list_header` style. It's possible to override
 -- this for a specific list by assigning another value to the instance itself.
-list.header_style = tr_style.list_header
+list.header_style = reduxstyle.list_header
 
 --- The style to use for indicating matches.
 -- You can turn off highlighing of matches by setting this to nil.
 -- It's possible to override this for a specific list by assigning another
 -- value to the instance itself. The default value is `style.default`.
-list.match_highlight_style = tr_style.list_match_highlight
+list.match_highlight_style = reduxstyle.list_match_highlight
 
 --- The default styles to use for different columns. This can be specified
 -- individually for each list as well. Values can either be explicit styles,
@@ -67,9 +66,9 @@ list.column_styles = {}
 -- I fought LDoc, but LDoc won. Define the field separately here to avoid it
 -- being poorly documented as a table
 --list.column_styles =  {
---  tr_style.string,
---  tr_style.comment,
---  tr_style.operator,
+--  reduxstyle.string,
+--  reduxstyle.comment,
+--  reduxstyle.operator,
 --}
 
 --- Whether searches are case insensitive or not.
@@ -224,18 +223,21 @@ function list:_calculate_column_widths()
   self._column_widths = column_widths
 end
 
+-- Return style for column from {@colum_styles} table.
 function list:_column_style(item, column)
   local style = self.column_styles[column]
-  if not style then return tr_style.default end
+  if not style then return reduxstyle.default end
   return type(style) == 'function' and style(item, column) or style
 end
 
+-- Add text and padding.
 local function add_column_text(buffer, text, pad_to, style)
   buffer:add_text(text, style)
   local padding = (pad_to + 1) - #text
   if padding then buffer:add_text(string_rep(' ', padding)) end
 end
 
+-- Highlight matches.
 function highlight_matches(explanations, line_start, buffer, match_style)
   for _, explanation in ipairs(explanations) do
     for _, range in ipairs(explanation) do
@@ -247,6 +249,7 @@ function highlight_matches(explanations, line_start, buffer, match_style)
   end
 end
 
+-- Add items.
 function list:_add_items(items, start_index, end_index)
   local buffer = self.buffer
   local data = self.buffer.data
@@ -286,10 +289,11 @@ function list:_add_items(items, start_index, end_index)
       "[..] (%d more items not shown, press <down> here to see more)",
       #items - end_index
     )
-    buffer:add_text(message, tr_style.comment)
+    buffer:add_text(message, reduxstyle.comment)
   end
 end
 
+-- Refresh list.
 function list:_refresh()
   local buffer = self.buffer
   local data = buffer.data
@@ -297,13 +301,13 @@ function list:_refresh()
 
   -- Header.
   buffer:add_text(self.title .. ' : ')
-  buffer:add_text(#data.matching_items, tr_style.number)
+  buffer:add_text(#data.matching_items, reduxstyle.number)
   buffer:add_text('/')
-  buffer:add_text(#self.items, tr_style.number)
+  buffer:add_text(#self.items, reduxstyle.number)
   buffer:add_text(' items')
   if data.search and #data.search > 0 then
     buffer:add_text( ' matching ')
-    buffer:add_text(data.search, tr_style.comment)
+    buffer:add_text(data.search, reduxstyle.comment)
   end
   buffer:add_text('\n\n')
 
@@ -329,6 +333,7 @@ function list:_refresh()
   buffer:home()
 end
 
+-- Load more items.
 function list:_load_more_items()
   local buffer = self.buffer
   local data = buffer.data
@@ -344,15 +349,16 @@ function list:_load_more_items()
   buffer:goto_pos(buffer.length)
 end
 
+-- Create Textredux buffer to display the list.
 function list:_create_buffer()
-  local reduxbuffer = textredux_buffer.new(self.title)
+  local reduxbuffer = textredux.buffer.new(self.title)
   reduxbuffer.on_refresh = function(...) self:_refresh(...) end
   reduxbuffer.on_deleted = function() self.data = {} end
 
   self.buffer = reduxbuffer
   self.data = self.buffer.data
 
-  setmetatable(keys[reduxbuffer.key_mode], {__index = function(t, k)
+  setmetatable(keys[reduxbuffer.keys_mode], {__index = function(t, k)
     if #k > 1 and k:find('^[cams]*.+$') then return keys[k] end
     if rawget(t, k) then return rawget(t, k) end
     local search = self.get_current_search(self) or ''
@@ -381,8 +387,10 @@ function list:_create_buffer()
     end
   end
 
-  self.keys = setmetatable({}, { __index = reduxbuffer.keys,
-                                 __newindex = key_wrapper })
+  self.keys = setmetatable({}, {
+    __index = reduxbuffer.keys,
+    __newindex = key_wrapper
+  })
   return buffer
 end
 
