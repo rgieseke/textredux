@@ -10,8 +10,9 @@ and the option of specifying the buffers to list via a provided function.
 
 @module textredux.buffer_list
 ]]
+
 local tr_list = require 'textredux.core.list'
-local tr_gui = require 'textredux.core.ui'
+local tr_ui = require 'textredux.core.ui'
 
 local M = {}
 
@@ -68,9 +69,8 @@ local function get_buffer_items()
   return items
 end
 
-local function on_selection(list, item, shift, ctrl)
+local function on_selection(list, item)
   list:close()
-  if ctrl then tr_ui.switch_to_other_view() end
   view:goto_buffer(_BUFFERS[item.buffer])
 end
 
