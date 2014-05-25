@@ -9,6 +9,38 @@ care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
 @{textredux.core.style} module to ensure that styling works, etc.
 
+How to use
+----------
+
+You create a new Textredux buffer by calling @{new}, passing the buffer
+title. You specify an @{on_refresh} handler for the buffer, which is responsible
+for actually inserting the content in the buffer, along with any custom styles
+and hotspot handlers. You specify any custom key bindings using @{keys}
+and/or hook any other handlers of interest. In the
+@{on_refresh} handler, you add the actual text using any of the extended
+text insertion functions (@{buffer:add_text}, @{buffer:append_text},
+@{buffer:insert_text}). You invoke
+@{buffer:show} to show the buffer, and respond to any interactions using the
+provided callbacks.
+
+    local reduxbuffer = textredux.core.buffer.new('Example buffer')
+    reduxbuffer.on_refresh = function(buf)
+      buf:add_text('Textredux!')
+    end
+    reduxbuffer:show()
+
+If you need to test whether a Textadept buffer is a Textredux buffer you can
+check for the `_textredux` field.
+
+    events.connect(events.BUFFER_AFTER_SWITCH, function()
+      local buffer = buffer
+      if buffer._textredux then
+        -- …
+      end
+    end)
+
+Please see the examples for more hands-on instructions.
+
 How it works
 ------------
 
@@ -39,33 +71,6 @@ exist.
 In short, you don't have to worry about creating buffers, detecting whether the
 buffer was closed, etc., as long as you remember to invoke @{buffer:show} and
 perform your work within the callbacks.
-
-How to use
-----------
-
-You create a new Textredux buffer by calling @{new}, passing the buffer
-title. You specify an @{on_refresh} handler for the buffer, which is responsible
-for actually inserting the content in the buffer, along with any custom styles
-and hotspot handlers. You specify any custom key bindings using either @{keys}
-or @{on_keypress}, and/or hook any other handlers of interest. In the
-@{on_refresh} handler, you add the actual text using any of the extended
-text insertion functions (@{buffer:add_text}, @{buffer:append_text},
-@{buffer:insert_text} or possibly @{buffer:newline}). You invoke
-@{buffer:show} to show the buffer, and respond to any interactions using the
-provided callbacks.
-
-If you need to test whether a buffer is a Textredux buffer you can check
-for the `_textredux` field.
-
-    events.connect(events.BUFFER_AFTER_SWITCH, function()
-      local buffer = buffer
-      if buffer._textredux then
-        -- …
-      end
-    end)
-
-
-Please see the examples for more hands-on instructions.
 
 @module textredux.core.buffer
 ]]
