@@ -371,10 +371,6 @@ The function will be called with following parameters:
 - `path`: The full path of the choosen file (UTF-8 encoded).
 - `exists`: A boolean indicating whether the file exists or not.
 - `list`: A reference to the Textredux list used by browser.
-- `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 
 The list will not be closed automatically, so close it explicitly using
 `list:close()` if desired.
@@ -401,7 +397,7 @@ function M.select_file(on_selection, start_directory, filter, depth, max_files)
   local list = create_list(start_directory, filter, depth or 1,
                            max_files or 10000)
 
-  list.on_selection = function(list, item, shift, ctrl, alt, meta)
+  list.on_selection = function(list, item)
     local path, mode = item.path, item.mode
       if mode == 'link' then
         mode = lfs.attributes(path, 'mode')
