@@ -128,6 +128,10 @@ perform your work within the callbacks.</p>
 	<td class="summary">Creates and returns a new textredux buffer.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#set_margin_styles">set_margin_styles ()</a></td>
+	<td class="summary">Sets the margin styles in a Textredux buffer.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer:show">reduxbuffer:show ()</a></td>
 	<td class="summary">Shows the buffer.</td>
 	</tr>
@@ -237,6 +241,29 @@ buffer.</td>
  title in the Textadept top bar.
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_margin_styles"></a>
+    <strong>set_margin_styles ()</strong>
+    </dt>
+    <dd>
+
+<p>Sets the margin styles in a Textredux buffer.
+Line numbers are hidden by setting them to the background color in the Curses
+version and by setting the line number margin to the color used for
+highlighting the current line in the GUI version.
+To disable you can deactivate the <code>BUFFER_AFTER_SWITCH</code> and <code>VIEW_AFTER_SWITCH</code>
+events:</p>
+<pre><code>events.disconnect(events.BUFFER_AFTER_SWITCH, textredux.core.set_margin_styles)
+</code></pre>
+
+
+
 
 
 
