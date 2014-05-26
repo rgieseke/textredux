@@ -52,4 +52,34 @@ local M = {
   indicator = require 'textredux.core.indicator',
 }
 
+local line_number_back =
+  buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
+local current_line_back = buffer.caret_line_back
+
+--[[-- Sets the margin styles in a Textredux buffer.
+Line numbers are hidden by setting them to the background color in the Curses
+version and by setting the line number margin to the color used for
+highlighting the current line.
+]]
+function M.set_margin_styles()
+  local line_number = 33
+  local buffer = buffer
+  if buffer._textredux then
+    if CURSES then
+      buffer.style_fore[line_number] = line_number_back
+    else
+      buffer.style_fore[line_number] = current_line_back
+      buffer.style_back[line_number] = current_line_back
+    end
+  else
+    if not CURSES then
+      buffer.style_back[line_number] = current_line_back
+    end
+  end
+end
+
+events.connect(events.BUFFER_AFTER_SWITCH, M.set_margin_styles)
+events.connect(events.VIEW_AFTER_SWITCH, M.set_margin_styles)
+
+
 return M
