@@ -375,9 +375,10 @@ function list:_create_buffer()
   end
 
   reduxbuffer.keys.down = function()
-      if self.buffer.line_from_position(self, self.buffer.current_pos) > self.buffer.data.items_end_line and
-        self.buffer.data.shown_items < #self.buffer.data.matching_items then
-        self:_load_more_items()
+    if self.buffer.line_from_position(self, self.buffer.current_pos) >
+       self.buffer.data.items_end_line and
+       self.buffer.data.shown_items < #self.buffer.data.matching_items then
+      self:_load_more_items()
     else
       buffer:line_down()
     end
