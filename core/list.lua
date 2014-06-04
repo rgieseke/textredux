@@ -370,6 +370,10 @@ function list:_create_buffer()
     if search then self.set_current_search(self, search:sub(1, #search - 1)) end
   end
 
+  reduxbuffer.keys['c\b'] = function()
+    self.set_current_search(self, '')
+  end
+
   reduxbuffer.keys.down = function()
       if self.buffer.line_from_position(self, self.buffer.current_pos) > self.buffer.data.items_end_line and
         self.buffer.data.shown_items < #self.buffer.data.matching_items then
