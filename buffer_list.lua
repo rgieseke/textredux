@@ -66,6 +66,11 @@ local function get_buffer_items()
       }
     end
   end
+  table.sort(items, function(a, b)
+    if a[2] == b[2] then return a[1] < b[1] end
+    if a[2] and b[2] then return a[2] < b[2] end
+    return a[1] < b[1]
+  end)
   return items
 end
 
@@ -116,7 +121,7 @@ function M.close_buffer(list)
   end
 end
 
---- Shows a list of the specified buffers, or _G.BUFFERS it not specified.
+--- Shows a list of the specified buffers, or _G.BUFFERS if not specified.
 -- @param buffers Either nil, in which case all buffers within _G.BUFFERS
 -- are displayed, or a function returning a table of buffers to display.
 function M.show(buffers)
@@ -131,8 +136,21 @@ function M.show(buffers)
     end
   end
   M.list.items = get_buffer_items()
+  local buffer = buffer
+  local active_buffer
+  for index, item in ipairs(M.list.items) do
+    if item.buffer == buffer then
+      active_buffer = index
+      break
+    end
+  end
   M.list:show()
+  if active_buffer then
+    local line = M.list.buffer.data.items_start_line + active_buffer - 1
+    M.list.buffer:goto_line(line)
+  end
   ui.statusbar_text = '[Enter] = open, [Ctrl+d] = close selected buffer'
 end
+
 
 return M
