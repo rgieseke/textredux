@@ -11,8 +11,8 @@ Usage
 In your init.lua:
 
     events.connect(events.INITIALIZED, function()
-      local ctags = require 'textredux.ctags'
-      keys.cg = ctags.goto_symbol -- Ctrl+G
+      local textredux = require 'textredux'
+      keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
     end)
 
 Requirements
@@ -48,11 +48,10 @@ This module is based on Mitchell's ctags code posted on the
 @module textredux.ctags
 ]]
 
-textredux = require 'textredux'
-
 local M = {}
 
-local reduxstyle = textredux.core.style
+local reduxstyle = require 'textredux.core.style'
+local reduxlist = require 'textredux.core.list'
 
 ---
 -- Path and options for the ctags call can be defined in the `CTAGS`

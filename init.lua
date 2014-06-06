@@ -63,9 +63,10 @@ settings.
 ]]
 
 local M = {
-  buffer_list = require 'textredux.buffer_list',
-  fs = require 'textredux.fs',
   core = require 'textredux.core',
+  buffer_list = require 'textredux.buffer_list',
+  ctags = require 'textredux.ctags',
+  fs = require 'textredux.fs'
 }
 
 return M
