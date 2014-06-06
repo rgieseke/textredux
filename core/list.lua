@@ -3,32 +3,29 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-The list class provides a versatile and extensible text based item listing for
-Textadept, featuring advanced search capabilities and styling. It's a
-convenient way of presenting lists to the user for simple selection, but is
-equally well suited for creating advanced list based interfaces.
+The list class provides a text based item listing for Textadept, featuring
+advanced search capabilities and styling.
 
-How to use
-----------
+## How to use
 
 Create the list using @{new}, specify @{items} and other fields/callbacks
 (such as @{on_selection}) and invoke @{list:show}.
 
-Please see the various list examples for more hands-on instructions.
+Please see also the various list examples in `./examples`.
 
-Features at a glance
---------------------
+## Features
 
 - Support for multi-column table items, in addition to supporting the simpler
   case of just listing strings.
 - Fully customizable styling. You can either specify individual styles for
   different columns, or specify styles for each item dynamically using a
-  callback. If you do neither, you will automatically get sane defaults.
+  callback.
 - Powerful search capabilities. The list class supports both exact matching and
   fuzzy matching, and will present best matches first. It also supports
   searching for multiple search strings (any text separated by whitespace is
   considered to be multiple search strings). Searches are done against all
   columns.
+- `Ctrl/Alt/Meta-Backspace` resets the current search.
 
 @module textredux.core.list
 ]]
@@ -62,14 +59,6 @@ list.match_highlight_style = reduxstyle.list_match_highlight
 -- corresponding item and column index. The default styles contains styles for
 -- up to three columns, after which the default style will be used.
 list.column_styles = {}
-
--- I fought LDoc, but LDoc won. Define the field separately here to avoid it
--- being poorly documented as a table
---list.column_styles =  {
---  reduxstyle.string,
---  reduxstyle.comment,
---  reduxstyle.operator,
---}
 
 --- Whether searches are case insensitive or not.
 -- It's possible to override this for a specific list by assigning another

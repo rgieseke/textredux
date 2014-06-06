@@ -9,19 +9,16 @@ care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
 @{textredux.core.style} module to ensure that styling works, etc.
 
-How to use
-----------
+## Usage
 
-You create a new Textredux buffer by calling @{new}, passing the buffer
-title. You specify an @{on_refresh} handler for the buffer, which is responsible
-for actually inserting the content in the buffer, along with any custom styles
-and hotspot handlers. You specify any custom key bindings using @{keys}
-and/or hook any other handlers of interest. In the
-@{on_refresh} handler, you add the actual text using any of the extended
-text insertion functions (@{buffer:add_text}, @{buffer:append_text},
-@{buffer:insert_text}). You invoke
-@{buffer:show} to show the buffer, and respond to any interactions using the
-provided callbacks.
+You create a new Textredux buffer by calling @{new}, passing the buffer title.
+You specify an @{on_refresh} handler for the buffer, which is responsible for
+actually inserting the content in the buffer, along with any custom styles and
+hotspot handlers. Custom key bindings are specified using @{keys}. In the
+@{on_refresh} handler, you add the actual text using any of the extended text
+insertion functions (@{reduxbuffer:add_text}, @{reduxbuffer:append_text},
+@{reduxbuffer:insert_text}). You invoke @{reduxbuffer:show} to show the buffer,
+and respond to any interactions using the provided callbacks.
 
     local reduxbuffer = textredux.core.buffer.new('Example buffer')
     reduxbuffer.on_refresh = function(buf)
@@ -41,8 +38,7 @@ check for the `_textredux` field.
 
 Please see the examples for more hands-on instructions.
 
-How it works
-------------
+## How it works
 
 When you work with a Textredux buffer, it will nearly always seem just like an
 ordinary [Textadept buffer](http://foicica.com/textadept/api/buffer.html)
@@ -51,31 +47,32 @@ etc.). But where a Textadept buffer is volatile, and might cease to exists at
 any time (due to it being closed by a user for example) a Textredux buffer is
 persistent.
 
-When we say that a Textredux buffer "wraps" a Textadept buffer, there's more to
-it than just adding additional methods to the Textadept buffer class. A
+When we say that a Textredux buffer “wraps” a Textadept buffer, there's more
+to it than just adding additional methods to the Textadept buffer class. A
 Textredux buffer will always exist, but the corresponding Textadept buffer,
 named `target` hereafter, may not. When the target buffer exists, a Textredux
 buffer will expose all the functions and attributes of the Textadept buffer,
-making it possible to use the Textredux buffer in just the same way as you
-would a Textadept buffer (i.e. invoking any of the ordinary buffer methods,
-setting attributes, etc.). The Textredux buffer takes care of creating the
-target buffer automatically if needed whenever you invoke @{buffer:show}.
-When the target buffer does not exist, for instance as the result of the user
-closing it, any attempt to invoke any of the ordinary buffer methods will
-raise an error. You can check explicitly whether the target exists by using the
-@{buffer:is_attached} function. However, this is not something you will have to
-worry much about in practice, since you'll typically interact with the buffer
-as part of a refresh, key press, etc., where the target buffer will always
-exist.
+making it possible to use the Textredux buffer in just the same way as you would
+a Textadept buffer (i.e. invoking any of the ordinary buffer methods, setting
+attributes, etc.). The Textredux buffer takes care of creating the target buffer
+automatically if needed whenever you invoke @{reduxbuffer:show}. When the target
+buffer does not exist, for instance as the result of the user closing it, any
+attempt to invoke any of the ordinary buffer methods will raise an error. You
+can check explicitly whether the target exists by using the
+@{reduxbuffer:is_attached} function. However, this is not something you will
+have to worry much about in practice, since you'll typically interact with the
+buffer as part of a refresh, key press, etc., where the target buffer will
+always exist.
 
 In short, you don't have to worry about creating buffers, detecting whether the
-buffer was closed, etc., as long as you remember to invoke @{buffer:show} and
-perform your work within the callbacks.
+buffer was closed, etc., as long as you remember to invoke @{reduxbuffer:show}
+and perform your work within the callbacks.
 
 @module textredux.core.buffer
 ]]
 
 local M = {}
+
 local textreduxbuffers = setmetatable({}, { __mode = 'k' })
 
 local reduxstyle = require('textredux.core.style')
@@ -218,7 +215,8 @@ version and by setting the line number margin to the color used for
 highlighting the current line in the GUI version.
 To disable you can deactivate the `BUFFER_AFTER_SWITCH` and `VIEW_AFTER_SWITCH`
 events:
-    events.disconnect(events.BUFFER_AFTER_SWITCH, textredux.core.set_margin_styles)
+    events.disconnect(events.BUFFER_AFTER_SWITCH,
+                      textredux.core.set_margin_styles)
 ]]
 function M.set_margin_styles()
   local line_number = 33

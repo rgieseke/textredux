@@ -4,28 +4,41 @@
 
 --[[--
 The buffer list module provides a text based replacement for the standard
-Textadept buffer list. Two differences compared to the stock one is the ability
-to close a buffer directly from the buffer list (bound to `Ctrl + d` by default),
-and the option of specifying the buffers to list via a provided function.
+Textadept buffer list.
+
+## Usage
+
+Use the @{textredux.hijack} module or load the buffer list
+in your `~/.textadept/init.lua`:
+
+    events.connect(events.INITIALIZED, function()
+      local textredux = require('textredux')
+      keys.cb = textredux.buffer_list.show
+    end)
+
+## Features
+
+- Close a buffer from the buffer list (bound to `Ctrl + D` by default)
+- The list of buffers is sorted and the current buffer is pre-selected
+- The buffers to show can be specified using a function
 
 @module textredux.buffer_list
 ]]
 
-local tr_list = require 'textredux.core.list'
-local tr_ui = require 'textredux.core.ui'
+local reduxlist = require 'textredux.core.list'
 
 local M = {}
 
 --- The Textredux list instance used by the buffer list.
 M.list = nil
 
---[[- The key bindings for the buffer list.
+--[[-- The key bindings for the buffer list.
 
 You can modifiy this to customise the key bindings to your liking. The key
 bindings are passed directly to the Textredux list, so note that the
 first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
-[list documentation](TODO/textredux/docs/modules/textredux.list.html#keys).
+[list documentation](./textredux.core.list.html#keys).
 
 If you like to add a custom key binding for closing a buffer you can bind the
 @{close_buffer} function to a key of your choice. For other actions it's likely
@@ -79,7 +92,7 @@ local function on_selection(list, item)
   view:goto_buffer(_BUFFERS[item.buffer])
 end
 
---[[- Returns the currently selected buffer in the list.
+--[[-- Returns the currently selected buffer in the list.
 @param list The Textredux list instance used by the buffer list. If not
 provided, then the global list is used automatically.
 @return The currently selected buffer, if any.
@@ -128,8 +141,8 @@ function M.show(buffers)
   buffer_source = buffers or function() return _BUFFERS end
 
   if not M.list then
-    M.list = tr_list.new('Buffer listing')
-    M.list.headers = { 'Name', 'Directory' }
+    M.list = reduxlist.new('Buffer listing')
+    M.list.headers = {'Name', 'Directory'}
     M.list.on_selection = on_selection
     for k, v in pairs(M.keys) do
       M.list.keys[k] = v
@@ -149,7 +162,7 @@ function M.show(buffers)
     local line = M.list.buffer.data.items_start_line + active_buffer - 1
     M.list.buffer:goto_line(line)
   end
-  ui.statusbar_text = '[Enter] = open, [Ctrl+d] = close selected buffer'
+  ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected buffer'
 end
 
 
