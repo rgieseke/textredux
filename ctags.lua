@@ -10,10 +10,8 @@ Usage
 
 In your init.lua:
 
-    events.connect(events.INITIALIZED, function()
-      local textredux = require 'textredux'
-      keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
-    end)
+    local textredux = require 'textredux'
+    keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
 
 Requirements
 ------------

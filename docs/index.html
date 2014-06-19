@@ -65,9 +65,8 @@ git clone https://github.com/rgieseke/textredux.git
 <h2 id="Usage"><a href="#Usage">Usage</a></h2>
 
 <p>Having installed the module, there are two ways you can use it. Note that due to
-Textredux re-using colors defined in your theme file, loading Textredux modules
-should be wrapped using
-<a href="http://foicica.com/textadept/api/events.html#INITIALIZED)">events.INITIALIZED</a>.
+Textredux re-using colors defined in your theme file, loading Textredux should happen
+after a custom theme is set using <code>ui.set_theme</code> in your <code>init.lua</code>.
 </p>
 
 <p>1) Cherrypick the functionality you want from the different modules by assigning
@@ -76,19 +75,15 @@ the text based file browser and normally opens files using <code>Ctrl-O</code>, 
 following code in your <code>init.lua</code> would do the trick:</p>
 
 <pre>
-events.connect(events.INITIALIZED, function()
-  textredux = require 'textredux'
-  keys.co = textredux.fs.open_file
-end)
+textredux = require 'textredux'
+keys.co = textredux.fs.open_file
 </pre>
 
 <p>2) If you can&rsquo;t get enough of text based interfaces and the joy they provide,
 then the hijack module is for you. Simple place this in your <code>init.lua</code>:</p>
 
 <pre>
-events.connect(events.INITIALIZED, function()
-  require 'textredux.hijack'
-end)
+require 'textredux.hijack'
 </pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your

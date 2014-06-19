@@ -11,10 +11,8 @@ Textadept buffer list.
 Use the @{textredux.hijack} module or load the buffer list
 in your `~/.textadept/init.lua`:
 
-    events.connect(events.INITIALIZED, function()
-      local textredux = require('textredux')
-      keys.cb = textredux.buffer_list.show
-    end)
+    local textredux = require('textredux')
+    keys.cb = textredux.buffer_list.show
 
 ## Features
 
