@@ -50,8 +50,8 @@
 <div class="content">
 
 <h2>Module <code>textredux.fs</code></h2>
-<p>textredux.fs provides file system related functions and a text based file
-browser for Textadept.</p>
+<p>textredux.fs provides a text based file browser and file system related
+functions for Textadept.</p>
 <p>It features traditional directory browsing, snapopen functionality, completely
 keyboard driven interaction, and provides powerful narrow to search
 functionality.</p>
@@ -62,7 +62,7 @@ functionality.</p>
 
 <p>As said above the file browser allows both traditional browsing as well as
 snapopen functionality. But it also allows you to seamlessly switch between
-the two modes (by default, <code>Ctrl + s</code> is assigned for this).</p>
+the two modes (by default, <code>Ctrl + S</code> is assigned for this).</p>
 
 <p><em>Quickly moving up one directory level</em></p>
 
@@ -79,15 +79,15 @@ to snapopen that directory.</p>
 <p><em>Changing the styles used for different file types</em></p>
 
 <p>If you don't like the default styles (colors, etc.) used by the file browser,
-you can easily change these by customizing any of the <code>style_&lt;foo&gt;</code> entries
+you can easily change these by customizing any of the <code>reduxstyle_&lt;foo&gt;</code> entries
 using the Textredux style module. As an example, to make directory entries
 underlined you would do something like the following:</p>
 
-<pre><code>textredux.core.style.fs_directory = { underline = true }
+<pre><code>textredux.core.style.fs_directory = {underline = true}
 </code></pre>
 
-<p>Please see the documentation for the Textredux style module for instructions
-on how to define styles.</p>
+<p>Please see the documentation for the <a href="./textredux.core.style.html">Textredux style
+module</a> for instructions on how to define styles.</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
@@ -117,27 +117,27 @@ parameters.</td>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_directory">tr_style.fs_directory</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_directory">reduxstyle.fs_directory</a></td>
 	<td class="summary">The style used for directory entries.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_file">tr_style.fs_file</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_file">reduxstyle.fs_file</a></td>
 	<td class="summary">The style used for ordinary file entries.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_link">tr_style.fs_link</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_link">reduxstyle.fs_link</a></td>
 	<td class="summary">The style used for link entries.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_socket">tr_style.fs_socket</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_socket">reduxstyle.fs_socket</a></td>
 	<td class="summary">The style used for socket entries.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_pipe">tr_style.fs_pipe</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_pipe">reduxstyle.fs_pipe</a></td>
 	<td class="summary">The style used for pipe entries.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#tr_style.fs_device">tr_style.fs_device</a></td>
+	<td class="name" nowrap><a href="#reduxstyle.fs_device">reduxstyle.fs_device</a></td>
 	<td class="summary">The style used for pipe entries.</td>
 	</tr>
 </table>
@@ -303,8 +303,8 @@ if not specified.
     <h2><a name="Fields"></a>Fields</h2>
     <dl class="function">
     <dt>
-    <a name = "tr_style.fs_directory"></a>
-    <strong>tr_style.fs_directory</strong>
+    <a name = "reduxstyle.fs_directory"></a>
+    <strong>reduxstyle.fs_directory</strong>
     </dt>
     <dd>
     The style used for directory entries.
@@ -317,8 +317,8 @@ if not specified.
 
 </dd>
     <dt>
-    <a name = "tr_style.fs_file"></a>
-    <strong>tr_style.fs_file</strong>
+    <a name = "reduxstyle.fs_file"></a>
+    <strong>reduxstyle.fs_file</strong>
     </dt>
     <dd>
     The style used for ordinary file entries.
@@ -331,8 +331,8 @@ if not specified.
 
 </dd>
     <dt>
-    <a name = "tr_style.fs_link"></a>
-    <strong>tr_style.fs_link</strong>
+    <a name = "reduxstyle.fs_link"></a>
+    <strong>reduxstyle.fs_link</strong>
     </dt>
     <dd>
     The style used for link entries.
@@ -345,8 +345,8 @@ if not specified.
 
 </dd>
     <dt>
-    <a name = "tr_style.fs_socket"></a>
-    <strong>tr_style.fs_socket</strong>
+    <a name = "reduxstyle.fs_socket"></a>
+    <strong>reduxstyle.fs_socket</strong>
     </dt>
     <dd>
     The style used for socket entries.
@@ -359,8 +359,8 @@ if not specified.
 
 </dd>
     <dt>
-    <a name = "tr_style.fs_pipe"></a>
-    <strong>tr_style.fs_pipe</strong>
+    <a name = "reduxstyle.fs_pipe"></a>
+    <strong>reduxstyle.fs_pipe</strong>
     </dt>
     <dd>
     The style used for pipe entries.
@@ -373,8 +373,8 @@ if not specified.
 
 </dd>
     <dt>
-    <a name = "tr_style.fs_device"></a>
-    <strong>tr_style.fs_device</strong>
+    <a name = "reduxstyle.fs_device"></a>
+    <strong>reduxstyle.fs_device</strong>
     </dt>
     <dd>
     The style used for pipe entries.

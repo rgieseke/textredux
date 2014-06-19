@@ -57,18 +57,16 @@ care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
 <a href="../modules/textredux.core.style.html#">textredux.core.style</a> module to ensure that styling works, etc.</p>
 
-<h2>How to use</h2>
+<h2>Usage</h2>
 
-<p>You create a new Textredux buffer by calling <a href="../modules/textredux.core.buffer.html#new">new</a>, passing the buffer
-title. You specify an <a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler for the buffer, which is responsible
-for actually inserting the content in the buffer, along with any custom styles
-and hotspot handlers. You specify any custom key bindings using <a href="../modules/textredux.core.buffer.html#reduxbuffer.keys">keys</a>
-and/or hook any other handlers of interest. In the
-<a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler, you add the actual text using any of the extended
-text insertion functions (<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_text">buffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#reduxbuffer:append_text">buffer:append_text</a>,
-<a href="../modules/textredux.core.buffer.html#reduxbuffer:insert_text">buffer:insert_text</a>). You invoke
-<a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a> to show the buffer, and respond to any interactions using the
-provided callbacks.</p>
+<p>You create a new Textredux buffer by calling <a href="../modules/textredux.core.buffer.html#new">new</a>, passing the buffer title.
+You specify an <a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler for the buffer, which is responsible for
+actually inserting the content in the buffer, along with any custom styles and
+hotspot handlers. Custom key bindings are specified using <a href="../modules/textredux.core.buffer.html#reduxbuffer.keys">keys</a>. In the
+<a href="../modules/textredux.core.buffer.html#reduxbuffer.on_refresh">on_refresh</a> handler, you add the actual text using any of the extended text
+insertion functions (<a href="../modules/textredux.core.buffer.html#reduxbuffer:add_text">reduxbuffer:add_text</a>, <a href="../modules/textredux.core.buffer.html#reduxbuffer:append_text">reduxbuffer:append_text</a>,
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:insert_text">reduxbuffer:insert_text</a>). You invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">reduxbuffer:show</a> to show the buffer,
+and respond to any interactions using the provided callbacks.</p>
 
 <pre><code>local reduxbuffer = textredux.core.buffer.new('Example buffer')
 reduxbuffer.on_refresh = function(buf)
@@ -99,26 +97,26 @@ etc.). But where a Textadept buffer is volatile, and might cease to exists at
 any time (due to it being closed by a user for example) a Textredux buffer is
 persistent.</p>
 
-<p>When we say that a Textredux buffer "wraps" a Textadept buffer, there's more to
-it than just adding additional methods to the Textadept buffer class. A
+<p>When we say that a Textredux buffer “wraps” a Textadept buffer, there's more
+to it than just adding additional methods to the Textadept buffer class. A
 Textredux buffer will always exist, but the corresponding Textadept buffer,
 named <code>target</code> hereafter, may not. When the target buffer exists, a Textredux
 buffer will expose all the functions and attributes of the Textadept buffer,
-making it possible to use the Textredux buffer in just the same way as you
-would a Textadept buffer (i.e. invoking any of the ordinary buffer methods,
-setting attributes, etc.). The Textredux buffer takes care of creating the
-target buffer automatically if needed whenever you invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a>.
-When the target buffer does not exist, for instance as the result of the user
-closing it, any attempt to invoke any of the ordinary buffer methods will
-raise an error. You can check explicitly whether the target exists by using the
-<a href="../modules/textredux.core.buffer.html#reduxbuffer:is_attached">buffer:is_attached</a> function. However, this is not something you will have to
-worry much about in practice, since you'll typically interact with the buffer
-as part of a refresh, key press, etc., where the target buffer will always
-exist.</p>
+making it possible to use the Textredux buffer in just the same way as you would
+a Textadept buffer (i.e. invoking any of the ordinary buffer methods, setting
+attributes, etc.). The Textredux buffer takes care of creating the target buffer
+automatically if needed whenever you invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">reduxbuffer:show</a>. When the target
+buffer does not exist, for instance as the result of the user closing it, any
+attempt to invoke any of the ordinary buffer methods will raise an error. You
+can check explicitly whether the target exists by using the
+<a href="../modules/textredux.core.buffer.html#reduxbuffer:is_attached">reduxbuffer:is_attached</a> function. However, this is not something you will
+have to worry much about in practice, since you'll typically interact with the
+buffer as part of a refresh, key press, etc., where the target buffer will
+always exist.</p>
 
 <p>In short, you don't have to worry about creating buffers, detecting whether the
-buffer was closed, etc., as long as you remember to invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">buffer:show</a> and
-perform your work within the callbacks.</p>
+buffer was closed, etc., as long as you remember to invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">reduxbuffer:show</a>
+and perform your work within the callbacks.</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
@@ -201,6 +199,10 @@ which accepts optional style, command and indicator parameters.</td>
 	<td class="summary">Callback invoked whenever the buffer should refresh.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#reduxbuffer.on_char_added">reduxbuffer.on_char_added</a></td>
+	<td class="summary">Callback invoked when a CHAR_ADDED event is fired.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#reduxbuffer.keys">reduxbuffer.keys</a></td>
 	<td class="summary">A table of key commands for the buffer.</td>
 	</tr>
@@ -259,7 +261,8 @@ version and by setting the line number margin to the color used for
 highlighting the current line in the GUI version.
 To disable you can deactivate the <code>BUFFER_AFTER_SWITCH</code> and <code>VIEW_AFTER_SWITCH</code>
 events:</p>
-<pre><code>events.disconnect(events.BUFFER_AFTER_SWITCH, textredux.core.set_margin_styles)
+<pre><code>events.disconnect(events.BUFFER_AFTER_SWITCH,
+                  textredux.core.set_margin_styles)
 </code></pre>
 
 
@@ -631,6 +634,21 @@ The callback will be invoked with the buffer as the sole parameter.
     <ul>
          <a href="../modules/textredux.core.buffer.html#reduxbuffer:refresh">buffer:refresh</a>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "reduxbuffer.on_char_added"></a>
+    <strong>reduxbuffer.on_char_added</strong>
+    </dt>
+    <dd>
+    Callback invoked when a CHAR_ADDED event is fired.
+Receives the char as an argument.
+
+
+
+
+
 
 
 </dd>

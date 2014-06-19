@@ -53,9 +53,29 @@
 <h2>Module <code>textredux.buffer_list</code></h2>
 <p>The buffer list module provides a text based replacement for the standard
 Textadept buffer list.</p>
-<p> Two differences compared to the stock one is the ability
-to close a buffer directly from the buffer list (bound to <code>Ctrl + d</code> by default),
-and the option of specifying the buffers to list via a provided function.</p>
+<p>
+
+
+<h2>Usage</h2>
+
+<p>Use the <a href="../modules/textredux.hijack.html#">textredux.hijack</a> module or load the buffer list
+in your <code>~/.textadept/init.lua</code>:</p>
+
+<pre><code>events.connect(events.INITIALIZED, function()
+  local textredux = require('textredux')
+  keys.cb = textredux.buffer_list.show
+end)
+</code></pre>
+
+<h2>Features</h2>
+
+<ul>
+    <li>Close a buffer from the buffer list (bound to <code>Ctrl + D</code> by default)</li>
+    <li>The list of buffers is sorted and the current buffer is pre-selected</li>
+    <li>The buffers to show can be specified using a function</li>
+</ul>
+
+</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
@@ -70,7 +90,7 @@ and the option of specifying the buffers to list via a provided function.</p>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#show">show (buffers)</a></td>
-	<td class="summary">Shows a list of the specified buffers, or _G.BUFFERS it not specified.</td>
+	<td class="summary">Shows a list of the specified buffers, or _G.BUFFERS if not specified.</td>
 	</tr>
 </table>
 <h2><a href="#Tables">Tables</a></h2>
@@ -150,7 +170,7 @@ automatically used.
     <strong>show (buffers)</strong>
     </dt>
     <dd>
-    Shows a list of the specified buffers, or _G.BUFFERS it not specified.
+    Shows a list of the specified buffers, or _G.BUFFERS if not specified.
 
 
     <h3>Parameters:</h3>
@@ -180,7 +200,7 @@ automatically used.
 bindings are passed directly to the Textredux list, so note that the
 first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
-<a href="TODO/textredux/docs/modules/textredux.list.html#keys">list documentation</a>.</p>
+<a href="./textredux.core.list.html#keys">list documentation</a>.</p>
 
 <p>If you like to add a custom key binding for closing a buffer you can bind the
 <a href="../modules/textredux.buffer_list.html#close_buffer">close_buffer</a> function to a key of your choice. For other actions it's likely
