@@ -223,36 +223,38 @@ end)
 
 
 --[[-- Sets the margin styles in a Textredux buffer.
-Line numbers are hidden by setting them to the background color in the Curses
+Line numbers are hidden by hiding the the line number margin in the Curses
 version and by setting the line number margin to the color used for
 highlighting the current line in the GUI version.
-To disable you can deactivate the `BUFFER_AFTER_SWITCH` and `VIEW_AFTER_SWITCH`
-events:
+To disable this you can deactivate the `BUFFER_AFTER_SWITCH` and
+`VIEW_AFTER_SWITCH` events like:
     events.disconnect(events.BUFFER_AFTER_SWITCH,
                       textredux.core.set_margin_styles)
 ]]
+local line_number_margin_width, line_number_back, current_line_back
 function M.set_margin_styles()
-  local line_number_back =
-    buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
-  local current_line_back = buffer.caret_line_back
-
   local line_number = 33
   local buffer = buffer
   if buffer._textredux then
     if CURSES then
-      buffer.style_fore[line_number] = line_number_back
+      buffer.margin_width_n[0] = 0 --  style_fore[line_number] = line_number_back
     else
       buffer.style_fore[line_number] = current_line_back
       buffer.style_back[line_number] = current_line_back
     end
   else
-    if not CURSES then
+    if CURSES then
+      buffer.margin_width_n[0] = line_number_margin_width
+    else
       buffer.style_back[line_number] = current_line_back
     end
   end
 end
 
 events.connect(events.INITIALIZED, function()
+  line_number_margin_width = buffer.margin_width_n[0]
+  line_number_back =  buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
+  current_line_back = buffer.caret_line_back
   events.connect(events.BUFFER_AFTER_SWITCH, M.set_margin_styles)
   events.connect(events.VIEW_AFTER_SWITCH, M.set_margin_styles)
 end)
