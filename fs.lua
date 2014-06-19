@@ -301,6 +301,7 @@ end
 local function toggle_snap(list)
   local data = list.data
   local depth = data.depth
+  local search = list:get_current_search()
 
   if data.prev_depth then
     data.depth = data.prev_depth
@@ -324,6 +325,7 @@ local function toggle_snap(list)
   end
   data.prev_depth = depth
   chdir(list, data.directory)
+  list:set_current_search(search)
 end
 
 local function create_list(directory, filter, depth, max_files)
