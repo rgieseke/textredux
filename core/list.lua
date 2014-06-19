@@ -34,6 +34,7 @@ local reduxstyle = require 'textredux.core.style'
 local util_matcher = require 'textredux.util.matcher'
 
 local string_rep = string.rep
+local band = bit32.band
 
 local M = {}
 local list = {}
@@ -157,7 +158,8 @@ function list:show()
                 self.items,
                 self.search_case_insensitive,
                 self.search_fuzzy
-              )
+              ),
+   list = self
   }
   self.buffer:set_title(self.title)
   self.buffer:show()
@@ -346,29 +348,8 @@ function list:_create_buffer()
   self.buffer = reduxbuffer
   self.data = self.buffer.data
 
-  local function limit_range(updated)
-    if buffer ~= reduxbuffer.target then return end
-    if not updated then return end
-    if bit32.band(buffer.UPDATE_SELECTION, updated) == buffer.UPDATE_SELECTION then
-      local line = buffer:line_from_position(buffer.current_pos)
-      local start_line = reduxbuffer.data.items_start_line
-      local end_line = reduxbuffer.data.items_end_line
-      if self.buffer.data.shown_items < #self.buffer.data.matching_items and line > end_line then
-        self:_load_more_items()
-        buffer:goto_line(reduxbuffer.data.items_end_line)
-      elseif line > end_line then
-        buffer:goto_line(end_line)
-      elseif line < start_line then
-        buffer:goto_line(start_line)
-      end
-    end
-  end
-
-  events.connect(events.UPDATE_UI, limit_range)
-
   reduxbuffer.on_deleted = function()
     self.data = {}
-    events.disconnect(events.UPDATE_UI, limit_range)
   end
 
   self.buffer.on_char_added = function(char)
@@ -401,4 +382,25 @@ function list:_create_buffer()
   return buffer
 end
 
+events.connect(events.UPDATE_UI, function(updated)
+  if not updated then return end
+  local buffer = buffer
+  local reduxbuffer = buffer._textredux
+  if not reduxbuffer then return end
+  if not reduxbuffer.data.list then return end
+  if band(buffer.UPDATE_SELECTION, updated) == buffer.UPDATE_SELECTION then
+    local line = buffer:line_from_position(buffer.current_pos)
+    local start_line = reduxbuffer.data.items_start_line
+    local end_line = reduxbuffer.data.items_end_line
+    if reduxbuffer.data.shown_items < #reduxbuffer.data.matching_items and
+       line > end_line then
+      reduxbuffer.data.list:_load_more_items()
+      buffer:goto_line(reduxbuffer.data.items_end_line)
+    elseif line > end_line then
+      buffer:goto_line(end_line)
+    elseif line < start_line then
+      buffer:goto_line(start_line)
+    end
+  end
+end)
 return M
