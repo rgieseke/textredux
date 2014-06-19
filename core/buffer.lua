@@ -219,9 +219,6 @@ events.connect(events.CHAR_ADDED, function(code)
   end
 end)
 
-local line_number_back =
-  buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
-local current_line_back = buffer.caret_line_back
 
 --[[-- Sets the margin styles in a Textredux buffer.
 Line numbers are hidden by setting them to the background color in the Curses
@@ -233,6 +230,10 @@ events:
                       textredux.core.set_margin_styles)
 ]]
 function M.set_margin_styles()
+  local line_number_back =
+    buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
+  local current_line_back = buffer.caret_line_back
+
   local line_number = 33
   local buffer = buffer
   if buffer._textredux then
@@ -249,8 +250,10 @@ function M.set_margin_styles()
   end
 end
 
-events.connect(events.BUFFER_AFTER_SWITCH, M.set_margin_styles)
-events.connect(events.VIEW_AFTER_SWITCH, M.set_margin_styles)
+events.connect(events.INITIALIZED, function()
+  events.connect(events.BUFFER_AFTER_SWITCH, M.set_margin_styles)
+  events.connect(events.VIEW_AFTER_SWITCH, M.set_margin_styles)
+end)
 
 --[[-- Shows the buffer.
 If the target buffer doesn't exist, due to it either not having been created
