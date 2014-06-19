@@ -80,7 +80,6 @@ local reduxindicator = require('textredux.core.indicator')
 
 local constants = _SCINTILLA.constants
 local huge = math.huge
-local band = bit32.band
 
 -- Style for selectable and clickable items.
 reduxindicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
