@@ -311,7 +311,7 @@ function reduxbuffer:refresh()
   self:update(function()
     self.hotspots = {}
     self:clear_all()
-    self:_call_hook('on_refresh')
+    if self.on_refresh then self:on_refresh() end
   end)
 end
 
@@ -458,13 +458,6 @@ function reduxbuffer:_create_target()
   target.undo_collection = false
   self.target = target
   self:set_title(self.title)
-end
-
--- Call hook.
-function reduxbuffer:_call_hook(hook, ...)
-  local callback = self[hook]
-  if not callback then return end
-  return callback(self, ...)
 end
 
 local function emit_error(error)
