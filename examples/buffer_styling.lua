@@ -14,10 +14,10 @@ local textredux = require 'textredux'
 local reduxstyle = textredux.core.style
 
 -- define a custom style based on a default style
-reduxstyle.example_style1 = reduxstyle.string .. {underline = true}
+reduxstyle.example_style1 = reduxstyle.error..{underline = true}
 
 -- define a custom style from scratch
-reduxstyle.example_style2 = {italic = true, fore = '#680000'}
+reduxstyle.example_style2 = {italic = true, fore = '#0000ff', back='#ffffff'}
 
 local function on_refresh(buffer)
   -- add some ordinary unstyled text. we can specify the newline directly here
@@ -30,7 +30,7 @@ local function on_refresh(buffer)
   -- add some lines with custom styles
   buffer:add_text('Custom style based on default style\n',
                   reduxstyle.example_style1)
-  buffer:add_text('Custom style from scratch\n',
+  buffer:add_text('Custom style from scratch',
                   reduxstyle.example_style2)
 end
 
