@@ -12,6 +12,7 @@ which lets you use any arbitrary field in the selection logic.
 local M = {}
 
 local textredux = require 'textredux'
+local reduxstyle = textredux.core.style
 
 local function on_selection(list, item)
   -- We will get back exactly what we specified, so the code below will print
@@ -31,7 +32,7 @@ function M.show_multi_column_list()
     {'Dog', 'Animal', id = 2},
     {'Hell','Other people', id = 3}
   }
-
+  list.column_styles = {reduxstyle.number, reduxstyle.operator}
   list.on_selection = on_selection
   list:show()
 end

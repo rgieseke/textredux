@@ -43,13 +43,11 @@ ui.dialogs.filteredlist = function(options)
 
   local l = list.new(title, items)
   if columns then l.headers = columns end
-  l.keys.esc = function() l:close() end
   l.on_selection = function(l, item)
     local value = not options.string_output and index_of(item, items) or item
     l:close()
     coroutine.resume(co, 1, value)
   end
-  l.match_highlight_style = tr_style['function']
   l:show()
   return coroutine.yield()
 end
