@@ -3,21 +3,20 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-textredux.fs provides file system related functions and a text based file
-browser for Textadept.
+textredux.fs provides a text based file browser and file system related
+functions for Textadept.
 
 It features traditional directory browsing, snapopen functionality, completely
 keyboard driven interaction, and provides powerful narrow to search
 functionality.
 
-Some tips on using the file browser
------------------------------------
+## Some tips on using the file browser
 
 *Switching between traditional browsing and snapopen*
 
 As said above the file browser allows both traditional browsing as well as
 snapopen functionality. But it also allows you to seamlessly switch between
-the two modes (by default, `Ctrl + s` is assigned for this).
+the two modes (by default, `Ctrl + S` is assigned for this).
 
 *Quickly moving up one directory level*
 
@@ -34,26 +33,24 @@ to snapopen that directory.
 *Changing the styles used for different file types*
 
 If you don't like the default styles (colors, etc.) used by the file browser,
-you can easily change these by customizing any of the `style_<foo>` entries
+you can easily change these by customizing any of the `reduxstyle_<foo>` entries
 using the Textredux style module. As an example, to make directory entries
 underlined you would do something like the following:
 
-    textredux.core.style.fs_directory = { underline = true }
+    textredux.core.style.fs_directory = {underline = true}
 
-Please see the documentation for the Textredux style module for instructions
-on how to define styles.
+Please see the documentation for the [Textredux style
+module](./textredux.core.style.html) for instructions on how to define styles.
 
 @module textredux.fs
 ]]
 
-local tr_list = require 'textredux.core.list'
-local tr_style = require 'textredux.core.style'
-local tr_ui = require 'textredux.core.ui'
+local reduxlist = require 'textredux.core.list'
+local reduxstyle = require 'textredux.core.style'
 
 local string_match, string_sub = string.match, string.sub
 local lfs = require 'lfs'
 
-local WIN32 = WIN32
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
 local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
 local separator = WIN32 and '\\' or '/'
@@ -62,32 +59,32 @@ local updir_pattern = '%.%.?$'
 local M = {}
 
 --- The style used for directory entries.
-tr_style.fs_directory = tr_style.keyword
+reduxstyle.fs_directory = reduxstyle.keyword
 
 --- The style used for ordinary file entries.
-tr_style.fs_file = tr_style.string
+reduxstyle.fs_file = reduxstyle.string
 
 ---  The style used for link entries.
-tr_style.fs_link = tr_style.operator
+reduxstyle.fs_link = reduxstyle.operator
 
 --- The style used for socket entries.
-tr_style.fs_socket = tr_style.error
+reduxstyle.fs_socket = reduxstyle.error
 
 --- The style used for pipe entries.
-tr_style.fs_pipe = tr_style.error
+reduxstyle.fs_pipe = reduxstyle.error
 
 --- The style used for pipe entries.
-tr_style.fs_device = tr_style.error
+reduxstyle.fs_device = reduxstyle.error
 
 local file_styles = {
-  directory = tr_style.fs_directory,
-  file = tr_style.fs_file,
-  link = tr_style.fs_link,
-  socket = tr_style.fs_socket,
-  ['named pipe'] = tr_style.fs_pipe,
-  ['char device'] = tr_style.fs_device,
-  ['block device'] = tr_style.fs_device,
-  other = tr_style.default
+  directory = reduxstyle.fs_directory,
+  file = reduxstyle.fs_file,
+  link = reduxstyle.fs_link,
+  socket = reduxstyle.fs_socket,
+  ['named pipe'] = reduxstyle.fs_pipe,
+  ['char device'] = reduxstyle.fs_device,
+  ['block device'] = reduxstyle.fs_device,
+  other = reduxstyle.default
 }
 
 local DEFAULT_DEPTH = 99
@@ -274,7 +271,7 @@ local function chdir(list, directory)
   end
 end
 
-local function open_selected_file(path, exists, list, shift, ctrl)
+local function open_selected_file(path, exists, list)
   if not exists then
     local file, error = io.open(path, 'wb')
     if not file then
@@ -284,7 +281,6 @@ local function open_selected_file(path, exists, list, shift, ctrl)
     file:close()
   end
   list:close()
-  if ctrl then tr_ui.switch_to_other_view() end
   io.open_file(path)
 end
 
@@ -295,7 +291,7 @@ local function get_initial_directory()
 end
 
 local function get_file_style(item, index)
-  return file_styles[item.mode] or tr_style.default
+  return file_styles[item.mode] or reduxstyle.default
 end
 
 local function toggle_snap(list)
@@ -329,7 +325,7 @@ local function toggle_snap(list)
 end
 
 local function create_list(directory, filter, depth, max_files)
-  local list = tr_list.new(directory)
+  local list = reduxlist.new(directory)
   local data = list.data
   list.column_styles[1] = get_file_style
   list.keys.cs = toggle_snap
