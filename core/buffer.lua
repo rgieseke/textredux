@@ -519,6 +519,7 @@ local function _on_buffer_deleted()
       buf.data = {}
       -- Return to previous buffer.
       buf:_restore_origin_buffer()
+      if buf.on_deleted then buf:on_deleted() end
       break
     end
   end
