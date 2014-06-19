@@ -112,6 +112,11 @@ The callback will be invoked with the buffer as the sole parameter.
 ]]
 reduxbuffer.on_refresh = nil
 
+--[[-- Callback invoked when a CHAR_ADDED event is fired.
+Receives the char as an argument.
+]]
+reduxbuffer.on_char_added = nil
+
 --[[-- A table of key commands for the buffer.
 This is simply a mode in `textadept.keys` works, but allows you to specify key
 commands specifically for one buffer. The format for specifying keys
@@ -203,6 +208,16 @@ local function set_keys_mode()
 end
 events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
 events.connect(events.VIEW_AFTER_SWITCH, set_keys_mode)
+-- Handle CHAR_ADDED events.
+events.connect(events.CHAR_ADDED, function(code)
+  local _textredux = buffer._textredux
+  if not _textredux then return end
+  if _textredux.on_char_added then
+    local char = code < 256 and (not CURSES or (code ~= 7 and code ~= 13)) and
+        string.char(code) or keys.KEYSYMS[code]
+    _textredux.on_char_added(char)
+  end
+end)
 
 local line_number_back =
   buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]

@@ -347,12 +347,10 @@ function list:_create_buffer()
   self.buffer = reduxbuffer
   self.data = self.buffer.data
 
-  setmetatable(keys[reduxbuffer.keys_mode], {__index = function(t, k)
-    if #k > 1 and k:find('^[cams]*.+$') then return keys[k] end
-    if rawget(t, k) then return rawget(t, k) end
+  self.buffer.on_char_added = function(char)
     local search = self.get_current_search(self) or ''
-    self.set_current_search(self, search..k)
-  end})
+    self.set_current_search(self, search..char)
+  end
 
   reduxbuffer.keys['\b'] = function()
     local search = self.get_current_search(self)
