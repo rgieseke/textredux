@@ -319,9 +319,6 @@ end
 function reduxbuffer:set_title(title)
   self.title = title
   if self:is_attached() then
-    -- there's currently an issue with how TA handles the titlebar update -
-    -- it can't handle trailing slashes so work around that for now
-    if title:match('[/\\]$') then title = title .. '\0' end
     self.target._type = title
   end
 end
