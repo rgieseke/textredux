@@ -17,6 +17,8 @@ in your `~/.textadept/init.lua`:
 ## Features
 
 - Close a buffer from the buffer list (bound to `Ctrl + D` by default)
+- Close all files in the directory of the selected buffer
+  (bound to `Ctrl + Shift + D` and `Meta + D` in Curses by default)
 - The list of buffers is sorted and the current buffer is pre-selected
 - The buffers to show can be specified using a function
 
@@ -38,13 +40,15 @@ first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
 [list documentation](./textredux.core.list.html#keys).
 
-If you like to add a custom key binding for closing a buffer you can bind the
-@{close_buffer} function to a key of your choice. For other actions it's likely
-that you want to obtain the currently selected buffer - you can use the
-@{currently_selected_buffer} function for that.
+If you like to add a custom key binding for closing a buffer or files in a
+directory you can bind the @{close_buffer} and @{close_directory} functions to a
+key of your choice. For other actions it's likely that you want to obtain the
+currently selected buffer - you can use the @{currently_selected_buffer}
+function for that.
 ]]
 M.keys = {
   cd = function(list) M.close_buffer(list) end, -- Default for `close buffer`
+  [CURSES and 'md' or 'cD'] = function(list) M.close_directory(list) end
 }
 
 local buffer_source
@@ -103,7 +107,7 @@ function M.currently_selected_buffer(list)
   if item then return item.buffer, item[1] end
 end
 
---[[- Closes the currently selected buffer in the buffer list.
+--[[-- Closes the currently selected buffer in the buffer list.
 @param list The Textredux list instance used by the buffer list. This function
 is ordinarily invoked as the result of a key binding, and you should thus not
 need to specify this yourself. If list isn't provided, the global list is
@@ -131,6 +135,42 @@ function M.close_buffer(list)
     end
   end
 end
+
+--[[-- Closes all files in the same directory as the currently selected buffer
+in the buffer list.
+@param list The Textredux list instance used by the buffer list. This function
+is ordinarily invoked as the result of a key binding, and you should thus not
+need to specify this yourself. If list isn't provided, the global list is
+automatically used.
+]]
+function M.close_directory(list)
+  list = list or M.list
+  if not list then error('`list` must be provided', 2) end
+  local sel_buffer, name = M.currently_selected_buffer(list)
+  local dir = buffer_directory(sel_buffer)
+  if dir then
+    local closed
+    for _, b in ipairs(_BUFFERS) do
+      if buffer_directory(b) == dir then
+        ui.statusbar_text = 'Closing ' .. name .. '..'
+        local current_pos = buffer.current_pos
+        local current_search = list:get_current_search()
+        view:goto_buffer(_BUFFERS[b])
+        closed = io.close_buffer()
+        if not closed then
+          ui.statusbar_text = 'Could not close file in '..dir
+          break
+        end
+      end
+    end
+    if closed then
+      ui.statusbar_text = 'Closed files in '..dir
+    end
+  end
+  list.items = get_buffer_items()
+  list:show()
+end
+
 
 --- Shows a list of the specified buffers, or _G.BUFFERS if not specified.
 -- @param buffers Either nil, in which case all buffers within _G.BUFFERS
@@ -160,7 +200,9 @@ function M.show(buffers)
     local line = M.list.buffer.data.items_start_line + active_buffer - 1
     M.list.buffer:goto_line(line)
   end
-  ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected buffer'
+  local short_cut = CURSES and '[Meta+D]' or '[Ctrl+Shift+D]'
+  ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected buffer, '..
+    short_cut..' = close files in directory'
 end
 
 
