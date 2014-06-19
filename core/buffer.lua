@@ -208,6 +208,8 @@ local function set_keys_mode()
 end
 events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
 events.connect(events.VIEW_AFTER_SWITCH, set_keys_mode)
+events.connect(events.FILE_OPENED, set_keys_mode)
+
 -- Handle CHAR_ADDED events.
 events.connect(events.CHAR_ADDED, function(code)
   local _textredux = buffer._textredux
