@@ -60,10 +60,8 @@ document using <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a>.</p>
 
 <p>In your init.lua:</p>
 
-<pre><code>events.connect(events.INITIALIZED, function()
-  local textredux = require 'textredux'
-  keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
-end)
+<pre><code>local textredux = require 'textredux'
+keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
 </code></pre>
 
 <h2>Requirements</h2>
