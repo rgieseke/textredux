@@ -115,7 +115,6 @@ local function apply(self, start_pos, length)
   buffer:set_styling(length, self.number)
 end
 
-
 -- Copy a table.
 local function table_copy(table)
   local new = {}
@@ -129,88 +128,6 @@ local function style_merge(s1, s2)
   for k, v in pairs(s2) do new[k] = v end
   new.number = nil
   return new
-end
-
--- Pre-defined style numbers.
-local default_styles = {
-  nothing = 0,
-  whitespace = 1,
-  comment = 2,
-  string = 3,
-  number = 4,
-  keyword = 5,
-  identifier = 6,
-  operator = 7,
-  error = 8,
-  preproc = 9,
-  constant = 10,
-  variable = 11,
-  ['function'] = 12,
-  class = 13,
-  type = 14,
-  default = 32,
-  line_number = 33,
-  bracelight = 34,
-  bracebad = 35,
-  controlchar = 36,
-  indentguide = 37,
-  calltip = 38
-}
-
--- Number of pre-defined styles. Used to calculate new style numbers.
-local count_default_styles = 0
-for _, _ in pairs(default_styles) do
-  count_default_styles = count_default_styles + 1
-end
-
--- Gets a style definition for the specified style (number).
--- Returns a style definition (table)
-local function get_definition(number, name)
-  if number < 0 or number > STYLE_MAX then
-    error('invalid style number "'.. number .. '"', 2)
-  end
-  local buffer = buffer
-  local style = {
-    font = buffer.style_font[number],
-    size = buffer.style_size[number],
-    bold = buffer.style_bold[number],
-    italic = buffer.style_italic[number],
-    underline = buffer.style_underline[number],
-    fore = color_to_string(buffer.style_fore[number]),
-    back = color_to_string(buffer.style_back[number]),
-    eolfilled = buffer.style_eol_filled[number],
-    characterset = buffer.style_character_set[number],
-    case = buffer.style_case[number],
-    visible = buffer.style_visible[number],
-    changeable = buffer.style_changeable[number],
-    hotspot = buffer.style_hot_spot[number],
-    name = name or buffer.style_name[number],
-    number = number,
-    apply = apply
-  }
-  return setmetatable(style, {__concat=style_merge})
-end
-
--- Add the pre-defined lexer styles to the module.
-for name, number in pairs(default_styles) do
-  M[name] = get_definition(number, name)
-end
-
--- Defines a new style using the given table of style properties.
--- @param name The style name that should be used for the style
--- @param properties The table describing the style
-local function define_style(t, name, properties)
-  local properties = table_copy(properties)
-  local count = 0
-  for k, v in pairs(M) do
-    if type(v) == 'table' then count = count + 1 end
-  end
-  local number = STYLE_LASTPREDEFINED + count - count_default_styles + 1
-  if (number > STYLE_MAX) then error('Maximum style number exceeded') end
-  properties.number = number
-  properties.apply = apply
-  properties.name = name
-  rawset(t, name, properties)
 end
 
 -- Set a property if it is set.
@@ -242,11 +159,74 @@ local function activate_styles()
   end
 end
 
+-- Pre-defined style numbers.
+local default_styles = {
+  nothing = 0,
+  whitespace = 1,
+  comment = 2,
+  string = 3,
+  number = 4,
+  keyword = 5,
+  identifier = 6,
+  operator = 7,
+  error = 8,
+  preproc = 9,
+  constant = 10,
+  variable = 11,
+  ['function'] = 12,
+  class = 13,
+  type = 14,
+  default = 32,
+  line_number = 33,
+  bracelight = 34,
+  bracebad = 35,
+  controlchar = 36,
+  indentguide = 37,
+  calltip = 38
+}
+
+-- Set default styles by parsing buffer properties.
+for k, v in pairs(default_styles) do
+  M[k] = {number = v, apply = apply}
+  local style = buffer.property['style.'..k]:gsub('[$%%]%b()', function(key)
+      return buffer.property[key:sub(3, -2)]
+    end)
+  local fore = style:match('fore:(%d+)')
+  if fore then M[k]['fore'] = color_to_string(tonumber(fore)) end
+  local back = style:match('back:(%d+)')
+  if back then M[k]['back'] = color_to_string(tonumber(back)) end
+  local font = style:match('font:([%a ]+)')
+  if font then M[k]['font'] = font end
+  local fontsize = style:match('fontsize:([%a ]+)')
+  if fontsize then M[k]['fontsize'] = fontsize end
+  -- Assuming "notbold" etc. are never used in default styles.
+  if style:match('italics') then M[k]['italic'] = true end
+  if style:match('bold') then M[k]['bold'] = true end
+  if style:match('underline') then M[k]['underline'] = true end
+  if style:match('eolfilled') then M[k]['eolfilled'] = true end
+  setmetatable(M[k], {__concat=style_merge})
+end
+
+-- Defines a new style using the given table of style properties.
+-- @param name The style name that should be used for the style
+-- @param properties The table describing the style
+local function define_style(t, name, properties)
+  local count = 0
+  for k, v in pairs(M) do
+    if type(v) == 'table' then count = count + 1 end
+  end
+  local number = STYLE_LASTPREDEFINED + count - #default_styles + 1
+  if (number > STYLE_MAX) then error('Maximum style number exceeded') end
+  properties.number = number
+  properties.apply = apply
+  rawset(t, name, properties)
+end
+
+setmetatable(M, {__newindex=define_style})
+
 -- Ensure Textredux styles are defined after switching buffers or views.
 events.connect(events.BUFFER_AFTER_SWITCH, activate_styles)
 events.connect(events.VIEW_NEW, activate_styles)
 events.connect(events.VIEW_AFTER_SWITCH, activate_styles)
-
-setmetatable(M, {__newindex=define_style, __concat=style_merge})
 
 return M
