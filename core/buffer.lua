@@ -460,10 +460,6 @@ function reduxbuffer:_create_target()
   self:set_title(self.title)
 end
 
-local function emit_error(error)
-  events.emit(events.ERROR, error)
-end
-
 -- Invoke command.
 local function invoke_command(command, buffer)
   local f = command
@@ -472,7 +468,7 @@ local function invoke_command(command, buffer)
     f = command[1]
     args = { table.unpack(command, 2) }
   end
-  xpcall(f, emit_error, table.unpack(args))
+  xpcall(f, function(e) events.emit(events.ERROR, e) end, table.unpack(args))
 end
 
 -- Return to the buffer in which the Textredux buffer was opened.
