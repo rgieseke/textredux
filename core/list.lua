@@ -342,10 +342,34 @@ end
 function list:_create_buffer()
   local reduxbuffer = textredux.core.buffer.new(self.title)
   reduxbuffer.on_refresh = function(...) self:_refresh(...) end
-  reduxbuffer.on_deleted = function() self.data = {} end
 
   self.buffer = reduxbuffer
   self.data = self.buffer.data
+
+  local function limit_range(updated)
+    if buffer ~= reduxbuffer.target then return end
+    if not updated then return end
+    if bit32.band(buffer.UPDATE_SELECTION, updated) == buffer.UPDATE_SELECTION then
+      local line = buffer:line_from_position(buffer.current_pos)
+      local start_line = reduxbuffer.data.items_start_line
+      local end_line = reduxbuffer.data.items_end_line
+      if self.buffer.data.shown_items < #self.buffer.data.matching_items and line > end_line then
+        self:_load_more_items()
+        buffer:goto_line(reduxbuffer.data.items_end_line)
+      elseif line > end_line then
+        buffer:goto_line(end_line)
+      elseif line < start_line then
+        buffer:goto_line(start_line)
+      end
+    end
+  end
+
+  events.connect(events.UPDATE_UI, limit_range)
+
+  reduxbuffer.on_deleted = function()
+    self.data = {}
+    events.disconnect(events.UPDATE_UI, limit_range)
+  end
 
   self.buffer.on_char_added = function(char)
     local search = self.get_current_search(self) or ''
@@ -361,16 +385,6 @@ function list:_create_buffer()
   reduxbuffer.keys['c\b'] = clear_search
   reduxbuffer.keys['a\b'] = clear_search
   reduxbuffer.keys['m\b'] = clear_search
-
-  reduxbuffer.keys.down = function()
-    if self.buffer.line_from_position(self, self.buffer.current_pos) >
-       self.buffer.data.items_end_line and
-       self.buffer.data.shown_items < #self.buffer.data.matching_items then
-      self:_load_more_items()
-    else
-      buffer:line_down()
-    end
-  end
 
   local key_wrapper = function(t, k, v)
     if type(v) == 'function' then
