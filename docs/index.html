@@ -127,12 +127,17 @@ patches, I&rsquo;ll be happy to receive these through other means as well.</p>
 <h3>Unreleased</h3>
 
 <ul>
+<li>Waiting for <code>events.INITIALIZED</code> is no longer necessary when requiring Textredux</li>
 <li>Keys use Textadept's <code>keys.MODE</code> under the hood</li>
-<li>Support for on_keypress events has been removed</li>
-<li>(Flaky) support for modifiers on key presses and mouse clicks has been removed</li>
+<li>Remove support for on_keypress events</li>
+<li>Add support for on_char_added events, see <code>list.lua</code> for an example</li>
+<li>Removed (flaky) support for modifiers on key presses and mouse clicks</li>
 <li>All Textredux buffers can be closed with <code>Esc</code> by default</li>
 <li>Indicators and styles are now set using an <code>apply</code> function bound to each table</li>
 <li>The Ctags list colorises the kind of symbol (class, function, …)</li>
+<li>The current search is kept when toggling between snapopen and directory view</li>
+<li>In lists scrolling is limited to the selectable items</li>
+<li>The search in lists can be reset using <code>Ctrl/Alt/Meta-Backspace</code></li>
 </ul>
 
 <h3>0.11 (2014-03-04)</h3>
