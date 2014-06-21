@@ -14,7 +14,7 @@ local textredux = require 'textredux'
 local reduxstyle = textredux.core.style
 
 -- define a custom style based on a default style
-reduxstyle.example_style1 = reduxstyle.error..{underline = true}
+reduxstyle.example_style1 = reduxstyle.number..{underline=true, bold=true}
 
 -- define a custom style from scratch
 reduxstyle.example_style2 = {italic = true, fore = '#0000ff', back='#ffffff'}
@@ -32,6 +32,7 @@ local function on_refresh(buffer)
                   reduxstyle.example_style1)
   buffer:add_text('Custom style from scratch',
                   reduxstyle.example_style2)
+  buffer:add_text('\n')
 end
 
 function M.create_styled_buffer()
