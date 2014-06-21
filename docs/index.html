@@ -124,9 +124,11 @@ patches, I&rsquo;ll be happy to receive these through other means as well.</p>
 <ul>
 <li>Waiting for <code>events.INITIALIZED</code> is no longer necessary when requiring Textredux</li>
 <li>Keys use Textadept's <code>keys.MODE</code> under the hood</li>
-<li>Remove support for on_keypress events</li>
+<li>Removed support for on_keypress events</li>
 <li>Add support for on_char_added events, see <code>list.lua</code> for an example</li>
 <li>Removed (flaky) support for modifiers on key presses and mouse clicks</li>
+<li>Removed reduxbuffer.newline function</li>
+<li>Hide Textadept's line numbers in Textredux buffers</li>
 <li>All Textredux buffers can be closed with <code>Esc</code> by default</li>
 <li>Indicators and styles are now set using an <code>apply</code> function bound to each table</li>
 <li>The Ctags list colorises the kind of symbol (class, function, …)</li>
