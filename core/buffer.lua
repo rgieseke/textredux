@@ -520,9 +520,9 @@ end
 -- We close all Textredux buffer upon quit - they won't restore properly anyway
 -- and it's annoying to have empty non-functioning buffers upon start.
 local function _on_quit()
-  for idx, buffer in ipairs(_BUFFERS) do
+  for _, buffer in ipairs(_BUFFERS) do
     if buffer._textredux then
-      view:goto_buffer(idx)
+      view:goto_buffer(_BUFFERS[buffer])
       io.close_buffer()
     end
   end
