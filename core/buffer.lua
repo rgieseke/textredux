@@ -3,7 +3,7 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-The buffer class wraps a Textadept buffer, and extends it with support for
+Textredux buffers wrap Textadept buffers and extend it with support for
 custom styling, buffer specific key bindings and hotspot support. It takes
 care of the details needed for making a text based interface work, such as
 mapping Textadept events to the correct buffers, working with the
@@ -26,8 +26,8 @@ and respond to any interactions using the provided callbacks.
     end
     reduxbuffer:show()
 
-If you need to test whether a Textadept buffer is a Textredux buffer you can
-check for the `_textredux` field.
+If you need to test whether a Textadept buffer is used as a Textredux buffer
+you can check for the `_textredux` field.
 
     events.connect(events.BUFFER_AFTER_SWITCH, function()
       local buffer = buffer
@@ -35,8 +35,6 @@ check for the `_textredux` field.
         -- …
       end
     end)
-
-Please see the examples for more hands-on instructions.
 
 ## How it works
 
@@ -54,11 +52,11 @@ named `target` hereafter, may not. When the target buffer exists, a Textredux
 buffer will expose all the functions and attributes of the Textadept buffer,
 making it possible to use the Textredux buffer in just the same way as you would
 a Textadept buffer (i.e. invoking any of the ordinary buffer methods, setting
-attributes, etc.). The Textredux buffer takes care of creating the target buffer
+attributes, etc.). Textredux takes care of creating the target buffer
 automatically if needed whenever you invoke @{reduxbuffer:show}. When the target
 buffer does not exist, for instance as the result of the user closing it, any
 attempt to invoke any of the ordinary buffer methods will raise an error. You
-can check explicitly whether the target exists by using the
+can check explicitly whether the target buffer exists by using the
 @{reduxbuffer:is_attached} function. However, this is not something you will
 have to worry much about in practice, since you'll typically interact with the
 buffer as part of a refresh, key press, etc., where the target buffer will
@@ -104,32 +102,32 @@ reduxbuffer.read_only = true
 reduxbuffer.on_deleted = nil
 
 --[[-- Callback invoked whenever the buffer should refresh.
-This should be set for each buffer. It is this callback that is responsible
-for actually inserting any content into the buffer. Before this callback
+This should be set for each buffer. This callback is responsible for actually
+inserting any content into the buffer. Before this callback
 is invoked, any previous buffer content will be cleared.
 The callback will be invoked with the buffer as the sole parameter.
-@see buffer:refresh
+@see buffer:[refresh]
 ]]
 reduxbuffer.on_refresh = nil
 
 --[[-- Callback invoked when a CHAR_ADDED event is fired.
-Receives the char as an argument.
+Receives the char as an argument. This can be used to handle keypresses in a
+buffer in read-only mode.
 ]]
 reduxbuffer.on_char_added = nil
 
 --[[-- A table of key commands for the buffer.
-This is simply a mode in `textadept.keys` works, but allows you to specify key
-commands specifically for one buffer. The format for specifying keys
-is the same as for
-[textadept.keys](http://foicica.com/textadept/api/keys.html),
-and the values assigned can also be either functions or tables.
+This is simply a `textadept.keys` mode, which is set whenever the Textredux
+buffer is active. The format for specifying keys is the same as for
+[textadept.keys](http://foicica.com/textadept/api/keys.html), thus the values
+assigned can be either functions or tables.
 ]]
 reduxbuffer.keys = nil
 
 --[[--
 A general purpose table that can be used for storing state associated with the
-buffer. The `data` table is special in the way that it will  automatically
-be cleared whenever the user closes the buffer.
+buffer. The `data` table is will automatically be cleared whenever the target
+buffer is closed.
 ]]
 reduxbuffer.data = nil
 
@@ -163,7 +161,7 @@ local function __index(t, k)
   end
 end
 
--- Set values in the built-in buffer or the instance.
+-- Set values in the built-in target buffer or the Textredux buffer instance.
 local function __newindex(t, k, v)
   if rawget(t, target) and rawget(t, target, k) then
     rawset(t.target, k, v)
@@ -173,10 +171,10 @@ local function __newindex(t, k, v)
 end
 
 ---
--- Creates and returns a new textredux buffer. The buffer will not be attached
+-- Creates and returns a new Textredux buffer. The buffer will not be attached
 -- upon the return.
 -- @param title The title of the buffer. This will be displayed as the buffer's
--- title in the Textadept top bar.
+-- title in Textadept's top bar.
 function M.new(title)
   local buf = {
     title = title,
@@ -197,8 +195,8 @@ function M.new(title)
   return setmetatable(buf, {__index = __index, __newindex = __newindex})
 end
 
--- Activate Textredux key mode on buffer or view switch. Otherwise activate
--- the default mode.
+-- Activate Textredux keys mode on buffer or view switch and file open.
+-- Otherwise activate Textadept's  default keys  mode.
 local function set_keys_mode()
   if buffer._textredux then
     keys.MODE = buffer._textredux.keys_mode
@@ -210,7 +208,8 @@ events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
 events.connect(events.VIEW_AFTER_SWITCH, set_keys_mode)
 events.connect(events.FILE_OPENED, set_keys_mode)
 
--- Handle CHAR_ADDED events.
+-- Handle CHAR_ADDED events. Key codes are translated to strings before they
+-- are passed to the Textredux `on_char_added` handler.
 events.connect(events.CHAR_ADDED, function(code)
   local _textredux = buffer._textredux
   if not _textredux then return end
@@ -349,22 +348,20 @@ function reduxbuffer:is_active()
 end
 
 --[[-- Adds a hotspot for the given text range.
-Hotspots allows you to specify the behaviour for when the user selects
-certain text. Besides using this function directly, it's also possible and
+Hotspots allows you to specify  what happens when the user selects
+a text range. Besides using this function directly, it's also possible and
 in many cases more convenient to add a hotspot when using any of the text
 insertion functions (@{buffer:add_text}, @{buffer:append_text},
 @{buffer:insert_text}). Note that the range given is interpreted as being
 half closed, i.e. `[start_pos, end_pos)`.
 
-*NB*: Please note that all hotspots are cleared as part of a refresh.
+Note that all hotspots are cleared as part of a refresh.
 @param start_pos The start position
 @param end_pos The end position. The end position itself is not part of the
 hotspot.
-@param command The command to execute. Similarily to @{keys}, command can be
-either a function or a table. When the command is a function, it will be passed
-the following parameters:
-
-- `buffer`: The buffer instance
+@param command The command to execute. Similarily to @{keys}, the command can
+be either a function or a table. When the command is a function, it will be
+passed the buffer instance as a parameter.
 ]]
 function reduxbuffer:add_hotspot(start_pos, end_pos, command)
   local hotspots = self.hotspots
@@ -448,7 +445,7 @@ end
 
 -- Begin private code.
 
--- Create a new buffer and store in the `target` attribute
+-- Create a new buffer and store a reference in the `target` attribute.
 function reduxbuffer:_create_target()
   local target = buffer.new()
   target._textredux = self
