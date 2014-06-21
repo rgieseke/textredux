@@ -30,14 +30,15 @@ Please see also the various list examples in `./examples`.
 @module textredux.core.list
 ]]
 
-local reduxstyle = require 'textredux.core.style'
-local util_matcher = require 'textredux.util.matcher'
+local M = {}
+local list = {}
+
+local reduxstyle = require('textredux.core.style')
+local util_matcher = require('textredux.util.matcher')
 
 local string_rep = string.rep
 local band = bit32.band
 
-local M = {}
-local list = {}
 reduxstyle.list_header = {underline = true}
 
 reduxstyle.list_match_highlight = reduxstyle.operator..{underline=true}
@@ -144,7 +145,7 @@ function M.new(title, items, on_selection)
     items = items or {},
     on_selection = on_selection
   }
-  setmetatable(l, { __index = list })
+  setmetatable(l, {__index = list})
 
   l:_create_buffer()
   return l
@@ -379,7 +380,7 @@ function list:_create_buffer()
     __index = reduxbuffer.keys,
     __newindex = key_wrapper
   })
-  return buffer
+  return reduxbuffer
 end
 
 events.connect(events.UPDATE_UI, function(updated)
@@ -403,4 +404,5 @@ events.connect(events.UPDATE_UI, function(updated)
     end
   end
 end)
+
 return M
