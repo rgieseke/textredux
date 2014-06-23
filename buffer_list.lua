@@ -8,7 +8,7 @@ Textadept buffer list.
 
 ## Usage
 
-Use the @{textredux.hijack} module or load the buffer list
+Use the @{textredux.hijack} function or load the buffer list
 in your `~/.textadept/init.lua`:
 
     local textredux = require('textredux')

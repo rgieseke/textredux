@@ -1,5 +1,11 @@
---[[
+-- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
+-- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
+-- License: MIT (see LICENSE)
+
+--[[--
 Filtered list wrapper.
+
+@module textredux.core.filteredlist
 ]]
 
 local list = require 'textredux.core.list'

@@ -80,15 +80,15 @@ keys.co = textredux.fs.open_file
 </pre>
 
 <p>2) If you can&rsquo;t get enough of text based interfaces and the joy they provide,
-then the hijack module is for you. Simple place this in your <code>init.lua</code>:</p>
+then the Textredux <code>hijack</code> function is for you. Simple place this in your
+<code>init.lua</code>:</p>
 
-<pre>
-require 'textredux.hijack'
-</pre>
+<pre><code>require('textredux').hijack()
+</code></pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your
-regular key bindings should now use Textredux where applicable. To get the
-regular GUI elements you can click the menu.</p>
+regular key bindings should now use Textredux where applicable. Clicking the
+menu will still open the standard GUI dialogs.</p>
 
 <p>Regardless of the approach chosen, the
 <a href="./docs/index.html">module documentation</a> contains more
@@ -122,6 +122,7 @@ patches, I&rsquo;ll be happy to receive these through other means as well.</p>
 <h3>Unreleased</h3>
 
 <ul>
+<li>Hijack is now a function, no longer a module</li>
 <li>Waiting for <code>events.INITIALIZED</code> is no longer necessary when requiring Textredux</li>
 <li>Keys use Textadept's <code>keys.MODE</code> under the hood</li>
 <li>Removed support for on_keypress events</li>
