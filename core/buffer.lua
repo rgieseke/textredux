@@ -106,7 +106,7 @@ This should be set for each buffer. This callback is responsible for actually
 inserting any content into the buffer. Before this callback
 is invoked, any previous buffer content will be cleared.
 The callback will be invoked with the buffer as the sole parameter.
-@see buffer:[refresh]
+@see refresh
 ]]
 reduxbuffer.on_refresh = nil
 

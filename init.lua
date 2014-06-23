@@ -31,7 +31,7 @@ key bindings to the desired functions. As an example, if you would like to use
 the text based file browser and normally opens files using `Ctr-O`, then the
 following code in your `init.lua` would do the trick:
 
-    textredux = require 'textredux'
+    local textredux = require('textredux')
     keys.co = textredux.fs.open_file
 
 2) If you can't get enough of text based interfaces and the joy they provide,
@@ -46,8 +46,7 @@ menu will still open the standard GUI dialogs.
 
 ## Customizing
 
-Please see the module documentation for the various modules for configurable
-settings.
+Please see the documentation for the various modules for configuration settings.
 
 @module textredux
 ]]
