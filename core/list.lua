@@ -33,6 +33,7 @@ Please see also the various list examples in `./examples`.
 local M = {}
 local list = {}
 
+local reduxbuffer = require('textredux.core.buffer')
 local reduxstyle = require('textredux.core.style')
 local util_matcher = require('textredux.util.matcher')
 
@@ -343,13 +344,13 @@ end
 
 -- Create Textredux buffer to display the list.
 function list:_create_buffer()
-  local reduxbuffer = textredux.core.buffer.new(self.title)
-  reduxbuffer.on_refresh = function(...) self:_refresh(...) end
+  local listbuffer = reduxbuffer.new(self.title)
+  listbuffer.on_refresh = function(...) self:_refresh(...) end
 
-  self.buffer = reduxbuffer
+  self.buffer = listbuffer
   self.data = self.buffer.data
 
-  reduxbuffer.on_deleted = function()
+  listbuffer.on_deleted = function()
     self.data = {}
   end
 
@@ -358,29 +359,29 @@ function list:_create_buffer()
     self.set_current_search(self, search..char)
   end
 
-  reduxbuffer.keys['\b'] = function()
+  listbuffer.keys['\b'] = function()
     local search = self.get_current_search(self)
     if search then self.set_current_search(self, search:sub(1, #search - 1)) end
   end
 
   local clear_search = function() self:set_current_search('') end
-  reduxbuffer.keys['c\b'] = clear_search
-  reduxbuffer.keys['a\b'] = clear_search
-  reduxbuffer.keys['m\b'] = clear_search
+  listbuffer.keys['c\b'] = clear_search
+  listbuffer.keys['a\b'] = clear_search
+  listbuffer.keys['m\b'] = clear_search
 
   local key_wrapper = function(t, k, v)
     if type(v) == 'function' then
-      reduxbuffer.keys[k] = function() v(self) end
+      listbuffer.keys[k] = function() v(self) end
     else
-      reduxbuffer.keys[k] = v
+      listbuffer.keys[k] = v
     end
   end
 
   self.keys = setmetatable({}, {
-    __index = reduxbuffer.keys,
+    __index = listbuffer.keys,
     __newindex = key_wrapper
   })
-  return reduxbuffer
+  return listbuffer
 end
 
 events.connect(events.UPDATE_UI, function(updated)
