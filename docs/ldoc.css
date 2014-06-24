@@ -237,11 +237,11 @@ body {
 }
 
 #sidebar {
-  margin-left: -250px;
-  width: 250px;
+  margin-left: -280px;
+  width: 280px;
   position: fixed;
   top: 0;
-  left: 200px;
+  left: 220px;
   bottom: 0;
   z-index: 1000;
   background-color: #e8e4cf;
@@ -253,12 +253,12 @@ body {
 
 .container {
   margin-top: 20px;
-  padding-left: 220px;
+  padding-left: 240px;
   padding-right: 20px;
 }
 
 .content {
-  max-width: 40em;
+  max-width: 640px;
 }
 
 .container ul {
@@ -323,4 +323,17 @@ table, td {
 
 footer {
   padding-top: 40px;
+}
+
+dd {
+  padding-bottom: 40px;
+}
+
+dd h3 {
+  font-size: 16px;
+}
+
+img.border {
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
