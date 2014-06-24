@@ -255,7 +255,7 @@ local function chdir(list, directory)
   local data = list.data
   local items, complete = find_files(directory, data.filter, data.depth, data.max_files)
   if data.depth == 1 then sort_items(items) end
-  list.title = directory
+  list.title = directory:gsub(user_home, '~')
   list.items = items
   data.directory = directory
   list:show()
