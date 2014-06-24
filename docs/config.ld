@@ -7,7 +7,6 @@ file = {
   '../ctags.lua',
   '../buffer_list.lua',
   '../core',
-  '../hijack',
   '../util'
 }
 format = 'markdown'

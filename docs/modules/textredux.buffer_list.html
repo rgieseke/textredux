@@ -27,12 +27,12 @@
   <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
   <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
   <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.filteredlist.html">textredux.core.filteredlist</a></li>
   <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
   <li><a href="../modules/textredux.core.html">textredux.core</a></li>
   <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
   <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
   <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
-  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
   <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
@@ -58,7 +58,7 @@ Textadept buffer list.</p>
 
 <h2>Usage</h2>
 
-<p>Use the <a href="../modules/textredux.hijack.html#">textredux.hijack</a> module or load the buffer list
+<p>Use the <a href="../modules/textredux.html#hijack">textredux.hijack</a> function or load the buffer list
 in your <code>~/.textadept/init.lua</code>:</p>
 
 <pre><code>local textredux = require('textredux')
@@ -69,6 +69,8 @@ keys.cb = textredux.buffer_list.show
 
 <ul>
     <li>Close a buffer from the buffer list (bound to <code>Ctrl + D</code> by default)</li>
+    <li>Close all files in the directory of the selected buffer
+    (bound to <code>Ctrl + Shift + D</code> and <code>Meta + D</code> in Curses by default)</li>
     <li>The list of buffers is sorted and the current buffer is pre-selected</li>
     <li>The buffers to show can be specified using a function</li>
 </ul>
@@ -85,6 +87,11 @@ keys.cb = textredux.buffer_list.show
 	<tr>
 	<td class="name" nowrap><a href="#close_buffer">close_buffer (list)</a></td>
 	<td class="summary">Closes the currently selected buffer in the buffer list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#close_directory">close_directory (list)</a></td>
+	<td class="summary">Closes all files in the same directory as the currently selected buffer
+in the buffer list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#show">show (buffers)</a></td>
@@ -164,6 +171,30 @@ automatically used.
 
 </dd>
     <dt>
+    <a name = "close_directory"></a>
+    <strong>close_directory (list)</strong>
+    </dt>
+    <dd>
+    Closes all files in the same directory as the currently selected buffer
+in the buffer list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">list</span>
+         The Textredux list instance used by the buffer list. This function
+is ordinarily invoked as the result of a key binding, and you should thus not
+need to specify this yourself. If list isn't provided, the global list is
+automatically used.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "show"></a>
     <strong>show (buffers)</strong>
     </dt>
@@ -200,16 +231,22 @@ first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
 <a href="./textredux.core.list.html#keys">list documentation</a>.</p>
 
-<p>If you like to add a custom key binding for closing a buffer you can bind the
-<a href="../modules/textredux.buffer_list.html#close_buffer">close_buffer</a> function to a key of your choice. For other actions it's likely
-that you want to obtain the currently selected buffer - you can use the
-<a href="../modules/textredux.buffer_list.html#currently_selected_buffer">currently_selected_buffer</a> function for that.
+<p>If you like to add a custom key binding for closing a buffer or files in a
+directory you can bind the <a href="../modules/textredux.buffer_list.html#close_buffer">close_buffer</a> and <a href="../modules/textredux.buffer_list.html#close_directory">close_directory</a> functions to a
+key of your choice. For other actions it's likely that you want to obtain the
+currently selected buffer - you can use the <a href="../modules/textredux.buffer_list.html#currently_selected_buffer">currently_selected_buffer</a>
+function for that.
 
 
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">cd</span>
         Default for <code>close buffer</code>
+        </li>
+        <li><span class="parameter">[</span>
+
+
+
         </li>
     </ul>
 

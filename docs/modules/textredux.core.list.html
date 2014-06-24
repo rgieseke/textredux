@@ -27,12 +27,12 @@
   <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
   <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
   <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.filteredlist.html">textredux.core.filteredlist</a></li>
   <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
   <li><a href="../modules/textredux.core.html">textredux.core</a></li>
   <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
   <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
   <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
-  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
   <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
@@ -52,7 +52,7 @@
 <div class="content">
 
 <h2>Module <code>textredux.core.list</code></h2>
-<p>The list class provides a text based item listing for Textadept, featuring
+<p>The list module provides a text based item listing for Textadept, featuring
 advanced search capabilities and styling.</p>
 <p>
 
@@ -301,6 +301,24 @@ this can be specified later using the <a href="../modules/textredux.core.list.ht
  up to three columns, after which the default style will be used.
 
 
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">reduxstyle</span>
+
+
+
+        </li>
+        <li><span class="parameter">reduxstyle</span>
+
+
+
+        </li>
+        <li><span class="parameter">reduxstyle</span>
+
+
+
+        </li>
+    </ul>
 
 
 
@@ -424,10 +442,6 @@ The handler will be passed the following parameters:</p>
 <ul>
     <li><code>list</code>: the list itself</li>
     <li><code>item</code>: the item selected</li>
-    <li><code>shift</code>: True if the Shift key was held down.</li>
-    <li><code>ctrl</code>: True if the Control key was held down.</li>
-    <li><code>alt</code>: True if the Alt/Option key was held down.</li>
-    <li><code>meta</code>: True if the Command/Meta key on Mac OS X/Curses was held down.</li>
 </ul>
 
 
@@ -452,10 +466,6 @@ doesn't match any item, and presses <code>&lt;enter&gt;</code>. </p>
 <ul>
     <li><code>list</code>: the list itself</li>
     <li><code>search</code>: the current search of the list</li>
-    <li><code>shift</code>: True if the Shift key was held down.</li>
-    <li><code>ctrl</code>: True if the Control key was held down.</li>
-    <li><code>alt</code>: True if the Alt/Option key was held down.</li>
-    <li><code>meta</code>: True if the Command/Meta key on Mac OS X/Curses was held down.</li>
 </ul>
 
 

@@ -27,16 +27,20 @@
   <li><a href="../modules/textredux.ctags.html">textredux.ctags</a></li>
   <li><a href="../modules/textredux.buffer_list.html">textredux.buffer_list</a></li>
   <li><a href="../modules/textredux.core.buffer.html">textredux.core.buffer</a></li>
+  <li><a href="../modules/textredux.core.filteredlist.html">textredux.core.filteredlist</a></li>
   <li><a href="../modules/textredux.core.indicator.html">textredux.core.indicator</a></li>
   <li><a href="../modules/textredux.core.html">textredux.core</a></li>
   <li><a href="../modules/textredux.core.list.html">textredux.core.list</a></li>
   <li><a href="../modules/textredux.core.style.html">textredux.core.style</a></li>
   <li><a href="../modules/textredux.core.ui.html">textredux.core.ui</a></li>
-  <li><a href="../modules/textredux.hijack.html">textredux.hijack</a></li>
   <li><a href="../modules/textredux.util.color.html">textredux.util.color</a></li>
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
+<ul>
+<li>Contents</li>
+  <li><a href="#Functions">Functions</a></li>
+</ul>
 
 
 </div>
@@ -54,15 +58,12 @@ based interfaces.</p>
     <li><a href="../modules/textredux.core.html#">textredux.core</a>. The core module provides basic components to create
     text based interfaces.</li>
     <li><a href="../modules/textredux.fs.html#">textredux.fs</a>. Contains text based interfaces for file io operations,
-    i.e. open file, save file as well as snapopen functionality.</li>
+    like open file, save file as well as snapopen functionality.</li>
     <li><a href="../modules/textredux.ctags.html#">textredux.ctags</a>. Displays a filtered list of symbols (functions,
     variables, …) in the current document using Exuberant Ctags.</li>
     <li><a href="../modules/textredux.buffer_list.html#">textredux.buffer_list</a>. A text based buffer list replacement, which in
     addition to being text based also offers an easy way to close buffers
     directly from the list.</li>
-    <li><a href="../modules/textredux.hijack.html#">textredux.hijack</a>. Hijacks Textadept, replacing all keyboard shortcuts
-    with text based counterparts. Additionally, it replaces the traditional
-    filtered list with a Textredux list for a number of operations.</li>
 </ul>
 
 <h2>How to use it</h2>
@@ -70,39 +71,66 @@ based interfaces.</p>
 <p>Download and put the Textredux module in your <code>.textadept/modules/</code>
 directory.</p>
 
-<p>Having installed it, there are two ways you can use Textredux.</p>
+<p>Having installed it, there are two (mixable) ways you can use Textredux.</p>
 
-<p>1) Cherrypick the functionality you want from the different modules by assigning
-key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using <code>Ctr-O</code>, then the
-following code in your <code>init.lua</code> would do the trick:</p>
+<p>1) Select the functionality you want from the different modules by assigning
+keys to the desired functions.</p>
 
-<pre><code>textredux = require 'textredux'
+<pre><code>local textredux = require('textredux')
 keys.co = textredux.fs.open_file
+keys.cS = textredux.fs.save_buffer_as
+keys.cb = textredux.buffer_list.show
+keys.cg = textredux.ctags.goto_symbol
 </code></pre>
 
 <p>2) If you can't get enough of text based interfaces and the joy they provide,
-then the <a href="../modules/textredux.hijack.html#">textredux.hijack</a> module is for you. Simple place this in your
+then the <a href="../modules/textredux.html#hijack">hijack</a> function is for you. Simply place this in your
 <code>init.lua</code>:</p>
 
-<pre><code>require 'textredux.hijack'
+<pre><code>require('textredux').hijack()
 </code></pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your
 regular key bindings should now use Textredux where applicable. Clicking the
-menu will open the standard dialogs.</p>
+menu will still open the standard GUI dialogs.</p>
 
 <h2>Customizing</h2>
 
-<p>Please see the module documentation for the various modules for configurable
-settings.</p>
+<p>Please see the modules documentation for more configuration settings.</p>
 
 
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#hijack">hijack ()</a></td>
+	<td class="summary">Hijacks Textadept, replacing all keyboard shortcuts with text based
+ counterparts.</td>
+	</tr>
+</table>
 
 <br/>
 <br/>
 
 
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "hijack"></a>
+    <strong>hijack ()</strong>
+    </dt>
+    <dd>
+    Hijacks Textadept, replacing all keyboard shortcuts with text based
+ counterparts.  Additionally, it replaces the traditional filtered list
+ with a Textredux list for a number of operations.
+
+
+
+
+
+
+
+</dd>
+</dl>
 
 
 <footer class="footer">
