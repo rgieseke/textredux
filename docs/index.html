@@ -31,15 +31,17 @@
 that offers text-based interfaces for core Textadept
 functionality.</p>
 <img class='border' src='images/bufferlist.gif'>
+
+<h2 id="Features"><a href="#Features">Features</a></h2>
 <ul>
-<li>A text-based file browser. Completely keyboard driven, with powerful searching
-functionality and the ability to seamlessly switch between traditional and
+<li>A text-based file browser. Completely keyboard driven, with powerful search
+and seamless switching between traditional and
 snapopen (recursive) listings.</li>
-<li>A replacement for the buffer list. In addition to being text based, it also
-provides an easy way of closing buffers.</li>
-<li>A no-holds-barred integration module that automatically integrates all Textredux
+<li>A text-based replacement for the buffer list, also
+providing an easy way to close buffers and directories.</li>
+<li>A simple function call that automatically integrates all Textredux
 functionality in the Textadept editor. No need to configure anything further
-unless you want to - once you&rsquo;ve required this you will be using Textredux.
+unless you want to – once you’ve loaded this you will be using Textredux.
 In addition to integrating the above modules, it will hook into Textadept and
 inject text based interfaces whereever it can (e.g. file open or theme selection).</li>
 </ul>
@@ -48,7 +50,10 @@ inject text based interfaces whereever it can (e.g. file open or theme selection
 <h2 id="Installation"><a href="#Installation">Installation</a></h2>
 
 <p>The Textredux module itself can be downloaded from the
-<a href="https://github.com/rgieseke/textredux/tags">download page</a>.</p>
+<a href="https://github.com/rgieseke/textredux/releases">releases page</a> or
+by getting the latest version on master
+<a href="https://github.com/rgieseke/textredux/archive/master.zip">as a zip file</a>.
+</p>
 
 <p>To install the module, just unpack the module into the</p>
 
@@ -71,7 +76,7 @@ after a custom theme is set using <code>ui.set_theme</code> in your <code>init.l
 
 <p>1) Cherrypick the functionality you want from the different modules by assigning
 key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using <code>Ctrl-O</code>, then the
+the text based file browser and normally open files using <code>Ctrl-O</code>, then the
 following code in your <code>init.lua</code> would do the trick:</p>
 
 <pre>
@@ -79,7 +84,7 @@ textredux = require 'textredux'
 keys.co = textredux.fs.open_file
 </pre>
 
-<p>2) If you can&rsquo;t get enough of text based interfaces and the joy they provide,
+<p>2) If you can’t get enough of text based interfaces and the joy they provide,
 then the Textredux <code>hijack</code> function is for you. Simple place this in your
 <code>init.lua</code>:</p>
 
@@ -91,15 +96,15 @@ regular key bindings should now use Textredux where applicable. Clicking the
 menu will still open the standard GUI dialogs.</p>
 
 <p>Regardless of the approach chosen, the
-<a href="./docs/index.html">module documentation</a> contains more
+<a href="api.html">module documentation</a> contains more
 in-depth documentation for the various modules, including customization tips.</p>
 
-<p>Also, make sure to take a brief look at the <a href="tour.html">visual tour</a> for some
+<p>Also, make sure to take a brief look at the <a href="tour.html">screen shots</a> for some
 quick tips on using Textredux.</p>
 
 <h2 id="Code"><a href="#Code">Code</a></h2>
 
-<p>TextRedux is released under the MIT license (see the LICENSE file in the source
+<p>Textredux is released under the MIT license (see the LICENSE file in the source
 for the full details). The <a href="https://github.com/rgieseke/textredux">source code</a>
 is available from GitHub. It was written by
 <a href="https://github.com/nilnor">Nils Nordman</a>
@@ -111,15 +116,15 @@ and is now maintained by <a href="https://github.com/rgieseke">Robert Gieseke</a
 
 <p>If you want to provide patches, the preferred way of doing so would be as a pull
 request via GitHub, or as a pull request from some other Git server. Should that
-not be an option I&rsquo;ll gladly accept patches through other means as well.</p>
+not be an option patches are gladly accepted through other means as well.</p>
 
-<p>If you have any bug reports or feature requests, please submit these to the
-<a href="https://github.com/rgieseke/textredux/issues">Github issue tracker</a>. As with
-patches, I&rsquo;ll be happy to receive these through other means as well.</p>
+<p>If you have any bug reports or feature requests, please submit them to the
+<a href="https://github.com/rgieseke/textredux/issues">Github issue tracker</a>
+or send an email to Textadept’s <a href="http://foicica.com/lists/">mailing list</a>.</p>
 
 <h2 id="Changelog"><a href="#Changelog">Changelog</a></h2>
 
-<h3>Unreleased</h3>
+<h3>1.0.0 (2014-06-24)</h3>
 
 <ul>
 <li>Hijack is now a function, no longer a module</li>
