@@ -12,7 +12,7 @@ It currently contains the following modules:
 - @{textredux.core}. The core module provides basic components to create
   text based interfaces.
 - @{textredux.fs}. Contains text based interfaces for file io operations,
-  i.e. open file, save file as well as snapopen functionality.
+  like open file, save file as well as snapopen functionality.
 - @{textredux.ctags}. Displays a filtered list of symbols (functions,
   variables, …) in the current document using Exuberant Ctags.
 - @{textredux.buffer_list}. A text based buffer list replacement, which in
@@ -24,18 +24,19 @@ It currently contains the following modules:
 Download and put the Textredux module in your `.textadept/modules/`
 directory.
 
-Having installed it, there are two ways you can use Textredux.
+Having installed it, there are two (mixable) ways you can use Textredux.
 
-1) Cherrypick the functionality you want from the different modules by assigning
-key bindings to the desired functions. As an example, if you would like to use
-the text based file browser and normally opens files using `Ctr-O`, then the
-following code in your `init.lua` would do the trick:
+1) Select the functionality you want from the different modules by assigning
+keys to the desired functions.
 
     local textredux = require('textredux')
     keys.co = textredux.fs.open_file
+    keys.cS = textredux.fs.save_buffer_as
+    keys.cb = textredux.buffer_list.show
+    keys.cg = textredux.ctags.goto_symbol
 
 2) If you can't get enough of text based interfaces and the joy they provide,
-then the Textredux {@hijack} function is for you. Simple place this in your
+then the @{hijack} function is for you. Simply place this in your
 `init.lua`:
 
     require('textredux').hijack()
@@ -46,7 +47,7 @@ menu will still open the standard GUI dialogs.
 
 ## Customizing
 
-Please see the documentation for the various modules for configuration settings.
+Please see the modules documentation for more configuration settings.
 
 @module textredux
 ]]
@@ -58,6 +59,7 @@ local M = {
   fs = require 'textredux.fs'
 }
 
+-- Get a unique identifier for functions or tables.
 local function get_id(f)
   local id = ''
   if type(f) == 'function' then
@@ -68,6 +70,7 @@ local function get_id(f)
   return id
 end
 
+-- Set new key bindings.
 local function patch_keys(replacements)
   local _keys = {}
   for k, v in pairs(keys) do
@@ -83,7 +86,7 @@ end
 
 ---
 -- Hijacks Textadept, replacing all keyboard shortcuts with text based
--- counterparts. Additionally, it replaces the traditional   filtered list
+-- counterparts. Additionally, it replaces the traditional filtered list
 -- with a Textredux list for a number of operations.
 function M.hijack()
   -- Table with unique identifiers for items to be replaced.
@@ -113,8 +116,8 @@ function M.hijack()
   local save_as_compat
   function save_as_compat(buffer, utf8_filename)
     if utf8_filename then return io_save_file_as(buffer, utf8_filename) end
-    -- temporarily restore the original save_as, since fs.save_buffer_as uses it
-    -- in its implementation
+    -- Temporarily restore the original save_as, since fs.save_buffer_as uses
+    -- it in its implementation.
     io.save_as = io_save_file_as
     local status, ret = pcall(M.fs.save_buffer_as)
     io.save_as = save_as_compat

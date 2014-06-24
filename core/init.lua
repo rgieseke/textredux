@@ -8,19 +8,19 @@ for the [Textadept](http://foicica.com/textadept/) editor.
 
 It currently consists of the following components:
 
-- A @{textredux.core.buffer} class that supports custom styling, buffer
+- The @{textredux.core.buffer} module that supports custom styling, buffer
   specific key bindings, hotspot support and generally makes it easy to
   create a text based interface buffer by taking care of the background
   gruntwork required.
 
-  - A @{textredux.core.style} module that let's you easily define custom
+  - The @{textredux.core.style} module that let's you easily define custom
   styles, as well as leveraging the default styles already provided by the
   user's theme.
 
-- A @{textredux.core.indicator} module that provides a convenient way of
+- The @{textredux.core.indicator} module that provides a convenient way of
   using indicators in your buffers.
 
-- A @{textredux.core.list} class that provides a versatile and extensible
+- The @{textredux.core.list} module that provides a versatile and extensible
   text based item listing for Textadept, featuring advanced search capabilities
   and styling.
 
@@ -30,17 +30,17 @@ How to use
 After installing the Textredux module into your `modules` directory, you can
 either do
 
-    textredux.core = require 'textredux.core'
+    local textredux = require('textredux')
+    local reduxlist = textredux.core.list
 
-to require and place all the core modules under the M.textredux namespace. You
-can also optionally require just the modules that you want by something
+or you can just the modules that you want by something
 similar to
 
-    local reduxstyle = require 'textredux.core.style'
-    local reduxbuffer = require 'textredux.core.style'
+    local reduxstyle = require('textredux.core.style')
+    local reduxbuffer = require('textredux.core.style')
 
 The examples provide an overview on how to use the various components and their
-features, and the documentation for each component provide more in depth details.
+features, and the documentation for each component provides more details.
 
 @module textredux.core
 ]]

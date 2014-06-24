@@ -3,7 +3,7 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-The list class provides a text based item listing for Textadept, featuring
+The list module provides a text based item listing for Textadept, featuring
 advanced search capabilities and styling.
 
 ## How to use
@@ -92,10 +92,6 @@ The handler will be passed the following parameters:
 
 - `list`: the list itself
 - `item`: the item selected
-- `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 ]]
 list.on_selection = nil
 
@@ -106,10 +102,6 @@ The handler will be passed the following parameters:
 
 - `list`: the list itself
 - `search`: the current search of the list
-- `shift`: True if the Shift key was held down.
-- `ctrl`: True if the Control key was held down.
-- `alt`: True if the Alt/Option key was held down.
-- `meta`: True if the Command/Meta key on Mac OS X/Curses was held down.
 ]]
 list.on_new_selection = nil
 
@@ -173,7 +165,8 @@ function list:get_current_selection()
   if buffer:is_showing() then
     local data = buffer.data
     local current_line = buffer:line_from_position(buffer.current_pos)
-    if current_line >= data.items_start_line and current_line <= data.items_end_line then
+    if current_line >= data.items_start_line
+      and current_line <= data.items_end_line then
       return data.matching_items[current_line - data.items_start_line + 1]
     end
   end
@@ -384,6 +377,7 @@ function list:_create_buffer()
   return listbuffer
 end
 
+-- Limit movement to selectable lines and load more items for long lists.
 events.connect(events.UPDATE_UI, function(updated)
   if not updated then return end
   local buffer = buffer

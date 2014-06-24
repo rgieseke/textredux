@@ -8,14 +8,11 @@ Indicators lets you visually mark a certain text range using various styles and
 colors. Using the event mechanism you can also receive events whenever the
 user clicks the marked text.
 
-The indicator definition
-------------------------
+## The indicator definition
 
 An indicator is defined using a simple table with the properties listed below.
 For the most part, these properties maps directly to fields in the
-[buffer](http://foicica.com/textadept/api/buffer.html) class. The
-list below will give short descriptions and refer to the corresponding field in
-the buffer class where applicable.
+[buffer](http://foicica.com/textadept/api/buffer.html) API.
 
 - `style`: The style of the indicator. See `indic_style`.
 - `alpha`: Alpha transparency value from 0 to 255 (or 256 for no alpha), used
@@ -33,8 +30,7 @@ A simple example:
     local reduxindicator = textredux.core.indicator
     reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
 
-Using indicators
-----------------
+## Using indicators
 
 Start with defining your indicators using the format described above. You can
 then either apply them against a range of text using apply, or pass them to
@@ -46,7 +42,7 @@ one of the text insertion functions in @{textredux.core.buffer}.
 
     buffer:add_text(text, nil, nil, reduxindicator.RED_BOX)
 
-Please also see the example `buffer_indicators.lua`.
+Please also see the file `examples/buffer_indicators.lua`.
 
 @module textredux.core.indicator
 ]]
@@ -94,7 +90,6 @@ local function activate_indicators()
       if properties.under then buffer.indic_under[number] = properties.under end
     end
   end
-
 end
 
 -- Ensure Textredux indicators are defined after switching buffers or views.

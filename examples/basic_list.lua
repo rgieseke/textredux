@@ -2,7 +2,7 @@
 -- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
 -- License: MIT (see LICENSE)
 
--- Very basic example on how to use the list class.
+-- Very basic example on how to use a Textredux list.
 
 local M = {}
 

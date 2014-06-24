@@ -3,10 +3,10 @@
 -- License: MIT (see LICENSE)
 
 --[[
-This example shows how to use custom styling with the list class. It illustrates
-both using one specific style for a column, and also how to specify styles
-dynamically based on the item. For conciseness' sake there is no `on_selection`
-handler specified.
+This example shows how to use custom styling with a Textredux list. It
+illustrates both using one specific style for a column, and also how to specify
+styles dynamically based on the item. For conciseness of this example there is
+no `on_selection` handler specified.
 ]]
 
 local M = {}

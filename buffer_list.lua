@@ -179,7 +179,7 @@ function M.show(buffers)
   buffer_source = buffers or function() return _BUFFERS end
 
   if not M.list then
-    M.list = reduxlist.new('Buffer listing')
+    M.list = reduxlist.new('Buffer list')
     M.list.headers = {'Name', 'Directory'}
     M.list.on_selection = on_selection
     for k, v in pairs(M.keys) do

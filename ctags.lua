@@ -102,7 +102,7 @@ function M.goto_symbol()
   end
   p:close()
   if #symbols > 0 then
-    local list = textredux.core.list.new('Go to symbol')
+    local list = reduxlist.new('Go to symbol')
     list.items = symbols
     list.on_selection = on_selection
     list.column_styles = { reduxstyle.default, get_item_style }

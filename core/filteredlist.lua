@@ -3,7 +3,7 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-Filtered list wrapper.
+Filtered list wrapper, hijacking `ui.dialogs.filteredlist`.
 
 @module textredux.core.filteredlist
 ]]

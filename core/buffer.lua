@@ -3,11 +3,8 @@
 -- License: MIT (see LICENSE)
 
 --[[--
-Textredux buffers wrap Textadept buffers and extend it with support for
-custom styling, buffer specific key bindings and hotspot support. It takes
-care of the details needed for making a text based interface work, such as
-mapping Textadept events to the correct buffers, working with the
-@{textredux.core.style} module to ensure that styling works, etc.
+Textredux buffers wrap Textadept buffers and extend them with support for
+custom styling, buffer specific key bindings and hotspot support.
 
 ## Usage
 
@@ -20,6 +17,7 @@ insertion functions (@{reduxbuffer:add_text}, @{reduxbuffer:append_text},
 @{reduxbuffer:insert_text}). You invoke @{reduxbuffer:show} to show the buffer,
 and respond to any interactions using the provided callbacks.
 
+    local textredux = require('textredux')
     local reduxbuffer = textredux.core.buffer.new('Example buffer')
     reduxbuffer.on_refresh = function(buf)
       buf:add_text('Textredux!')
@@ -42,11 +40,11 @@ When you work with a Textredux buffer, it will nearly always seem just like an
 ordinary [Textadept buffer](http://foicica.com/textadept/api/buffer.html)
 (but with benefits, such as support for custom styling and easy callbacks,
 etc.). But where a Textadept buffer is volatile, and might cease to exists at
-any time (due to it being closed by a user for example) a Textredux buffer is
+any time (for example being closed by a user) a Textredux buffer is
 persistent.
 
 When we say that a Textredux buffer “wraps” a Textadept buffer, there's more
-to it than just adding additional methods to the Textadept buffer class. A
+to it than just adding additional methods to the Textadept buffer API. A
 Textredux buffer will always exist, but the corresponding Textadept buffer,
 named `target` hereafter, may not. When the target buffer exists, a Textredux
 buffer will expose all the functions and attributes of the Textadept buffer,
@@ -557,5 +555,5 @@ events.connect(events.BUFFER_DELETED, _on_buffer_deleted)
 events.connect(events.BUFFER_AFTER_SWITCH, _on_buffer_after_switch)
 events.connect(events.INDICATOR_RELEASE, _on_indicator_release)
 events.connect(events.QUIT, _on_quit, 1)
-
+events.connect(events.RESET_BEFORE, _on_quit)
 return M
