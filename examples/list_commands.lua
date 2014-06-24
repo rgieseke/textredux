@@ -19,9 +19,15 @@ function M.show_action_list()
   -- Assign snapopen user home as a table command to `3`.
   list.keys['4'] = { io.snapopen, _USERHOME }
 
-  -- Assign a closure to `5`, which prints the list title to the statusbar.
+  -- Print the currently selected item to the buffer when `5` is pressed.
   list.keys['5'] = function(list)
-    ui.statusbar_text = 'A command from ' .. list.title
+    local sel = tostring(list:get_current_selection())
+    list.buffer:update(function(buf)
+      local pos = buf.current_pos
+      buf:document_end()
+      buf:add_text('\n'..buf.title..': '..sel)
+      buf:goto_pos(pos)
+    end)
   end
 
   -- Print the currently selected item when `6` is pressed.
