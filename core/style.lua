@@ -5,8 +5,7 @@
 --[[--
 The style module lets you define and use custom, non-lexer-based styles.
 
-What's a style?
----------------
+## What's a style?
 
 Textredux styling provides an abstraction layer over the lexer based style
 creation. A style is thus just a table with certain properties, almost exactly
@@ -16,8 +15,7 @@ for
 for information about the available fields. Colors should be defined in the
 standard `'#rrggbb'` notation.
 
-Defining styles
----------------
+## Defining styles
 
 You define a new style by assigning a table with its properties to the module:
 
@@ -42,17 +40,25 @@ In order to avoid name clashes, it's suggested that you name any custom styles
 by prefixing their name with the name of your module. E.g. if your module is
 named `awesome`, then name your style something like `style.awesome_style`.
 
-Using styles
-------------
+## Updating styles
+
+To make them fit better with your theme or preferences you can change styles
+already set by overwriting their properties in your `init.lua`:
+
+    local textredux = require('textredux')
+    local reduxstyle = textredux.core.style
+    reduxstyle.list_match_highlight.fore = reduxstyle.class.fore
+    reduxstyle.fs_directory.italic = true
+
+## Using styles
 
 You typically use a style by inserting text through
 @{textredux.core.buffer}'s text insertion methods, specifying the style.
 Please see also the example in `examples/buffer_styling.lua`.
 
-  reduxbuffer:add_text('Foo header text', reduxstyle.foo_header)
+    reduxbuffer:add_text('Foo header text', reduxstyle.foo_header)
 
-The default styles
-------------------
+## The default styles
 
 Textredux piggybacks on the default lexer styles defined by a user's theme,
 and makes them available for your Textredux interfaces. The big benefit of this

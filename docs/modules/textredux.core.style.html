@@ -91,13 +91,25 @@ are created.</p>
 by prefixing their name with the name of your module. E.g. if your module is
 named <code>awesome</code>, then name your style something like <code>style.awesome_style</code>.</p>
 
+<h2>Updating styles</h2>
+
+<p>To make them fit better with your theme or preferences you can change styles
+already set by overwriting their properties in your <code>init.lua</code>:</p>
+
+<pre><code>local textredux = require('textredux')
+local reduxstyle = textredux.core.style
+reduxstyle.list_match_highlight.fore = reduxstyle.class.fore
+reduxstyle.fs_directory.italic = true
+</code></pre>
+
 <h2>Using styles</h2>
 
 <p>You typically use a style by inserting text through
 <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>'s text insertion methods, specifying the style.
 Please see also the example in <code>examples/buffer_styling.lua</code>.</p>
 
-<p>  reduxbuffer:add<em>text('Foo header text', reduxstyle.foo</em>header)</p>
+<pre><code>reduxbuffer:add_text('Foo header text', reduxstyle.foo_header)
+</code></pre>
 
 <h2>The default styles</h2>
 
