@@ -234,7 +234,7 @@ function M.set_margin_styles()
   local buffer = buffer
   if buffer._textredux then
     if CURSES then
-      buffer.margin_width_n[0] = 0 
+      buffer.margin_width_n[0] = 0
     else
       buffer.style_fore[line_number] = current_line_back
       buffer.style_back[line_number] = current_line_back
