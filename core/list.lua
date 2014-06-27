@@ -42,7 +42,7 @@ local band = bit32.band
 
 reduxstyle.list_header = {underline = true}
 
-reduxstyle.list_match_highlight = reduxstyle.operator..{underline=true}
+reduxstyle.list_match_highlight = reduxstyle['function']..{underline=true}
 
 --- The default style to use for diplaying headers.
 -- This is by default the `style.list_header` style. It's possible to override
@@ -61,7 +61,7 @@ list.match_highlight_style = reduxstyle.list_match_highlight
 -- explicit styles. In the latter case, the function will be invoked with the
 -- corresponding item and column index. The default styles contains styles for
 -- up to three columns, after which the default style will be used.
-list.column_styles = {reduxstyle.number, reduxstyle.string, reduxstyle.operator}
+list.column_styles = {reduxstyle.string, reduxstyle.keyword, reduxstyle.type}
 
 --- Whether searches are case insensitive or not.
 -- It's possible to override this for a specific list by assigning another

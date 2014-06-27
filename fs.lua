@@ -59,7 +59,7 @@ local updir_pattern = '%.%.?$'
 local M = {}
 
 --- The style used for directory entries.
-reduxstyle.fs_directory = reduxstyle.keyword
+reduxstyle.fs_directory = reduxstyle.operator
 
 --- The style used for ordinary file entries.
 reduxstyle.fs_file = reduxstyle.string
