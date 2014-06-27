@@ -327,7 +327,7 @@ end
 local function create_list(directory, filter, depth, max_files)
   local list = reduxlist.new(directory)
   local data = list.data
-  list.column_styles[1] = get_file_style
+  list.column_styles = {get_file_style}
   list.keys.cs = toggle_snap
   list.keys['~'] = function()
     if user_home then chdir(list, user_home) end
