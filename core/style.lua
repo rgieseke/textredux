@@ -219,6 +219,7 @@ end
 -- @param name The style name that should be used for the style
 -- @param properties The table describing the style
 local function define_style(t, name, properties)
+  local properties = table_copy(properties)
   local count = 0
   for k, v in pairs(M) do
     if type(v) == 'table' then count = count + 1 end
