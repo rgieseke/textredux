@@ -63,6 +63,10 @@ M.styles = {
   enum = reduxstyle['type'],
   enumerator = reduxstyle['type'],
   ['function'] = reduxstyle['function'],
+  procedure = reduxstyle['function'],
+  method = reduxstyle['function'],
+  field = reduxstyle.variable,
+  member = reduxstyle.variable,
   macro = reduxstyle.operator,
   namespace = reduxstyle.preproc,
   typedef = reduxstyle.keyword,
@@ -93,14 +97,13 @@ end
 function M.goto_symbol()
   if not buffer.filename then return end
   local symbols = {}
-  local p = io.popen(M.CTAGS..' --sort=no --excmd=number -f - "'..buffer.filename..'"')
+  local p = spawn(M.CTAGS..' --sort=no --excmd=number -f - "'..buffer.filename..'"')
   for line in p:read('*all'):gmatch('[^\r\n]+') do
     local name, line, ext = line:match('^(%S+)\t[^\t]+\t([^;]+);"\t(.+)$')
     if name and line and ext then
       symbols[#symbols + 1] = {name, ext, line}
     end
   end
-  p:close()
   if #symbols > 0 then
     local list = reduxlist.new('Go to symbol')
     list.items = symbols
