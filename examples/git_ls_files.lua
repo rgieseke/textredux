@@ -19,17 +19,19 @@ function M.show_files()
   if not working_dir then return end
   lfs.chdir(working_dir)
   ui.statusbar_text = lfs.currentdir()
-  local p = io.popen('git ls-files')
-  for line in p:lines() do
+  local p = spawn('git ls-files')
+  for line in p:read('*all'):gmatch('[^\r\n]+') do
     files[#files + 1] = line
   end
-  p:close()
   lfs.chdir(current_dir)
   if #files > 0 then
     local list = reduxlist.new('Git: '..working_dir)
     list.items = files
     list.on_selection = function(list, item)
-      if item then io.open_file(working_dir..'/'..item) end
+      if item then
+        io.open_file(working_dir..'/'..item)
+        list:close()
+      end
     end
     list:show()
   end
