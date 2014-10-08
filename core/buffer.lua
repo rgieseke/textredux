@@ -297,6 +297,7 @@ function reduxbuffer:close()
   if self.is_command_entry then
     ui.command_entry:focus()
     ce_active = nil
+    set_keys_mode()
   elseif self:is_attached() then
     self:show()
     io.close_buffer()
