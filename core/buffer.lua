@@ -81,6 +81,7 @@ local huge = math.huge
 reduxindicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
 
 local reduxbuffer = {}
+local ce_active = nil
 
 --- Instance fields. These can be set for a buffer instance, and not
 -- globally for the module.
@@ -196,7 +197,9 @@ end
 -- Activate Textredux keys mode on buffer or view switch and file open.
 -- Otherwise activate Textadept's  default keys  mode.
 local function set_keys_mode()
-  if buffer._textredux then
+  if ce_active then
+    keys.MODE = ce_active.keys_mode
+  elseif buffer._textredux then
     keys.MODE = buffer._textredux.keys_mode
   else
     keys.MODE = nil
@@ -271,9 +274,30 @@ function reduxbuffer:show()
   end
 end
 
+function reduxbuffer:attach_to_command_entry()
+  local origin_buffer = buffer
+  
+  local target = ui.command_entry
+  target._textredux = self
+  target:set_lexer('text')
+  target.eol_mode = constants.EOL_LF
+  target:set_save_point()
+  target.undo_collection = false
+  self.target = target
+  self.is_command_entry = true
+  target:clear_all()
+  target:focus()
+  ce_active = self
+  set_keys_mode()
+  self:refresh()
+end
+
 --- Closes the buffer.
 function reduxbuffer:close()
-  if self:is_attached() then
+  if self.is_command_entry then
+    ui.command_entry:focus()
+    ce_active = nil
+  elseif self:is_attached() then
     self:show()
     io.close_buffer()
   end
@@ -287,7 +311,7 @@ save point, etc.
 will receive the buffer instance as its sole parameter.
 ]]
 function reduxbuffer:update(callback)
-  if not self:is_attached() then error("Can't refresh: not attached", 2) end
+  if not (self:is_attached() or self.is_command_entry) then error("Can't refresh: not attached") end
   self.target.read_only = false
   callback(self)
   self.target.read_only = self.read_only
@@ -376,7 +400,10 @@ function reduxbuffer:add_hotspot(start_pos, end_pos, command)
     hotspots[i] = current_spots
   end
   local length = end_pos - start_pos
+  local saved_buf = buffer
+  _G.buffer = self.target
   reduxindicator.HOTSPOT:apply(start_pos, length)
+  _G.buffer = saved_buf
 end
 
 -- Add styling and hotspot support to buffer text insertion functions.
@@ -395,10 +422,13 @@ text.
 function reduxbuffer:add_text(text, style, command, indicator)
   text = tostring(text)
   local insert_pos = self.target.current_pos
+  local saved_buf = buffer
+  _G.buffer = self.target
   self.target:add_text(text)
   if style then style:apply(insert_pos, #text) end
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
   if indicator then indicator:apply(insert_pos, #text) end
+  _G.buffer = saved_buf
 end
 
 --[[-- Override for
@@ -416,9 +446,12 @@ function reduxbuffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
   text = tostring(text)
   self.target:append_text(text)
+  local saved_buf = buffer
+  _G.buffer = self.target
   if style then style:apply(insert_pos, #text) end
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
   if indicator then indicator:apply(insert_pos, #text) end
+  _G.buffer = saved_buf
 end
 
 --[[-- Override for
@@ -436,9 +469,12 @@ text.
 function reduxbuffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
+  local saved_buf = buffer
+  _G.buffer = self.target
   if style then style:apply(pos, #text) end
   if command then self:add_hotspot(pos, pos + #text, command) end
   if indicator then indicator:apply(pos, #text) end
+  _G.buffer = saved_buf
 end
 
 -- Begin private code.
