@@ -295,6 +295,8 @@ end
 --- Closes the buffer.
 function reduxbuffer:close()
   if self.is_command_entry then
+    ui.command_entry._textredux = nil
+    ui.command_entry.read_only = false
     ui.command_entry:focus()
     ce_active = nil
     set_keys_mode()
