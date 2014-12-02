@@ -396,7 +396,8 @@ function reduxbuffer:add_text(text, style, command, indicator)
   text = tostring(text)
   local insert_pos = self.target.current_pos
   self.target:add_text(text)
-  if style then style:apply(insert_pos, #text) end
+  if not style then style = reduxstyle.default end
+  style:apply(insert_pos, #text)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
   if indicator then indicator:apply(insert_pos, #text) end
 end
@@ -416,7 +417,8 @@ function reduxbuffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
   text = tostring(text)
   self.target:append_text(text)
-  if style then style:apply(insert_pos, #text) end
+  if not style then style = reduxstyle.default end
+  style:apply(insert_pos, #text)
   if command then self:add_hotspot(insert_pos, insert_pos + #text, command) end
   if indicator then indicator:apply(insert_pos, #text) end
 end
@@ -436,7 +438,8 @@ text.
 function reduxbuffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
-  if style then style:apply(pos, #text) end
+  if not style then style = reduxstyle.default end
+  style:apply(insert_pos, #text)
   if command then self:add_hotspot(pos, pos + #text, command) end
   if indicator then indicator:apply(pos, #text) end
 end
