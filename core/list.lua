@@ -155,7 +155,6 @@ function list:show()
               ),
    list = self
   }
-  self.buffer:set_title(self.title)
   self.buffer:show()
 end
 
