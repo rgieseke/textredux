@@ -226,19 +226,19 @@ buffer is showing and set as the global buffer.
 function reduxbuffer:show()
   local origin_buffer = buffer
   if not self:is_attached() then self:_create_target() end
-  view:goto_buffer(_BUFFERS[self.target], false)
+  if not self:is_showing() then view:goto_buffer(_BUFFERS[self.target]) end
   if origin_buffer ~= buffer then
     self.origin_buffer = origin_buffer
     self.origin_key_mode = keys.MODE
   end
+  self:refresh()
+  keys.MODE = self.keys_mode
 end
 
 --- Closes the buffer.
 function reduxbuffer:close()
-  if self:is_attached() then
-    self:show()
-    io.close_buffer()
-  end
+  if not self:is_active() then view:goto_buffer(_BUFFERS[self.target]) end
+  io.close_buffer()
 end
 
 --[[-- Performs an update of the buffer contents.
