@@ -91,7 +91,8 @@ end
 
 local function on_selection(list, item)
   list:close()
-  view:goto_buffer(_BUFFERS[item.buffer])
+  local target = _BUFFERS[item.buffer]
+  if buffer ~= target then view:goto_buffer(_BUFFERS[item.buffer]) end
 end
 
 --[[-- Returns the currently selected buffer in the list.
