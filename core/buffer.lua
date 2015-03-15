@@ -414,10 +414,15 @@ function reduxbuffer:_create_target()
   target._textredux = self
   target:set_lexer('text')
   target.eol_mode = constants.EOL_LF
+  target.wrap_mode = target.WRAP_NONE
+  target.margin_width_n[1] = not CURSES and target.margin_width_n[0] + 4 or 1
+  target.margin_width_n[0] = 0
+  target.style_back[33] = target.caret_line_back
   target:set_save_point()
   target.undo_collection = false
   self.target = target
   self:set_title(self.title)
+  reduxstyle.activate_styles()
 end
 
 -- Invoke command.
