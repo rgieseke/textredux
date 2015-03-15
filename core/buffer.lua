@@ -465,8 +465,6 @@ local function _on_buffer_deleted()
     if buf:is_attached() and not _BUFFERS[buf.target] then
       buf.target = nil
       buf.data = {}
-      -- Return to previous buffer.
-      buf:_restore_origin_buffer()
       if buf.on_deleted then buf:on_deleted() end
       break
     end
