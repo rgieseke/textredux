@@ -97,6 +97,10 @@ function M.hijack()
 
   local io_snapopen = io.snapopen
   local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
+    if not utf8_paths then utf8_paths = io.get_project_root() end
+    if not utf8_paths and buffer.filename then
+      utf8_paths = buffer.filename:match('^(.+)[/\\]')
+    end
     if not utf8_paths or
        (type(utf8_paths) == 'table' and #utf8_paths ~= 1)
     then
