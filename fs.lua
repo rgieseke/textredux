@@ -444,9 +444,9 @@ end
 function M.save_buffer()
   local buffer = _G.buffer
   if buffer.filename then
-    io.save()
+    io.save_file()
   else
-    save_buffer_as()
+    M.save_buffer_as()
   end
 end
 
