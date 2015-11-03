@@ -129,12 +129,17 @@ function M.hijack()
   end
 
   -- Hijack filteredlist for the below functions.
-  for _, target in ipairs({
+  local fl_funcs = {
     {textadept.file_types, 'select_lexer'},
-    {textadept.menu, 'select_command'},
     {io, 'open_recent_file'},
     {textadept.bookmarks, 'goto_mark'},
-  }) do
+  }
+
+  if textadept.menu then
+    table.insert(fl_funcs, {textadept.menu, 'select_command'})
+  end
+
+  for _, target in ipairs(fl_funcs) do
     local func = target[1][target[2]]
     local wrap = M.core.filteredlist.wrap(func)
     target[1][target[2]] = wrap
