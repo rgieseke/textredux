@@ -158,6 +158,7 @@ function M.hijack()
   replacements[io.open_file] = open_file_compat
   io.open_file = open_file_compat
   replacements[io.save_file_as] = save_as_compat
+  replacements[io.save_file] = M.fs.save_buffer
 
   -- Finalize by patching keys.
   patch_keys(replacements)
