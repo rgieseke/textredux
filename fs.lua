@@ -226,7 +226,10 @@ local function find_files(directory, filter, depth, max_files)
               table.insert(directories, 1, file)
             else
               if max_files and #files == max_files then return files, false end
-              files[#files + 1] = file
+              -- Workaround check for top-level (virtual) Windows drive
+              if not (WIN32 and #dir.path == 3 and entry == '..') then
+                files[#files + 1] = file
+              end
             end
           end
         end
@@ -294,6 +297,8 @@ local function get_file_style(item, index)
 end
 
 local function toggle_snap(list)
+  -- Don't toggle for list of Windows drives
+  if WIN32 and list.data.directory == "" then return end
   local data = list.data
   local depth = data.depth
   local search = list:get_current_search()
@@ -323,6 +328,19 @@ local function toggle_snap(list)
   list:set_current_search(search)
 end
 
+local function get_windows_drives()
+  local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  local drives = {}
+  for i=1, #letters do
+    local drive = letters:sub(i, i)..":\\"
+    if fs_attributes(drive) then
+      drives[#drives + 1] = file(drive, drive)
+      drives[#drives][1] = drive
+    end
+  end
+  return drives
+end
+
 local function create_list(directory, filter, depth, max_files)
   local list = reduxlist.new(directory)
   local data = list.data
@@ -335,7 +353,14 @@ local function create_list(directory, filter, depth, max_files)
     local search = list:get_current_search()
     if not search then
       local parent = dirname(list.data.directory)
-      if parent ~= list.data.directory then
+      if WIN32 and #list.data.directory == 3 then
+        list.items = get_windows_drives()
+        list.data.directory = ""
+        list.data.depth = 1
+        list.title = "Drives"
+        list:show()
+        return true
+      elseif parent ~= list.data.directory then
         chdir(list, parent)
         return true
       end
