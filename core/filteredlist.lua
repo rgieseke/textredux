@@ -52,7 +52,7 @@ ui.dialogs.filteredlist = function(options)
   l.on_selection = function(l, item)
     local value = not options.string_output and index_of(item, items) or item
     l:close()
-    coroutine.resume(co, 1, value)
+    coroutine.resume(co, options.string_output and _L['_OK'] or 1, value)
   end
   l:show()
   return coroutine.yield()

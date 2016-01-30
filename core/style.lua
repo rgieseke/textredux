@@ -142,7 +142,7 @@ local function set_style_property(t, number, value)
 end
 
 -- Activate Textredux styles in a buffer.
-local function activate_styles()
+function M.activate_styles()
   if not buffer._textredux then return end
   for k, v in pairs(M) do
     if type(v) == 'table' then
@@ -240,8 +240,8 @@ end
 setmetatable(M, {__newindex=define_style})
 
 -- Ensure Textredux styles are defined after switching buffers or views.
-events.connect(events.BUFFER_AFTER_SWITCH, activate_styles)
-events.connect(events.VIEW_NEW, activate_styles)
-events.connect(events.VIEW_AFTER_SWITCH, activate_styles)
+events.connect(events.BUFFER_AFTER_SWITCH, M.activate_styles)
+events.connect(events.VIEW_NEW, M.activate_styles)
+events.connect(events.VIEW_AFTER_SWITCH, M.activate_styles)
 
 return M

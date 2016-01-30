@@ -221,44 +221,6 @@ events.connect(events.CHAR_ADDED, function(code)
   end
 end)
 
-
---[[-- Sets the margin styles in a Textredux buffer.
-Line numbers are hidden by hiding the the line number margin in the Curses
-version and by setting the line number margin to the color used for
-highlighting the current line in the GUI version.
-To disable this you can deactivate the `BUFFER_AFTER_SWITCH` and
-`VIEW_AFTER_SWITCH` events like:
-    events.disconnect(events.BUFFER_AFTER_SWITCH,
-                      textredux.core.set_margin_styles)
-]]
-local line_number_margin_width, line_number_back, current_line_back
-function M.set_margin_styles()
-  local line_number = 33
-  local buffer = buffer
-  if buffer._textredux then
-    if CURSES then
-      buffer.margin_width_n[0] = 0
-    else
-      buffer.style_fore[line_number] = current_line_back
-      buffer.style_back[line_number] = current_line_back
-    end
-  else
-    if CURSES then
-      buffer.margin_width_n[0] = line_number_margin_width
-    else
-      buffer.style_back[line_number] = line_number_back
-    end
-  end
-end
-
-events.connect(events.INITIALIZED, function()
-  line_number_margin_width = buffer.margin_width_n[0]
-  line_number_back =  buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
-  current_line_back = buffer.caret_line_back
-  events.connect(events.BUFFER_AFTER_SWITCH, M.set_margin_styles)
-  events.connect(events.VIEW_AFTER_SWITCH, M.set_margin_styles)
-end)
-
 --[[-- Shows the buffer.
 If the target buffer doesn't exist, due to it either not having been created
 yet or having been deleted, it is automatically created. Upon the return, the
@@ -267,11 +229,13 @@ buffer is showing and set as the global buffer.
 function reduxbuffer:show()
   local origin_buffer = buffer
   if not self:is_attached() then self:_create_target() end
-  view:goto_buffer(_BUFFERS[self.target], false)
+  if not self:is_showing() then view:goto_buffer(_BUFFERS[self.target]) end
   if origin_buffer ~= buffer then
     self.origin_buffer = origin_buffer
     self.origin_key_mode = keys.MODE
   end
+  self:refresh()
+  keys.MODE = self.keys_mode
 end
 
 function reduxbuffer:attach_to_command_entry()
@@ -300,8 +264,8 @@ function reduxbuffer:close()
     ui.command_entry:focus()
     ce_active = nil
     set_keys_mode()
-  elseif self:is_attached() then
-    self:show()
+  else
+    if not self:is_active() then view:goto_buffer(_BUFFERS[self.target]) end
     io.close_buffer()
   end
 end
@@ -491,10 +455,15 @@ function reduxbuffer:_create_target()
   target._textredux = self
   target:set_lexer('text')
   target.eol_mode = constants.EOL_LF
+  target.wrap_mode = target.WRAP_NONE
+  target.margin_width_n[1] = not CURSES and target.margin_width_n[0] + 4 or 1
+  target.margin_width_n[0] = 0
+  target.style_back[33] = target.caret_line_back
   target:set_save_point()
   target.undo_collection = false
   self.target = target
   self:set_title(self.title)
+  reduxstyle.activate_styles()
 end
 
 -- Invoke command.
@@ -542,8 +511,6 @@ local function _on_buffer_deleted()
     if buf:is_attached() and not _BUFFERS[buf.target] then
       buf.target = nil
       buf.data = {}
-      -- Return to previous buffer.
-      buf:_restore_origin_buffer()
       if buf.on_deleted then buf:on_deleted() end
       break
     end

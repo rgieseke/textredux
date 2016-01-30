@@ -97,6 +97,10 @@ function M.hijack()
 
   local io_snapopen = io.snapopen
   local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
+    if not utf8_paths then utf8_paths = io.get_project_root() end
+    if not utf8_paths and buffer.filename then
+      utf8_paths = buffer.filename:match('^(.+)[/\\]')
+    end
     if not utf8_paths or
        (type(utf8_paths) == 'table' and #utf8_paths ~= 1)
     then
@@ -125,12 +129,17 @@ function M.hijack()
   end
 
   -- Hijack filteredlist for the below functions.
-  for _, target in ipairs({
+  local fl_funcs = {
     {textadept.file_types, 'select_lexer'},
-    {textadept.menu, 'select_command'},
     {io, 'open_recent_file'},
     {textadept.bookmarks, 'goto_mark'},
-  }) do
+  }
+
+  if textadept.menu then
+    table.insert(fl_funcs, {textadept.menu, 'select_command'})
+  end
+
+  for _, target in ipairs(fl_funcs) do
     local func = target[1][target[2]]
     local wrap = M.core.filteredlist.wrap(func)
     target[1][target[2]] = wrap
@@ -149,6 +158,7 @@ function M.hijack()
   replacements[io.open_file] = open_file_compat
   io.open_file = open_file_compat
   replacements[io.save_file_as] = save_as_compat
+  replacements[io.save_file] = M.fs.save_buffer
 
   -- Finalize by patching keys.
   patch_keys(replacements)
