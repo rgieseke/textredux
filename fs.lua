@@ -471,7 +471,7 @@ function M.save_buffer()
   if buffer.filename then
     io.save_file()
   else
-    M.save_buffer_as()
+    io.save_file_as()
   end
 end
 

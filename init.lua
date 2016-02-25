@@ -116,18 +116,6 @@ function M.hijack()
     M.fs.open_file()
   end
 
-  local io_save_file_as = io.save_file_as
-  local save_as_compat
-  function save_as_compat(buffer, utf8_filename)
-    if utf8_filename then return io_save_file_as(buffer, utf8_filename) end
-    -- Temporarily restore the original save_as, since fs.save_buffer_as uses
-    -- it in its implementation.
-    io.save_as = io_save_file_as
-    local status, ret = pcall(M.fs.save_buffer_as)
-    io.save_as = save_as_compat
-    if not status then events.emit(events.ERROR, ret) end
-  end
-
   -- Hijack filteredlist for the below functions.
   local fl_funcs = {
     {textadept.file_types, 'select_lexer'},
@@ -154,10 +142,9 @@ function M.hijack()
   replacements[io.snapopen] = snapopen_compat
   io.snapopen = snapopen_compat
 
-  -- Hijack open file and save_as.
+  -- Hijack open file and save.
   replacements[io.open_file] = open_file_compat
   io.open_file = open_file_compat
-  replacements[io.save_file_as] = save_as_compat
   replacements[io.save_file] = M.fs.save_buffer
 
   -- Finalize by patching keys.
