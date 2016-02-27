@@ -245,13 +245,13 @@ local function sort_items(items)
     if a.rel_path == parent_path then return true
     elseif b.rel_path == parent_path then return false
     elseif a.hidden ~= b.hidden then return b.hidden
-    elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     elseif b.mode == 'directory' and a.mode ~= 'directory' then return false
+    elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     end
-    -- strip the / on the end of directores for correct sorting
-    local a_path = (a.mode == 'directory') and string.sub(a.rel_path, 1, -2) or a.rel_path
-    local b_path = (b.mode == 'directory') and string.sub(b.rel_path, 1, -2) or b.rel_path
-    return (a_path < b_path)
+    -- Strip trailing seperator from directories for correct sorting,
+    -- e.g. `foo` before `foo-bar`
+    local trailing = separator.."$"
+    return a.rel_path:gsub(trailing, "") < b.rel_path:gsub(trailing, "")
   end)
 end
 
