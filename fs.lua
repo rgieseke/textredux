@@ -248,7 +248,10 @@ local function sort_items(items)
     elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     elseif b.mode == 'directory' and a.mode ~= 'directory' then return false
     end
-    return (a.rel_path < b.rel_path)
+    -- strip the / on the end of directores for correct sorting
+    local a_path = (a.mode == 'directory') and string.sub(a.rel_path, 1, -2) or a.rel_path
+    local b_path = (b.mode == 'directory') and string.sub(b.rel_path, 1, -2) or b.rel_path
+    return (a_path < b_path)
   end)
 end
 
