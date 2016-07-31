@@ -522,7 +522,7 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   if not exclude_FILTER then
     for _, key in ipairs({ 'folders', 'extensions' }) do
       filter[key] = filter[key] or {}
-      for _, pattern in ipairs(lfs.FILTER[key]) do
+      for _, pattern in ipairs(lfs.default_filter[key]) do
         filter[key][#filter[key] + 1] = pattern
       end
     end

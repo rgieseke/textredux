@@ -59,22 +59,11 @@ local M = {
   fs = require 'textredux.fs'
 }
 
--- Get a unique identifier for functions or tables.
-local function get_id(f)
-  local id = ''
-  if type(f) == 'function' then
-    id = tostring(f)
-  elseif type(f) == 'table' then
-    for i = 1, #f do id = id..tostring(f[i]) end
-  end
-  return id
-end
-
 -- Set new key bindings.
 local function patch_keys(replacements)
   local _keys = {}
   for k, v in pairs(keys) do
-    _keys[k] = get_id(v)
+    _keys[k] = v
   end
   for k, command_id in pairs(_keys) do
     local replacement = replacements[command_id]
@@ -89,13 +78,16 @@ end
 -- counterparts. Additionally, it replaces the traditional filtered list
 -- with a Textredux list for a number of operations.
 function M.hijack()
-  -- Table with unique identifiers for items to be replaced.
+  local m_file = textadept.menu.menubar[_L['_File']]
+  local m_buffer = textadept.menu.menubar[_L['_Buffer']]
+  local m_tools = textadept.menu.menubar[_L['_Tools']]
+  local m_bookmark = m_tools[_L['_Bookmark']]
+  
+  local io_open = m_file[_L['_Open']][2]
+  
   local replacements = {}
-  setmetatable(replacements, {__newindex = function(t, k, v)
-    rawset(t, get_id(k), v)
-  end})
-
-  local io_snapopen = io.snapopen
+  
+  local io_quick_open = io.quick_open
   local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
     if not utf8_paths then utf8_paths = io.get_project_root() end
     if not utf8_paths and buffer.filename then
@@ -104,7 +96,7 @@ function M.hijack()
     if not utf8_paths or
        (type(utf8_paths) == 'table' and #utf8_paths ~= 1)
     then
-      return io_snapopen(utf8_paths, filter, exclude_FILTER, ...)
+      return io_quick_open(utf8_paths, filter, exclude_FILTER, ...)
     end
     local directory = type(utf8_paths) == 'table' and utf8_paths[1] or utf8_paths
     M.fs.snapopen(directory, filter, exclude_FILTER)
@@ -115,41 +107,32 @@ function M.hijack()
     if utf8_filenames then return io_open_file(utf8_filenames) end
     M.fs.open_file()
   end
-
+  replacements[io_open] = open_file_compat
+                    
   -- Hijack filteredlist for the below functions.
+  local select_command = m_tools[_L['Select Co_mmand']][2]
+  local goto_mark = m_bookmark[_L['_Goto Bookmark...']][2]
   local fl_funcs = {
-    {textadept.file_types, 'select_lexer'},
-    {io, 'open_recent_file'},
-    {textadept.bookmarks, 'goto_mark'},
+    textadept.file_types.select_lexer,
+    io.open_recent_file,
+    select_command,
+    goto_mark
   }
 
-  if textadept.menu then
-    table.insert(fl_funcs, {textadept.menu, 'select_command'})
-  end
-
   for _, target in ipairs(fl_funcs) do
-    local func = target[1][target[2]]
-    local wrap = M.core.filteredlist.wrap(func)
-    target[1][target[2]] = wrap
-    replacements[func] = wrap
+    local wrap = M.core.filteredlist.wrap(target)
+    replacements[target] = wrap
   end
-
+  
   -- Hijack buffer list.
   replacements[ui.switch_buffer] = M.buffer_list.show
-  ui.switch_buffer = M.buffer_list.show
 
   -- Hijack snapopen.
-  replacements[io.snapopen] = snapopen_compat
-  io.snapopen = snapopen_compat
-
-  -- Hijack open file and save.
-  replacements[io.open_file] = open_file_compat
-  io.open_file = open_file_compat
-  replacements[io.save_file] = M.fs.save_buffer
-
+  replacements[io.quick_open] = snapopen_compat
+  io.quick_open = snapopen_compat
+ 
   -- Finalize by patching keys.
   patch_keys(replacements)
-
 end
 
 return M
