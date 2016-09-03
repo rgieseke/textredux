@@ -314,7 +314,7 @@ function list:_refresh()
   data.items_start_line = buffer:line_from_position(buffer.current_pos)
   local nr_items = buffer.lines_on_screen - data.items_start_line - 1
   self:_add_items(data.matching_items, 1, nr_items)
-  buffer:goto_line(data.items_start_line)
+  buffer:goto_line(data.items_start_line - 1)
   buffer:home()
 end
 

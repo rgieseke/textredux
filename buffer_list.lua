@@ -91,8 +91,8 @@ end
 
 local function on_selection(list, item)
   list:close()
-  local target = _BUFFERS[item.buffer]
-  if buffer ~= target then view:goto_buffer(_BUFFERS[item.buffer]) end
+  local target = item.buffer
+  if buffer ~= target then view:goto_buffer(target) end
 end
 
 --[[-- Returns the currently selected buffer in the list.
@@ -122,7 +122,7 @@ function M.close_buffer(list)
     ui.statusbar_text = 'Closing ' .. name .. '..'
     local current_pos = buffer.current_pos
     local current_search = list:get_current_search()
-    view:goto_buffer(_BUFFERS[sel_buffer])
+    view:goto_buffer(sel_buffer)
     local closed = io.close_buffer()
     list.items = get_buffer_items()
     list:show()
@@ -156,7 +156,7 @@ function M.close_directory(list)
         ui.statusbar_text = 'Closing ' .. name .. '..'
         local current_pos = buffer.current_pos
         local current_search = list:get_current_search()
-        view:goto_buffer(_BUFFERS[b])
+        view:goto_buffer(b)
         closed = io.close_buffer()
         if not closed then
           ui.statusbar_text = 'Could not close file in '..dir
@@ -198,8 +198,8 @@ function M.show(buffers)
   end
   M.list:show()
   if active_buffer then
-    local line = M.list.buffer.data.items_start_line + active_buffer - 1
-    M.list.buffer:goto_line(line)
+    local line = M.list.buffer.data.items_start_line + active_buffer
+    M.list.buffer:goto_line(line - 1)
   end
   local short_cut = CURSES and '[Meta+D]' or '[Ctrl+Shift+D]'
   ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected buffer, '..

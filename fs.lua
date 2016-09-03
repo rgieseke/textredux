@@ -226,7 +226,10 @@ local function find_files(directory, filter, depth, max_files)
               table.insert(directories, 1, file)
             else
               if max_files and #files == max_files then return files, false end
-              files[#files + 1] = file
+              -- Workaround check for top-level (virtual) Windows drive
+              if not (WIN32 and #dir.path == 3 and entry == '..') then
+                files[#files + 1] = file
+              end
             end
           end
         end
@@ -242,10 +245,13 @@ local function sort_items(items)
     if a.rel_path == parent_path then return true
     elseif b.rel_path == parent_path then return false
     elseif a.hidden ~= b.hidden then return b.hidden
-    elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     elseif b.mode == 'directory' and a.mode ~= 'directory' then return false
+    elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     end
-    return (a.rel_path < b.rel_path)
+    -- Strip trailing seperator from directories for correct sorting,
+    -- e.g. `foo` before `foo-bar`
+    local trailing = separator.."$"
+    return a.rel_path:gsub(trailing, "") < b.rel_path:gsub(trailing, "")
   end)
 end
 
@@ -294,6 +300,8 @@ local function get_file_style(item, index)
 end
 
 local function toggle_snap(list)
+  -- Don't toggle for list of Windows drives
+  if WIN32 and list.data.directory == "" then return end
   local data = list.data
   local depth = data.depth
   local search = list:get_current_search()
@@ -323,6 +331,19 @@ local function toggle_snap(list)
   list:set_current_search(search)
 end
 
+local function get_windows_drives()
+  local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  local drives = {}
+  for i=1, #letters do
+    local drive = letters:sub(i, i)..":\\"
+    if fs_attributes(drive) then
+      drives[#drives + 1] = file(drive, drive)
+      drives[#drives][1] = drive
+    end
+  end
+  return drives
+end
+
 local function create_list(directory, filter, depth, max_files)
   local list = reduxlist.new(directory)
   local data = list.data
@@ -335,7 +356,14 @@ local function create_list(directory, filter, depth, max_files)
     local search = list:get_current_search()
     if not search then
       local parent = dirname(list.data.directory)
-      if parent ~= list.data.directory then
+      if WIN32 and #list.data.directory == 3 then
+        list.items = get_windows_drives()
+        list.data.directory = ""
+        list.data.depth = 1
+        list.title = "Drives"
+        list:show()
+        return true
+      elseif parent ~= list.data.directory then
         chdir(list, parent)
         return true
       end
@@ -446,7 +474,7 @@ function M.save_buffer()
   if buffer.filename then
     io.save_file()
   else
-    M.save_buffer_as()
+    io.save_file_as()
   end
 end
 
@@ -494,7 +522,7 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   if not exclude_FILTER then
     for _, key in ipairs({ 'folders', 'extensions' }) do
       filter[key] = filter[key] or {}
-      for _, pattern in ipairs(lfs.FILTER[key]) do
+      for _, pattern in ipairs(lfs.default_filter[key]) do
         filter[key][#filter[key] + 1] = pattern
       end
     end
