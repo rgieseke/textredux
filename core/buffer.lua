@@ -367,6 +367,11 @@ function reduxbuffer:add_hotspot(start_pos, end_pos, command)
     hotspots[i] = current_spots
   end
   local length = end_pos - start_pos
+  -- Temporarily replace the global Textadept `buffer` variable with the
+  -- buffer we're working on.  This is so that when attached to the command
+  -- entry buffer (which `_G.buffer` doesn't point to), the styling etc.
+  -- functions, which assume they're working on the current buffer, still
+  -- work.
   local saved_buf = buffer
   _G.buffer = self.target
   reduxindicator.HOTSPOT:apply(start_pos, length)
@@ -389,6 +394,11 @@ text.
 function reduxbuffer:add_text(text, style, command, indicator)
   text = tostring(text)
   local insert_pos = self.target.current_pos
+  -- Temporarily replace the global Textadept `buffer` variable with the
+  -- buffer we're working on.  This is so that when attached to the command
+  -- entry buffer (which `_G.buffer` doesn't point to), the styling etc.
+  -- functions, which assume they're working on the current buffer, still
+  -- work.
   local saved_buf = buffer
   _G.buffer = self.target
   self.target:add_text(text)
@@ -414,6 +424,11 @@ function reduxbuffer:append_text(text, style, command, indicator)
   local insert_pos = self.target.length
   text = tostring(text)
   self.target:append_text(text)
+  -- Temporarily replace the global Textadept `buffer` variable with the
+  -- buffer we're working on.  This is so that when attached to the command
+  -- entry buffer (which `_G.buffer` doesn't point to), the styling etc.
+  -- functions, which assume they're working on the current buffer, still
+  -- work.
   local saved_buf = buffer
   _G.buffer = self.target
   if not style then style = reduxstyle.default end
@@ -438,6 +453,11 @@ text.
 function reduxbuffer:insert_text(pos, text, style, command, indicator)
   text = tostring(text)
   self.target:insert_text(pos, text)
+  -- Temporarily replace the global Textadept `buffer` variable with the
+  -- buffer we're working on.  This is so that when attached to the command
+  -- entry buffer (which `_G.buffer` doesn't point to), the styling etc.
+  -- functions, which assume they're working on the current buffer, still
+  -- work.
   local saved_buf = buffer
   _G.buffer = self.target
   if not style then style = reduxstyle.default end
