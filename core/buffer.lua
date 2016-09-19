@@ -240,7 +240,7 @@ end
 
 function reduxbuffer:attach_to_command_entry()
   local origin_buffer = buffer
-  
+
   local target = ui.command_entry
   target._textredux = self
   target:set_lexer('text')

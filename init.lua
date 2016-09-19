@@ -82,11 +82,11 @@ function M.hijack()
   local m_buffer = textadept.menu.menubar[_L['_Buffer']]
   local m_tools = textadept.menu.menubar[_L['_Tools']]
   local m_bookmark = m_tools[_L['_Bookmark']]
-  
+
   local io_open = m_file[_L['_Open']][2]
-  
+
   local replacements = {}
-  
+
   local io_quick_open = io.quick_open
   local function snapopen_compat(utf8_paths, filter, exclude_FILTER, ...)
     if not utf8_paths then utf8_paths = io.get_project_root() end
@@ -108,7 +108,7 @@ function M.hijack()
     M.fs.open_file()
   end
   replacements[io_open] = open_file_compat
-                    
+
   -- Hijack filteredlist for the below functions.
   local select_command = m_tools[_L['Select Co_mmand']][2]
   local goto_mark = m_bookmark[_L['_Goto Bookmark...']][2]
@@ -123,14 +123,14 @@ function M.hijack()
     local wrap = M.core.filteredlist.wrap(target)
     replacements[target] = wrap
   end
-  
+
   -- Hijack buffer list.
   replacements[ui.switch_buffer] = M.buffer_list.show
 
   -- Hijack snapopen.
   replacements[io.quick_open] = snapopen_compat
   io.quick_open = snapopen_compat
- 
+
   -- Finalize by patching keys.
   patch_keys(replacements)
 end
