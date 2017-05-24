@@ -569,4 +569,39 @@ function M.find_in_files()
     end
 end
 
+function M.save_as()
+    local start_directory = get_initial_directory()
+    local save_dir = start_directory
+    local list = create_list("Save as... | select directory", {}, 1, 100)
+
+    list.on_selection = function(list, item)
+        local path, mode = item.path, item.mode
+        if mode == 'link' then
+            mode = lfs.attributes(path, 'mode')
+        end
+        if mode == 'directory' then
+            save_dir = path
+            chdir(list, path)
+        end
+    end
+
+    list.keys['s\n'] = function()
+        local button, value = ui.dialogs.inputbox{
+        title = 'Save as...',
+        informative_text = 'Filename',
+        button1 = _L['_OK'],
+        button2 = _L['_Cancel']}
+
+        list:close()
+
+        if button == 1 then
+            io.save_file_as(save_dir .. "/" .. value)
+        end
+    end
+
+    --entry point
+    chdir(list, start_directory)
+    ui.statusbar_text = "Select directory to save buffer in | SHIFT+ENTER to save"
+end
+
 return M
