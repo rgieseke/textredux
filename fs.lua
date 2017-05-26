@@ -552,8 +552,8 @@ function M.find_in_files()
             mode = lfs.attributes(path, 'mode')
         end
         if mode == 'directory' then
-            fif_dir = path
             chdir(list, path)
+            fif_dir = normalize_path(path)
         end
     end
 
@@ -580,8 +580,8 @@ function M.save_as()
             mode = lfs.attributes(path, 'mode')
         end
         if mode == 'directory' then
-            save_dir = path
             chdir(list, path)
+            save_dir = normalize_path(path)
         end
     end
 
