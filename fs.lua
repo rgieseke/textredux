@@ -531,20 +531,10 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   M.select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
 end
 
-function M.find_in_files()
-    local button, value = ui.dialogs.inputbox
-    {
-        title = 'Find in files',
-        informative_text = 'Find what',
-        button1 = _L['_OK'],
-        button2 = _L['_Cancel']
-    }
-
-    ui.find.find_entry_text = value
-
+local function select_dir(title_text, ui_text, mode)
     local start_directory = get_initial_directory()
-    local fif_dir = start_directory
-    local list = create_list("Find in Files - Select directory", {}, 1, 100)
+    local target_dir = start_directory
+    local list = create_list(title_text, {}, 1, 100)
 
     list.on_selection = function(list, item)
         local path, mode = item.path, item.mode
@@ -553,55 +543,42 @@ function M.find_in_files()
         end
         if mode == 'directory' then
             chdir(list, path)
-            fif_dir = normalize_path(path)
+            target_dir = normalize_path(path)
         end
     end
 
     list.keys['s\n'] = function()
-        list:close()
-        ui.find.find_in_files(fif_dir, ui.find.find_in_files_filter)
-    end
-
-    --entry point
-    if button == 1 then
-        chdir(list, start_directory)
-        ui.statusbar_text = "Select directory to search in; press SHIFT+ENTER to start the search"
-    end
-end
-
-function M.save_as()
-    local start_directory = get_initial_directory()
-    local save_dir = start_directory
-    local list = create_list("Save as... | select directory", {}, 1, 100)
-
-    list.on_selection = function(list, item)
-        local path, mode = item.path, item.mode
-        if mode == 'link' then
-            mode = lfs.attributes(path, 'mode')
-        end
-        if mode == 'directory' then
-            chdir(list, path)
-            save_dir = normalize_path(path)
-        end
-    end
-
-    list.keys['s\n'] = function()
-        local button, value = ui.dialogs.inputbox{
-        title = 'Save as...',
-        informative_text = 'Filename',
-        button1 = _L['_OK'],
-        button2 = _L['_Cancel']}
+        local button, value = ui.dialogs.inputbox
+        {
+            title = title_text,
+            informative_text = '',
+            button1 = _L['_OK'],
+            button2 = _L['_Cancel']
+        }
 
         list:close()
 
         if button == 1 then
-            io.save_file_as(save_dir .. "/" .. value)
+            if mode == "save" then
+                io.save_file_as(target_dir .. "/" .. value)
+            elseif mode == "find" then
+                ui.find.find_entry_text = value
+                ui.find.find_in_files(target_dir, ui.find.find_in_files_filter)
+            end
         end
     end
 
     --entry point
     chdir(list, start_directory)
-    ui.statusbar_text = "Select directory to save buffer in | SHIFT+ENTER to save"
+    ui.statusbar_text = ui_text
+end
+
+function M.find_in_files()
+    select_dir("Find in files...", "Select directory to search in | press SHIFT+ENTER to start the search", "find")
+end
+
+function M.save_as()
+    select_dir("Save as...", "Select directory to save buffer in | press SHIFT+ENTER to save", "save")
 end
 
 return M
