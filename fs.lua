@@ -1,3 +1,4 @@
+
 -- Copyright 2011-2012 Nils Nordman <nino at nordman.org>
 -- Copyright 2012-2014 Robert Gieseke <rob.g@web.de>
 -- License: MIT (see LICENSE)
@@ -120,6 +121,7 @@ end
 -- Normalizes the path. This will deconstruct and reconstruct the
 -- path's components, while removing any relative parent references
 local function normalize_path(path)
+--ui.print("normalize: " .. path)
   local parts = split_path(path)
   local normalized = {}
   for _, part in ipairs(parts) do
@@ -531,7 +533,7 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   M.select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
 end
 
-local function select_dir(title_text, ui_text, mode)
+local function select_dir(title_text, ui_text, function_mode)
     local start_directory = get_initial_directory()
     local target_dir = start_directory
     local list = create_list(title_text, {}, 1, 100)
@@ -543,7 +545,6 @@ local function select_dir(title_text, ui_text, mode)
         end
         if mode == 'directory' then
             chdir(list, path)
-            target_dir = normalize_path(path)
         end
     end
 
@@ -556,12 +557,13 @@ local function select_dir(title_text, ui_text, mode)
             button2 = _L['_Cancel']
         }
 
+        local target_dir = list.data.directory
         list:close()
 
         if button == 1 then
-            if mode == "save" then
+            if function_mode == "save" then
                 io.save_file_as(target_dir .. "/" .. value)
-            elseif mode == "find" then
+            elseif function_mode == "find" then
                 ui.find.find_entry_text = value
                 ui.find.find_in_files(target_dir, ui.find.find_in_files_filter)
             end
