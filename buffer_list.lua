@@ -73,9 +73,9 @@ local function get_buffer_items()
   local items = {}
   for _, buffer in ipairs(buffer_source()) do
     if M.list.buffer.target ~= buffer then
-      local modified = buffer.dirty and '*' or ''
+      local modified = buffer.modify and '*' or ''
       items[#items + 1] = {
-        buffer_title(buffer) .. modified,
+        modified .. buffer_title(buffer),
         buffer_directory(buffer),
         buffer = buffer
       }
