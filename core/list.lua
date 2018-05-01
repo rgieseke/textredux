@@ -38,7 +38,6 @@ local reduxstyle = require('textredux.core.style')
 local util_matcher = require('textredux.util.matcher')
 
 local string_rep = string.rep
-local band = bit32.band
 
 reduxstyle.list_header = {underline = true}
 
@@ -383,7 +382,7 @@ events.connect(events.UPDATE_UI, function(updated)
   local reduxbuffer = buffer._textredux
   if not reduxbuffer then return end
   if not reduxbuffer.data.list then return end
-  if band(buffer.UPDATE_SELECTION, updated) == buffer.UPDATE_SELECTION then
+  if buffer.UPDATE_SELECTION & updated == buffer.UPDATE_SELECTION then
     local line = buffer:line_from_position(buffer.current_pos)
     local start_line = reduxbuffer.data.items_start_line
     local end_line = reduxbuffer.data.items_end_line
