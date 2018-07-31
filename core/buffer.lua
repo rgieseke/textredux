@@ -202,7 +202,7 @@ local function set_keys_mode()
   elseif buffer._textredux then
     keys.MODE = buffer._textredux.keys_mode
   else
-    keys.MODE = nil
+    keys.MODE = M.DEFAULT_MODE
   end
 end
 events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
