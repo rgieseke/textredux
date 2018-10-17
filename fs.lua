@@ -443,6 +443,45 @@ function M.select_file(on_selection, start_directory, filter, depth, max_files)
   chdir(list, start_directory)
 end
 
+function M.select_directory(on_selection, start_directory, filter, depth, max_files)
+  start_directory = start_directory or get_initial_directory()
+  if not filter then filter = {}
+  elseif type(filter) == 'string' then filter = { filter } end
+  filter[#filter + 1] = '.'
+
+  filter.folders = filter.folders or {}
+  filter.folders[#filter.folders + 1] = separator .. '%.$'
+
+  local list = create_list(start_directory, filter, depth or 1,
+                           max_files or 10000)
+
+  list.on_selection = function(list, item)
+    local path, mode = item.path, item.mode
+      if mode == 'link' then
+        mode = lfs.attributes(path, 'mode')
+      end
+      if mode == 'directory' then
+        on_selection(path, true, list, shift, ctrl, alt, meta)
+      end
+  end
+
+  list.on_new_selection = function(list, name, shift, ctrl, alt, meta)
+    local path = split_path(list.data.directory)
+    path[#path + 1] = name
+    on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
+  end
+
+  list.keys.cd = function()
+    local selected_dir = list:get_current_selection()
+    if selected_dir ~= nil then
+      local path_of_dir = selected_dir.path
+      chdir(list, path_of_dir)
+    end
+  end
+
+  chdir(list, start_directory)
+end
+
 --- Saves the current buffer under a new name.
 -- Open a browser and lets the user select a name.
 function M.save_buffer_as()
