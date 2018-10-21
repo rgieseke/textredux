@@ -461,7 +461,7 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
         mode = lfs.attributes(path, 'mode')
       end
       if mode == 'directory' then
-        on_selection(path, true, list, shift, ctrl, alt, meta)
+        on_selection(normalize_dir_path(path), true, list, shift, ctrl, alt, meta)
       end
   end
 
@@ -471,7 +471,7 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
     on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
   end
 
-  list.keys.cd = function()
+  list.keys.cright = function()
     local selected_dir = list:get_current_selection()
     if selected_dir ~= nil then
       local path_of_dir = selected_dir.path
