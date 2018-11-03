@@ -269,7 +269,7 @@ local function chdir(list, directory)
   end
   if not complete then
     local status = 'Number of entries limited to ' ..
-                   data.max_files .. ' as per io.SNAPOPEN_MAX'
+                   data.max_files .. ' as per io.quick_open_max'
     ui.statusbar_text = status
   else
     ui.statusbar_text = ''
@@ -521,7 +521,7 @@ end
 -- @param start_directory The directory to open, in UTF-8 encoding
 function M.open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
-  M.select_file(open_selected_file, start_directory, filter, 1, io.SNAPOPEN_MAX)
+  M.select_file(open_selected_file, start_directory, filter, 1, io.quick_open_max)
 end
 
 
@@ -567,7 +567,7 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
     end
   end
 
-  M.select_file(open_selected_file, directory, filter, depth, io.SNAPOPEN_MAX)
+  M.select_file(open_selected_file, directory, filter, depth, io.quick_open_max)
 end
 
 return M
