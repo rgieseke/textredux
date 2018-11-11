@@ -461,6 +461,29 @@ function M.select_file(on_selection, start_directory, filter, depth, max_files)
     on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
   end
 
+  -- force execution of callback
+  list.keys.right = function()
+    local user_input = list:get_current_search()
+    if not user_input then
+      return
+    end
+
+    local selection = list:get_current_selection()
+    if not selection then
+      return
+    end
+    selection = selection.path:match("([^/\\]+)$")
+    local file_exists = false
+    if selection == user_input then
+      file_exists = true
+    end
+
+    local path = split_path(list.data.directory)
+    path[#path + 1] = user_input
+
+    on_selection(join_path(path), file_exists, list, shift, ctrl, alt, meta)
+  end
+
   chdir(list, start_directory)
 end
 
@@ -513,27 +536,33 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
 end
 
 --- Saves the current buffer under a new name.
--- Open a browser and lets the user select a name.
+-- Opens a browser and lets the user select a name.
 function M.save_buffer_as()
-  local buffer = _G.buffer
-  local confirm_path
-
   local function set_file_name(path, exists, list)
-    if not exists or path == confirm_path then
-      list:close()
-      _G.view:goto_buffer(_G._BUFFERS[buffer], false)
-      io.save_file_as(path)
-      ui.statusbar_text = ''
-    else
-      ui.statusbar_text = 'File exists (' .. path ..
-                           '): Press enter to overwrite.'
-      confirm_path = path
+    list:close()
+
+    if exists then
+      local retval = ui.dialogs.msgbox
+      {
+        title = 'Save buffer as',
+        text = path .. "\nexists already!\n\nDo you want to overwrite it?",
+        icon = 'gtk-dialog-question',
+        button1 = 'Cancel',
+        button2 = 'Overwrite'
+      }
+      if retval ~= 2 then
+        return
+      end
     end
+
+    io.save_file_as(path)
+    ui.statusbar_text = 'Saved buffer as: ' .. path
   end
+
   local filter = { folders = { separator .. '%.$' } }
   M.select_file(set_file_name, nil, filter, 1)
-  ui.statusbar_text = 'Save file: select file name to save as..'
-
+  ui.statusbar_text = 'Save buffer as: select file name to save as...'
+      .. " (RIGHT to save as current user input)"
 end
 
 --- Saves the current buffer.
@@ -543,7 +572,7 @@ function M.save_buffer()
   if buffer.filename then
     io.save_file()
   else
-    io.save_file_as()
+    M.save_buffer_as()
   end
 end
 
