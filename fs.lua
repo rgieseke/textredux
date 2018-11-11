@@ -241,8 +241,11 @@ end
 
 local function sort_items(items)
   table.sort(items, function (a, b)
+    local self_path = '.' .. separator
     local parent_path = '..' .. separator
-    if a.rel_path == parent_path then return true
+    if a.rel_path == self_path then return true
+    elseif b.rel_path == self_path then return false
+    elseif a.rel_path == parent_path then return true
     elseif b.rel_path == parent_path then return false
     elseif a.hidden ~= b.hidden then return b.hidden
     elseif b.mode == 'directory' and a.mode ~= 'directory' then return false
@@ -450,7 +453,6 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
   filter[#filter + 1] = '.'
 
   filter.folders = filter.folders or {}
-  filter.folders[#filter.folders + 1] = separator .. '%.$'
 
   local list = create_list(start_directory, filter, depth or 1,
                            max_files or 10000)
@@ -475,6 +477,7 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
     local selected_dir = list:get_current_selection()
     if selected_dir ~= nil then
       local path_of_dir = selected_dir.path
+      if path_of_dir:match("/%.$") then return end
       chdir(list, path_of_dir)
     end
   end
