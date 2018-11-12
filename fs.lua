@@ -140,7 +140,7 @@ end
 -- with a trailing separator
 local function normalize_dir_path(directory)
   local path = normalize_path(directory)
-  return string_sub(path, -1) == separator and path or path .. separator
+  return path:gsub("[\\/]?%.?[\\/]?$", separator)
 end
 
 local function parse_filters(filter)
@@ -473,11 +473,11 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
     on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
   end
 
-  list.keys.cright = function()
+  list.keys.right = function()
     local selected_dir = list:get_current_selection()
     if selected_dir ~= nil then
       local path_of_dir = selected_dir.path
-      if path_of_dir:match("/%.$") then return end
+      if path_of_dir:match("[\\/]%.$") then return end
       chdir(list, path_of_dir)
     end
   end
