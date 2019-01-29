@@ -251,7 +251,7 @@ local function sort_items(items)
     elseif b.mode == 'directory' and a.mode ~= 'directory' then return false
     elseif a.mode == 'directory' and b.mode ~= 'directory' then return true
     end
-    -- Strip trailing seperator from directories for correct sorting,
+    -- Strip trailing separator from directories for correct sorting,
     -- e.g. `foo` before `foo-bar`
     local trailing = separator.."$"
     return a.rel_path:gsub(trailing, "") < b.rel_path:gsub(trailing, "")
@@ -463,23 +463,32 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
         mode = lfs.attributes(path, 'mode')
       end
       if mode == 'directory' then
-        on_selection(normalize_dir_path(path), true, list, shift, ctrl, alt, meta)
+        if path:match("[/\\]%.$") then
+          return
+        end
+        chdir(list, path)
       end
   end
 
   list.on_new_selection = function(list, name, shift, ctrl, alt, meta)
-    local path = split_path(list.data.directory)
-    path[#path + 1] = name
-    on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
+    local path = list.data.directory .. separator .. name:gsub("[/\\]*", "")
+    on_selection(normalize_dir_path(path), false, list, shift, ctrl, alt, meta)
   end
 
   list.keys.right = function()
     local selected_dir = list:get_current_selection()
-    if selected_dir ~= nil then
-      local path_of_dir = selected_dir.path
-      if path_of_dir:match("[\\/]%.$") then return end
-      chdir(list, path_of_dir)
+    if not selected_dir then
+      return
     end
+
+    local path = selected_dir.path
+    if path:match("[/\\]%.$") then
+      path = path:sub(1, -2)
+    elseif path:match("[/\\]%..$") then
+      return
+    end
+
+    on_selection(normalize_dir_path(path), false, list, shift, ctrl, alt, meta)
   end
 
   chdir(list, start_directory)
