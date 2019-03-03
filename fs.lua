@@ -347,6 +347,21 @@ local function get_windows_drives()
   return drives
 end
 
+local function updir(list)
+  local parent = dirname(list.data.directory)
+    if WIN32 and #list.data.directory == 3 then
+      list.items = get_windows_drives()
+      list.data.directory = ""
+      list.data.depth = 1
+      list.title = "Drives"
+      list:show()
+      return true
+    elseif parent ~= list.data.directory then
+      chdir(list, parent)
+      return true
+  end
+end
+
 local function create_list(directory, filter, depth, max_files)
   local list = reduxlist.new(directory)
   local data = list.data
@@ -355,21 +370,13 @@ local function create_list(directory, filter, depth, max_files)
   list.keys['~'] = function()
     if user_home then chdir(list, user_home) end
   end
+  list.keys['aup'] = function()
+    updir(list)
+  end
   list.keys['\b'] = function()
     local search = list:get_current_search()
     if not search then
-      local parent = dirname(list.data.directory)
-      if WIN32 and #list.data.directory == 3 then
-        list.items = get_windows_drives()
-        list.data.directory = ""
-        list.data.depth = 1
-        list.title = "Drives"
-        list:show()
-        return true
-      elseif parent ~= list.data.directory then
-        chdir(list, parent)
-        return true
-      end
+      updir(list)
     else
       list:set_current_search(search:sub(1, -2))
     end
