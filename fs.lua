@@ -571,11 +571,18 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   filter.folders[#filter.folders + 1] = updir_pattern
 
   if not exclude_FILTER then
-    for _, key in ipairs({ 'folders', 'extensions' }) do
-      filter[key] = filter[key] or {}
-      for _, pattern in ipairs(lfs.default_filter[key]) do
-        filter[key][#filter[key] + 1] = pattern
+    filter['folders'] = filter['folders'] or {}
+    filter['extensions'] = filter['extensions'] or {}
+
+    for _, pattern in ipairs(lfs.default_filter) do
+      pattern = pattern:match('..(.+)')
+      local pattern_type = ''
+      if pattern:match('%$$') then
+        pattern_type = 'folders'
+      else
+        pattern_type = 'extensions'
       end
+      filter[pattern_type][#filter[pattern_type] + 1] = pattern
     end
   end
 
