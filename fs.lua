@@ -461,29 +461,6 @@ function M.select_file(on_selection, start_directory, filter, depth, max_files)
     on_selection(join_path(path), false, list, shift, ctrl, alt, meta)
   end
 
-  -- force execution of callback
-  list.keys.right = function()
-    local user_input = list:get_current_search()
-    if not user_input then
-      return
-    end
-
-    local selection = list:get_current_selection()
-    if not selection then
-      return
-    end
-    selection = selection.path:match("([^/\\]+)$")
-    local file_exists = false
-    if selection == user_input then
-      file_exists = true
-    end
-
-    local path = split_path(list.data.directory)
-    path[#path + 1] = user_input
-
-    on_selection(join_path(path), file_exists, list, shift, ctrl, alt, meta)
-  end
-
   chdir(list, start_directory)
 end
 
@@ -539,19 +516,31 @@ end
 -- Opens a browser and lets the user select a name.
 function M.save_buffer_as()
   local function set_file_name(path, exists, list)
+    local user_input = list:get_current_search()
     list:close()
 
     if exists then
       local retval = ui.dialogs.msgbox
       {
         title = 'Save buffer as',
-        text = path .. "\nexists already!\n\nDo you want to overwrite it?",
+        text = path .. '\nexists already!\n\nDo you want to overwrite it?',
         icon = 'gtk-dialog-question',
         button1 = 'Cancel',
-        button2 = 'Overwrite'
+        button2 = 'Overwrite',
+        button3 = user_input and 'No, save as: ' .. user_input or nil,
       }
-      if retval ~= 2 then
+
+      if retval <= 1 then
         return
+      end
+
+      if retval == 3 then
+        if not user_input then
+          return
+        end
+        local path_segments = split_path(path)
+        path_segments[#path_segments] = user_input
+        path = join_path(path_segments)
       end
     end
 
@@ -562,7 +551,6 @@ function M.save_buffer_as()
   local filter = { folders = { separator .. '%.$' } }
   M.select_file(set_file_name, nil, filter, 1)
   ui.statusbar_text = 'Save buffer as: select file name to save as...'
-      .. " (RIGHT to save as current user input)"
 end
 
 --- Saves the current buffer.
