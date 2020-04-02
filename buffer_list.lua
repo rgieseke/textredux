@@ -123,12 +123,12 @@ function M.close_buffer(list)
     local current_pos = buffer.current_pos
     local current_search = list:get_current_search()
     view:goto_buffer(sel_buffer)
-    local closed = io.close_buffer()
+    local closed = sel_buffer:close()
     list.items = get_buffer_items()
     list:show()
     if closed then
       list:set_current_search(current_search)
-      buffer.goto_pos(math.min(current_pos, buffer.length))
+      buffer.goto_pos(math.min(current_pos, buffer.length + 1))
       buffer.home()
       ui.statusbar_text = 'Closed ' .. name
     else
@@ -157,7 +157,7 @@ function M.close_directory(list)
         local current_pos = buffer.current_pos
         local current_search = list:get_current_search()
         view:goto_buffer(b)
-        closed = io.close_buffer()
+        closed = b:close()
         if not closed then
           ui.statusbar_text = 'Could not close file in '..dir
           break
