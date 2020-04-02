@@ -78,12 +78,12 @@ end
 -- counterparts. Additionally, it replaces the traditional filtered list
 -- with a Textredux list for a number of operations.
 function M.hijack()
-  local m_file = textadept.menu.menubar[_L['_File']]
-  local m_buffer = textadept.menu.menubar[_L['_Buffer']]
-  local m_tools = textadept.menu.menubar[_L['_Tools']]
-  local m_bookmark = m_tools[_L['_Bookmark']]
+  local m_file = textadept.menu.menubar[_L['File']]
+  local m_buffer = textadept.menu.menubar[_L['Buffer']]
+  local m_tools = textadept.menu.menubar[_L['Tools']]
+  local m_bookmark = m_tools[_L['Bookmarks']]
 
-  local io_open = m_file[_L['_Open']][2]
+  local io_open = m_file[_L['Open']][2]
 
   local replacements = {}
 
@@ -110,8 +110,8 @@ function M.hijack()
   replacements[io_open] = open_file_compat
 
   -- Hijack filteredlist for the below functions.
-  local select_command = m_tools[_L['Select Co_mmand']][2]
-  local goto_mark = m_bookmark[_L['_Goto Bookmark...']][2]
+  local select_command = m_tools[_L['Select Command']][2]
+  local goto_mark = m_bookmark[_L['Goto Bookmark...']][2]
   local fl_funcs = {
     textadept.file_types.select_lexer,
     io.open_recent_file,

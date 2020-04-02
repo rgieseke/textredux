@@ -198,11 +198,11 @@ end
 -- Otherwise activate Textadept's  default keys  mode.
 local function set_keys_mode()
   if ce_active then
-    keys.MODE = ce_active.keys_mode
+    keys.mode = ce_active.keys_mode
   elseif buffer._textredux then
-    keys.MODE = buffer._textredux.keys_mode
+    keys.mode = buffer._textredux.keys_mode
   else
-    keys.MODE = M.DEFAULT_MODE
+    keys.mode = M.DEFAULT_MODE
   end
 end
 events.connect(events.BUFFER_AFTER_SWITCH, set_keys_mode)
@@ -232,10 +232,10 @@ function reduxbuffer:show()
   if not self:is_showing() then view:goto_buffer(_BUFFERS[self.target]) end
   if origin_buffer ~= buffer then
     self.origin_buffer = origin_buffer
-    self.origin_key_mode = keys.MODE
+    self.origin_key_mode = keys.mode
   end
   self:refresh()
-  keys.MODE = self.keys_mode
+  keys.mode = self.keys_mode
 end
 
 function reduxbuffer:attach_to_command_entry()
@@ -266,7 +266,7 @@ function reduxbuffer:close()
     set_keys_mode()
   else
     if not self:is_active() then view:goto_buffer(_BUFFERS[self.target]) end
-    io.close_buffer()
+    self.target:close()
   end
 end
 
@@ -503,7 +503,7 @@ function reduxbuffer:_restore_origin_buffer()
     local buf_index = _BUFFERS[origin_buffer]
     if buf_index and originbuffer ~= buffer then
       view:goto_buffer(buf_index, false)
-      keys.MODE = self.origin_key_mode
+      keys.mode = self.origin_key_mode
     end
   end
 end
@@ -549,7 +549,7 @@ local function _on_quit()
   for _, buffer in ipairs(_BUFFERS) do
     if buffer._textredux then
       view:goto_buffer(_BUFFERS[buffer])
-      io.close_buffer()
+      buffer:close()
     end
   end
 end
