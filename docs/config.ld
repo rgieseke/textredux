@@ -16,5 +16,6 @@ description = [[
 Text-based interfaces for Textadept.
 ]]
 output = 'api'
-
+template = '.'
+dir = '.'
 alias("p","param")
