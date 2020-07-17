@@ -2,6 +2,8 @@ Textredux is a module for the [Textadept editor](http://foicica.com/textadept/)
 that offers a set of text based replacement interfaces for core Textadept
 functionality.
 
+![](docs/images/bufferlist.gif)
+
 Current master requires Textadept 11
 
 [v1.2.0](https://github.com/rgieseke/textredux/releases/tag/v1.2.0) works with Textadept 10.
