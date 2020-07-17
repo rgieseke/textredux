@@ -76,19 +76,23 @@ directory.</p>
 <p>1) Select the functionality you want from the different modules by assigning
 keys to the desired functions.</p>
 
-<pre><code>local textredux = require('textredux')
+
+<pre>
+<span class="keyword">local</span> textredux = <span class="global">require</span>(<span class="string">'textredux'</span>)
 keys.co = textredux.fs.open_file
 keys.cS = textredux.fs.save_buffer_as
 keys.cb = textredux.buffer_list.show
 keys.cg = textredux.ctags.goto_symbol
-</code></pre>
+</pre>
 
 <p>2) If you can't get enough of text based interfaces and the joy they provide,
 then the <a href="../modules/textredux.html#hijack">hijack</a> function is for you. Simply place this in your
 <code>init.lua</code>:</p>
 
-<pre><code>require('textredux').hijack()
-</code></pre>
+
+<pre>
+<span class="global">require</span>(<span class="string">'textredux'</span>).hijack()
+</pre>
 
 <p>As the name suggest, Textredux has now hijacked your environment. All your
 regular key bindings should now use Textredux where applicable. Clicking the

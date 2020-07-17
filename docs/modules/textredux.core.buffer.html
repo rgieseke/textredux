@@ -66,24 +66,28 @@ insertion functions (<a href="../modules/textredux.core.buffer.html#reduxbuffer:
 <a href="../modules/textredux.core.buffer.html#reduxbuffer:insert_text">reduxbuffer:insert_text</a>). You invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">reduxbuffer:show</a> to show the buffer,
 and respond to any interactions using the provided callbacks.</p>
 
-<pre><code>local textredux = require('textredux')
-local reduxbuffer = textredux.core.buffer.new('Example buffer')
-reduxbuffer.on_refresh = function(buf)
-  buf:add_text('Textredux!')
-end
+
+<pre>
+<span class="keyword">local</span> textredux = <span class="global">require</span>(<span class="string">'textredux'</span>)
+<span class="keyword">local</span> reduxbuffer = textredux.core.buffer.new(<span class="string">'Example buffer'</span>)
+reduxbuffer.on_refresh = <span class="keyword">function</span>(buf)
+  buf:add_text(<span class="string">'Textredux!'</span>)
+<span class="keyword">end</span>
 reduxbuffer:show()
-</code></pre>
+</pre>
 
 <p>If you need to test whether a Textadept buffer is used as a Textredux buffer
 you can check for the <code>_textredux</code> field.</p>
 
-<pre><code>events.connect(events.BUFFER_AFTER_SWITCH, function()
-  local buffer = buffer
-  if buffer._textredux then
-    -- …
-  end
-end)
-</code></pre>
+
+<pre>
+events.connect(events.BUFFER_AFTER_SWITCH, <span class="keyword">function</span>()
+  <span class="keyword">local</span> buffer = buffer
+  <span class="keyword">if</span> buffer._textredux <span class="keyword">then</span>
+    <span class="comment">-- …
+</span>  <span class="keyword">end</span>
+<span class="keyword">end</span>)
+</pre>
 
 <h2>How it works</h2>
 
@@ -114,7 +118,6 @@ always exist.</p>
 <p>In short, you don't have to worry about creating buffers, detecting whether the
 buffer was closed, etc., as long as you remember to invoke <a href="../modules/textredux.core.buffer.html#reduxbuffer:show">reduxbuffer:show</a>
 and perform your work within the callbacks.</p>
-
 </p>
 
 
@@ -544,7 +547,7 @@ text.
 </dd>
 </dl>
     <h2><a name="Instance_fields"></a>Instance fields </h2>
-          These can be set for a buffer instance, and not
+         These can be set for a buffer instance, and not
  globally for the module.
     <dl class="function">
     <dt>

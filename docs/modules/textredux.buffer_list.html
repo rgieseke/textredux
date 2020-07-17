@@ -61,9 +61,11 @@ Textadept buffer list.</p>
 <p>Use the <a href="../modules/textredux.html#hijack">textredux.hijack</a> function or load the buffer list
 in your <code>~/.textadept/init.lua</code>:</p>
 
-<pre><code>local textredux = require('textredux')
-keys.cb = textredux.buffer_list.show
-</code></pre>
+
+<pre>
+<span class="keyword">local</span> textredux = <span class="global">require</span>(<span class="string">'textredux'</span>)
+keys[<span class="string">"ctrl+b"</span>] = textredux.buffer_list.show
+</pre>
 
 <h2>Features</h2>
 
@@ -74,7 +76,6 @@ keys.cb = textredux.buffer_list.show
     <li>The list of buffers is sorted and the current buffer is pre-selected</li>
     <li>The buffers to show can be specified using a function</li>
 </ul>
-
 </p>
 
 
@@ -240,10 +241,10 @@ function for that.
 
     <h3>Fields:</h3>
     <ul>
-        <li><span class="parameter">cd</span>
+        <li><span class="parameter">[ctrl+d]</span>
         Default for <code>close buffer</code>
         </li>
-        <li><span class="parameter">[</span>
+        <li><span class="parameter">[CURSES]</span>
 
 
 

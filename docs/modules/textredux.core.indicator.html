@@ -37,10 +37,6 @@
   <li><a href="../modules/textredux.util.matcher.html">textredux.util.matcher</a></li>
 </ul>
 
-<ul>
-<li>Contents</li>
-  <li><a href="#Local_Functions">Local Functions</a></li>
-</ul>
 
 
 </div>
@@ -75,9 +71,11 @@ For the most part, these properties maps directly to fields in the
 
 <p>A simple example:</p>
 
-<pre><code>local reduxindicator = textredux.core.indicator
-reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
-</code></pre>
+
+<pre>
+<span class="keyword">local</span> reduxindicator = textredux.core.indicator
+reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = <span class="string">'#ff0000'</span>}
+</pre>
 
 <h2>Using indicators</h2>
 
@@ -85,59 +83,23 @@ reduxindicator.RED_BOX = {style = c.INDIC_BOX, fore = '#ff0000'}
 then either apply them against a range of text using apply, or pass them to
 one of the text insertion functions in <a href="../modules/textredux.core.buffer.html#">textredux.core.buffer</a>.</p>
 
-<pre><code>local text = 'Text for a red box indicator\n\n'
-buffer:add_text(text)
-reduxindicator.RED_BOX:apply(0, #text)
 
-buffer:add_text(text, nil, nil, reduxindicator.RED_BOX)
-</code></pre>
+<pre>
+<span class="keyword">local</span> text = <span class="string">'Text for a red box indicator\n\n'</span>
+buffer:add_text(text)
+reduxindicator.RED_BOX:apply(<span class="number">0</span>, #text)
+
+buffer:add_text(text, <span class="keyword">nil</span>, <span class="keyword">nil</span>, reduxindicator.RED_BOX)
+</pre>
 
 <p>Please also see the file <code>examples/buffer_indicators.lua</code>.</p>
 
 
-<h2><a href="#Local_Functions">Local Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#apply">apply (self, position, length)</a></td>
-	<td class="summary">Applies the given indicator for the text range specified in the current
- buffer.</td>
-	</tr>
-</table>
 
 <br/>
 <br/>
 
 
-    <h2><a name="Local_Functions"></a>Local Functions</h2>
-    <dl class="function">
-    <dt>
-    <a name = "apply"></a>
-    <strong>apply (self, position, length)</strong>
-    </dt>
-    <dd>
-    Applies the given indicator for the text range specified in the current
- buffer.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-         The indicator to apply
-        </li>
-        <li><span class="parameter">position</span>
-         The start position
-        </li>
-        <li><span class="parameter">length</span>
-         The length of the range to fill
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-</dl>
 
 
 <footer class="footer">

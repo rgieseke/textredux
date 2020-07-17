@@ -60,9 +60,11 @@ document using <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a>.</p>
 
 <p>In your init.lua:</p>
 
-<pre><code>local textredux = require 'textredux'
-keys.cg = textredux.ctags.goto_symbol -- Ctrl+G
-</code></pre>
+
+<pre>
+<span class="keyword">local</span> textredux = <span class="global">require</span> <span class="string">'textredux'</span>
+keys.cg = textredux.ctags.goto_symbol <span class="comment">-- Ctrl+G</span>
+</pre>
 
 <h2>Requirements</h2>
 
@@ -71,31 +73,36 @@ usual package managers.</p>
 
 <p>Debian/Ubuntu:</p>
 
-<pre><code>sudo apt-get install exuberant-ctags
-</code></pre>
+
+<pre>
+sudo apt-get install exuberant-ctags
+</pre>
 
 <p>Homebrew on OS X:</p>
 
-<pre><code>brew install ctags
-</code></pre>
+
+<pre>
+brew install ctags
+</pre>
 
 <p>Note that it is possible to add support for additional filetypes in your
 <code>~/.ctags</code>, for example LaTeX:</p>
 
-<pre><code>--langdef=latex
---langmap=latex:.tex
---regex-latex=/\\label\{([^}]*)\}/\1/l,label/
---regex-latex=/\\section\{([^}]*)\}/\1/s,section/
---regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
---regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
---regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
---regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
---regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/
-</code></pre>
+
+<pre>
+<span class="comment">--langdef=latex
+</span><span class="comment">--langmap=latex:.tex
+</span><span class="comment">--regex-latex=/\\label\{([^}]*)\}/\1/l,label/
+</span><span class="comment">--regex-latex=/\\section\{([^}]*)\}/\1/s,section/
+</span><span class="comment">--regex-latex=/\\subsection\{([^}]*)\}/\1/t,subsection/
+</span><span class="comment">--regex-latex=/\\subsubsection\{([^}]*)\}/\1/u,subsubsection/
+</span><span class="comment">--regex-latex=/\\section\*\{([^}]*)\}/\1/s,section/
+</span><span class="comment">--regex-latex=/\\subsection\*\{([^}]*)\}/\1/t,subsection/
+</span><span class="comment">--regex-latex=/\\subsubsection\*\{([^}]*)\}/\1/u,subsubsection/</span>
+</pre>
 
 <p>This module is based on Mitchell's ctags code posted on the
 <a href="http://foicica.com/wiki/ctags">Textadept wiki</a>.</p>
-
 </p>
 
 
@@ -171,7 +178,27 @@ usual package managers.</p>
 
 
         </li>
-        <li><span class="parameter">[</span>
+        <li><span class="parameter">[function]</span>
+
+
+
+        </li>
+        <li><span class="parameter">procedure</span>
+
+
+
+        </li>
+        <li><span class="parameter">method</span>
+
+
+
+        </li>
+        <li><span class="parameter">field</span>
+
+
+
+        </li>
+        <li><span class="parameter">member</span>
 
 
 
