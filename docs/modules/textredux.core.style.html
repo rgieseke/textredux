@@ -66,7 +66,7 @@ standard <code>'#rrggbb'</code> notation.</p>
 
 <pre>
 <span class="keyword">local</span> reduxstyle = <span class="global">require</span> <span class="string">'textredux.core.style'</span>
-reduxstyle.foo_header = { italic = <span class="keyword">true</span>, fore = <span class="string">'#680000'</span> }
+reduxstyle.foo_header = { italics = <span class="keyword">true</span>, fore = <span class="string">'#680000'</span> }
 </pre>
 
 <p>As has been previously said, it's often a good idea to base your custom styles
@@ -75,14 +75,14 @@ you can achieve this by concatenating styles:</p>
 
 
 <pre>
-reduxstyle.foo_header = style.<span class="global">string</span> .. { underline = <span class="keyword">true</span> }
+reduxstyle.foo_header = style.<span class="global">string</span> .. { underlined = <span class="keyword">true</span> }
 </pre>
 
 <p><em>NB:</em> Watch out for the mistake of assigning the style to a local variable:</p>
 
 
 <pre>
-<span class="keyword">local</span> header = reduxstyle.<span class="global">string</span> .. { underline = <span class="keyword">true</span> }
+<span class="keyword">local</span> header = reduxstyle.<span class="global">string</span> .. { underlined = <span class="keyword">true</span> }
 </pre>
 
 <p>This will <em>not</em> work, as the style is not correctly defined with the style
@@ -103,7 +103,7 @@ already set by overwriting their properties in your <code>init.lua</code>:</p>
 <span class="keyword">local</span> textredux = <span class="global">require</span>(<span class="string">'textredux'</span>)
 <span class="keyword">local</span> reduxstyle = textredux.core.style
 reduxstyle.list_match_highlight.fore = reduxstyle.class.fore
-reduxstyle.fs_directory.italic = <span class="keyword">true</span>
+reduxstyle.fs_directory.italics = <span class="keyword">true</span>
 </pre>
 
 <h2>Using styles</h2>
