@@ -12,7 +12,7 @@ Use the @{textredux.hijack} function or load the buffer list
 in your `~/.textadept/init.lua`:
 
     local textredux = require('textredux')
-    keys.cb = textredux.buffer_list.show
+    keys["ctrl+b"] = textredux.buffer_list.show
 
 ## Features
 
@@ -47,8 +47,8 @@ currently selected buffer - you can use the @{currently_selected_buffer}
 function for that.
 ]]
 M.keys = {
-  cd = function(list) M.close_buffer(list) end, -- Default for `close buffer`
-  [CURSES and 'md' or 'cD'] = function(list) M.close_directory(list) end
+  ["ctrl+d"] = function(list) M.close_buffer(list) end, -- Default for `close buffer`
+  [CURSES and 'meta+d' or 'ctrl+shif+d'] = function(list) M.close_directory(list) end
 }
 
 local buffer_source

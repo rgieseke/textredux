@@ -356,9 +356,9 @@ function list:_create_buffer()
   end
 
   local clear_search = function() self:set_current_search('') end
-  listbuffer.keys['c\b'] = clear_search
-  listbuffer.keys['a\b'] = clear_search
-  listbuffer.keys['m\b'] = clear_search
+  listbuffer.keys['ctrl+\b'] = clear_search
+  listbuffer.keys['alt+\b'] = clear_search
+  listbuffer.keys['cmd+\b'] = clear_search
 
   local key_wrapper = function(t, k, v)
     if type(v) == 'function' then

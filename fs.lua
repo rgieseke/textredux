@@ -377,11 +377,11 @@ local function create_list(directory, filter, depth, max_files)
   local list = reduxlist.new(directory)
   local data = list.data
   list.column_styles = {get_file_style}
-  list.keys.cs = toggle_snap
+  list.keys["ctrl+s"] = toggle_snap
   list.keys['~'] = function()
     if user_home then chdir(list, user_home) end
   end
-  list.keys['aup'] = function()
+  list.keys['alt+up'] = function()
     updir(list)
   end
   list.keys['\b'] = function()
@@ -493,7 +493,7 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
     on_selection(normalize_dir_path(path), false, list, shift, ctrl, alt, meta)
   end
 
-  list.keys.right = function()
+  list.keys["right"] = function()
     local selected_dir = list:get_current_selection()
     if not selected_dir then
       return
