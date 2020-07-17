@@ -20,17 +20,17 @@ standard `'#rrggbb'` notation.
 You define a new style by assigning a table with its properties to the module:
 
     local reduxstyle = require 'textredux.core.style'
-    reduxstyle.foo_header = { italic = true, fore = '#680000' }
+    reduxstyle.foo_header = { italics = true, fore = '#680000' }
 
 As has been previously said, it's often a good idea to base your custom styles
 on an existing default style. Similarily to defining a lexer style in Textadept
 you can achieve this by concatenating styles:
 
-    reduxstyle.foo_header = style.string .. { underline = true }
+    reduxstyle.foo_header = style.string .. { underlined = true }
 
 *NB:* Watch out for the mistake of assigning the style to a local variable:
 
-    local header = reduxstyle.string .. { underline = true }
+    local header = reduxstyle.string .. { underlined = true }
 
 This will _not_ work, as the style is not correctly defined with the style
 module, necessary to ensure styles are correctly defined when new buffers
@@ -48,7 +48,7 @@ already set by overwriting their properties in your `init.lua`:
     local textredux = require('textredux')
     local reduxstyle = textredux.core.style
     reduxstyle.list_match_highlight.fore = reduxstyle.class.fore
-    reduxstyle.fs_directory.italic = true
+    reduxstyle.fs_directory.italics = true
 
 ## Using styles
 
@@ -149,8 +149,8 @@ function M.activate_styles()
       if v.number > STYLE_LASTPREDEFINED then
         set_style_property(buffer.style_size, v.number, v.size)
         set_style_property(buffer.style_bold, v.number, v.bold)
-        set_style_property(buffer.style_italic, v.number, v.italic)
-        set_style_property(buffer.style_underline, v.number, v.underline)
+        set_style_property(buffer.style_italic, v.number, v.italics)
+        set_style_property(buffer.style_underline, v.number, v.underlined)
         set_style_property(buffer.style_fore, v.number, string_to_color(v.fore))
         set_style_property(buffer.style_back, v.number, string_to_color(v.back))
         set_style_property(buffer.style_eol_filled, v.number, v.eolfilled)
@@ -214,9 +214,9 @@ for k, v in pairs(default_styles) do
   local fontsize = style:match('fontsize:([%a ]+)')
   if fontsize then M[k]['fontsize'] = fontsize end
   -- Assuming "notbold" etc. are never used in default styles.
-  if style:match('italics') then M[k]['italic'] = true end
+  if style:match('italics') then M[k]['italics'] = true end
   if style:match('bold') then M[k]['bold'] = true end
-  if style:match('underline') then M[k]['underline'] = true end
+  if style:match('underlined') then M[k]['underlined'] = true end
   if style:match('eolfilled') then M[k]['eolfilled'] = true end
   setmetatable(M[k], {__concat=style_merge})
 end
