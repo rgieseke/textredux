@@ -39,9 +39,9 @@ local util_matcher = require('textredux.util.matcher')
 
 local string_rep = string.rep
 
-reduxstyle.list_header = {underline = true}
+reduxstyle.list_header = {underlined = true}
 
-reduxstyle.list_match_highlight = reduxstyle['function']..{underline=true}
+reduxstyle.list_match_highlight = reduxstyle['function']..{underlined = true}
 
 --- The default style to use for diplaying headers.
 -- This is by default the `style.list_header` style. It's possible to override
