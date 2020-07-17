@@ -14,10 +14,10 @@ local textredux = require 'textredux'
 local reduxstyle = textredux.core.style
 
 -- define a custom style based on a default style
-reduxstyle.example_style1 = reduxstyle.number..{underline=true, bold=true}
+reduxstyle.example_style1 = reduxstyle.number..{underlined=true, bold=true}
 
 -- define a custom style from scratch
-reduxstyle.example_style2 = {italic = true, fore = '#0000ff', back='#ffffff'}
+reduxstyle.example_style2 = {italics = true, fore = '#0000ff', back='#ffffff'}
 
 local function on_refresh(buffer)
   -- add some ordinary unstyled text. we can specify the newline directly here

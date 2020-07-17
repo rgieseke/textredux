@@ -14,14 +14,14 @@ local M = {}
 local textredux = require 'textredux'
 
 local reduxstyle = textredux.core.style
-reduxstyle.action_style = reduxstyle['function']..{underline = true}
+reduxstyle.action_style = reduxstyle['function']..{underlined = true}
 
 local function on_refresh(buffer)
   buffer:add_text('Press Ctrl-T to show a message box.')
   buffer:add_text('\n\n')
   buffer:add_text('Table command: ')
-  buffer:add_text('Snapopen user home', reduxstyle.action_style,
-                  { io.snapopen, _USERHOME })
+  buffer:add_text('Quickopen Textadept config directory', reduxstyle.action_style,
+                  { io.quick_open, _USERHOME })
 
   buffer:add_text('\n\nExplicit hotspot: ')
   local start_pos = buffer.current_pos
@@ -35,7 +35,7 @@ function M.create_action_buffer()
   buffer.on_refresh = on_refresh
 
   -- Bind Control+T to show a simple message box.
-  buffer.keys.ct = function()
+  buffer.keys['ctrl+t'] = function()
     ui.dialogs.msgbox{title='Testredux', text='Test 1, 2, 3!'}
   end
 

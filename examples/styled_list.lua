@@ -19,7 +19,7 @@ local reduxstyle = textredux.core.style
 reduxstyle.example_red = {fore = '#FF0000'}
 reduxstyle.example_green = {fore = '#00FF00'}
 reduxstyle.example_blue = {fore = '#0000FF'}
-reduxstyle.example_code = {italic = true}
+reduxstyle.example_code = {italics = true, underlined = true}
 
 local function get_item_style(item, column_index)
   -- Choose style based on the color name.
