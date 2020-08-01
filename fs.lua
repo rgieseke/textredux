@@ -440,6 +440,8 @@ function M.select_file(on_selection, start_directory, filter, depth, max_files)
   filter.folders = filter.folders or {}
   filter.folders[#filter.folders + 1] = separator .. '%.$'
 
+  -- Prevent opening another list from an already opened Textredux buffer.
+  if buffer._textredux then return false end
   local list = create_list(start_directory, filter, depth or 1,
                            max_files or 10000)
 
