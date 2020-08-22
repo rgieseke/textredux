@@ -403,21 +403,21 @@ local function create_list(directory, filter, depth, max_files)
     end
   end
   list.keys["ctrl+\n"] = function ()
-	local search = list:get_current_search()
-	local found = false
+    local search = list:get_current_search()
+    local found = false
 
-	for _, item in ipairs(list.buffer.data.matching_items) do
-		if item[1] == search then
-			found = true
-			break
-		end
-	end
+    for _, item in ipairs(list.buffer.data.matching_items) do
+      if item[1] == search then
+        found = true
+        break
+      end
+    end
 
-	if found then
-		list.buffer._on_user_select(list.buffer, list.buffer.current_pos)
-	else
-		list:on_new_selection(search)
-	end
+    if found then
+      list.buffer._on_user_select(list.buffer, list.buffer.current_pos)
+    else
+      list:on_new_selection(search)
+    end
   end
 
   data.directory = directory
