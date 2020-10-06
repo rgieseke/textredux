@@ -404,6 +404,7 @@ local function create_list(directory, filter, depth, max_files)
   end
   list.keys["ctrl+\n"] = function ()
     local search = list:get_current_search()
+    if not search then return end
     local found = false
 
     for _, item in ipairs(list.buffer.data.matching_items) do
