@@ -187,6 +187,25 @@ local function create_filter(filter)
   end
 end
 
+-- create a filter for quick_open based on lfs.default_filter
+local function create_qopen_filter(filter)
+  filter['folders'] = filter['folders'] or {}
+  filter['extensions'] = filter['extensions'] or {}
+
+  for _, pattern in pairs(lfs.default_filter) do
+    pattern = pattern:match('..(.+)')
+    local pattern_type = ''
+    if pattern:match('%$$') then
+      pattern_type = 'folders'
+    else
+      pattern_type = 'extensions'
+    end
+    filter[pattern_type][#filter[pattern_type] + 1] = pattern
+  end
+
+  return filter
+end
+
 local function file(path, name, parent)
   local file, error = fs_attributes(path)
   if error then file = { mode = 'error' } end
@@ -340,6 +359,7 @@ local function toggle_snap(list)
     filter.folders = filter.folders or {}
     filter.folders[#filter.folders + 1] = updir_pattern
   end
+  filter = create_qopen_filter(filter)
   data.prev_depth = depth
   chdir(list, data.directory)
   list:set_current_search(search)
@@ -609,19 +629,7 @@ function M.snapopen(directory, filter, exclude_FILTER, depth)
   filter.folders[#filter.folders + 1] = updir_pattern
 
   if not exclude_FILTER then
-    filter['folders'] = filter['folders'] or {}
-    filter['extensions'] = filter['extensions'] or {}
-
-    for _, pattern in ipairs(lfs.default_filter) do
-      pattern = pattern:match('..(.+)')
-      local pattern_type = ''
-      if pattern:match('%$$') then
-        pattern_type = 'folders'
-      else
-        pattern_type = 'extensions'
-      end
-      filter[pattern_type][#filter[pattern_type] + 1] = pattern
-    end
+    filter = create_qopen_filter(filter)
   end
 
   M.select_file(open_selected_file, directory, filter, depth, io.quick_open_max)
