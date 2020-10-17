@@ -476,8 +476,8 @@ function reduxbuffer:_create_target()
   target:set_lexer('text')
   target.eol_mode = constants.EOL_LF
   target.wrap_mode = target.WRAP_NONE
-  target.margin_width_n[1] = not CURSES and target.margin_width_n[0] + 4 or 1
-  target.margin_width_n[0] = 0
+  target.margin_width_n[2] = not CURSES and target.margin_width_n[1] + 4 or 1
+  target.margin_width_n[1] = 0
   target:set_save_point()
   target.undo_collection = false
   self.target = target
