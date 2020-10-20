@@ -154,8 +154,6 @@ function M.close_directory(list)
     for _, b in ipairs(_BUFFERS) do
       if buffer_directory(b) == dir then
         ui.statusbar_text = 'Closing ' .. name .. '..'
-        local current_pos = buffer.current_pos
-        local current_search = list:get_current_search()
         view:goto_buffer(b)
         closed = b:close()
         if not closed then
