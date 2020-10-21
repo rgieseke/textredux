@@ -48,7 +48,7 @@ function for that.
 ]]
 M.keys = {
   ["ctrl+d"] = function(list) M.close_buffer(list) end, -- Default for `close buffer`
-  [CURSES and 'meta+d' or 'ctrl+D'] = function(list) M.close_directory(list) end
+  [CURSES and 'meta+d' or 'ctrl+D'] = function(list) M.close_selected(list) end,
 }
 
 local buffer_source
@@ -170,6 +170,28 @@ function M.close_directory(list)
   list:show()
 end
 
+function M.close_selected(list)
+  list = list or M.list
+  if not list then error('`list` must be provided', 2) end
+  local current_search = list:get_current_search()
+  if not current_search then return end
+  while true do
+    local sel_buffer, name = M.currently_selected_buffer(list)
+    if not sel_buffer then break end
+    local current_pos = buffer.current_pos
+    view:goto_buffer(sel_buffer)
+    local closed = sel_buffer:close()
+    list.items = get_buffer_items()
+    list:show()
+    if closed then
+      list:set_current_search(current_search)
+      buffer.goto_pos(math.min(current_pos, buffer.length + 1))
+      buffer.home()
+    end
+  end
+  list:set_current_search('')
+  ui.statusbar_text = 'All selected buffers closed'
+end
 
 --- Shows a list of the specified buffers, or _G.BUFFERS if not specified.
 -- @param buffers Either nil, in which case all buffers within _G.BUFFERS
