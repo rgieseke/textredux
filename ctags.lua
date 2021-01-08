@@ -80,7 +80,7 @@ local function on_selection(list, item)
     ui.statusbar_text = line
     list:close()
     buffer:goto_line(tonumber(line) - 1)
-    buffer:vertical_centre_caret()
+    buffer:vertical_center_caret()
   end
 end
 
