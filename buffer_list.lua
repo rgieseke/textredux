@@ -40,10 +40,10 @@ first argument to any function will be the Textredux list itself.
 You can read more about the Textredux list's keys in the
 [list documentation](./textredux.core.list.html#keys).
 
-If you like to add a custom key binding for closing a buffer or files in a
-directory you can bind the @{close_buffer} and @{close_directory} functions to a
-key of your choice. For other actions it's likely that you want to obtain the
-currently selected buffer - you can use the @{currently_selected_buffer}
+If you like to add a custom key binding for closing a buffer or all buffers
+in the current selection you can bind the @{close_buffer} and @{close_selected}
+functions to a key of your choice. For other actions it's likely that you want to
+obtain the currently selected buffer - you can use the @{currently_selected_buffer}
 function for that.
 ]]
 M.keys = {
