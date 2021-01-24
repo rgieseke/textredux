@@ -195,8 +195,8 @@ function M.show(buffers)
     M.list.buffer:goto_line(line - 1)
   end
   local short_cut = CURSES and '[Meta+D]' or '[Ctrl+Shift+D]'
-  ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected buffer, '..
-    short_cut..' = close all selected buffers in list'
+  ui.statusbar_text = '[Enter] = open, [Ctrl+D] = close selected, '..
+    short_cut..' = close all buffers in current list'
 end
 
 
