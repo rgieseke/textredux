@@ -217,7 +217,10 @@ events.connect(events.CHAR_ADDED, function(code)
   if _textredux.on_char_added then
     local char = code < 256 and (not CURSES or (code ~= 7 and code ~= 13)) and
         string.char(code) or keys.KEYSYMS[code]
-    _textredux.on_char_added(char)
+
+    if char ~= nil then
+      _textredux.on_char_added(char)
+    end
   end
 end)
 
