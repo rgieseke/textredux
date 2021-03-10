@@ -355,10 +355,15 @@ function list:_create_buffer()
     if search then self.set_current_search(self, search:sub(1, #search - 1)) end
   end
 
-  local clear_search = function() self:set_current_search('') end
-  listbuffer.keys['ctrl+\b'] = clear_search
-  listbuffer.keys['alt+\b'] = clear_search
-  listbuffer.keys['cmd+\b'] = clear_search
+  local search_delete_word = function()
+    local search = self:get_current_search()
+    if search then
+      self:set_current_search(search:gsub('%s*$', ''):match('^(.*%s)%S*$'))
+    end
+  end
+  listbuffer.keys['ctrl+\b'] = search_delete_word
+  listbuffer.keys['alt+\b'] = search_delete_word
+  listbuffer.keys['cmd+\b'] = search_delete_word
 
   local key_wrapper = function(t, k, v)
     if type(v) == 'function' then
