@@ -358,14 +358,18 @@ local function get_windows_drives()
   return drives
 end
 
+local function display_windows_root(list)
+  list.items = get_windows_drives()
+  list.data.directory = ""
+  list.data.depth = 1
+  list.title = "Drives"
+  list:show()
+end
+
 local function updir(list)
   local parent = dirname(list.data.directory)
     if WIN32 and #list.data.directory == 3 then
-      list.items = get_windows_drives()
-      list.data.directory = ""
-      list.data.depth = 1
-      list.title = "Drives"
-      list:show()
+      display_windows_root(list)
       return true
     elseif parent ~= list.data.directory then
       chdir(list, parent)
@@ -378,6 +382,13 @@ local function create_list(directory, filter, depth, max_files)
   local data = list.data
   list.column_styles = {get_file_style}
   list.keys["ctrl+s"] = toggle_snap
+  list.keys['/'] = function()
+    if WIN32 then
+      display_windows_root(list)
+    else
+      chdir(list, '/')
+    end
+  end
   list.keys['~'] = function()
     if user_home then chdir(list, user_home) end
   end
