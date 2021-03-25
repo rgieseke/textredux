@@ -130,6 +130,9 @@ function M.hijack()
   replacements[io.quick_open] = snapopen_compat
   io.quick_open = snapopen_compat
 
+  replacements[buffer.save] = M.fs.save_buffer
+  replacements[buffer.save_as] = M.fs.save_buffer_as
+
   -- Finalize by patching keys.
   patch_keys(replacements)
 end

@@ -570,27 +570,33 @@ function M.select_directory(on_selection, start_directory, filter, depth, max_fi
 end
 
 --- Saves the current buffer under a new name.
--- Open a browser and lets the user select a name.
+-- Opens a browser and lets the user select a name.
 function M.save_buffer_as()
-  local buffer = _G.buffer
-  local confirm_path
-
   local function set_file_name(path, exists, list)
-    if not exists or path == confirm_path then
-      list:close()
-      _G.view:goto_buffer(_G._BUFFERS[buffer], false)
-      buffer:save_as(path)
-      ui.statusbar_text = ''
-    else
-      ui.statusbar_text = 'File exists (' .. path ..
-                           '): Press enter to overwrite.'
-      confirm_path = path
+    list:close()
+
+    if exists then
+      local retval = ui.dialogs.msgbox
+      {
+        title = 'Save buffer as',
+        text = path .. "\nexists already!\n\nDo you want to overwrite it?",
+        icon = 'dialog-question',
+        button1 = 'Cancel',
+        button2 = 'Overwrite'
+      }
+      if retval ~= 2 then
+        return
+      end
     end
+
+    _G.buffer:save_as(path)
+    ui.statusbar_text = 'Saved buffer as: ' .. path
   end
+
   local filter = { folders = { separator .. '%.$' } }
   M.select_file(set_file_name, nil, filter, 1)
-  ui.statusbar_text = 'Save file: select file name to save as..'
-
+  ui.statusbar_text = 'Save buffer as: select file name to save as...'
+      .. " (RIGHT to save as current user input)"
 end
 
 --- Saves the current buffer.
@@ -600,7 +606,7 @@ function M.save_buffer()
   if buffer.filename then
     buffer:save()
   else
-    buffer:save_as()
+    M.save_buffer_as()
   end
 end
 
