@@ -600,7 +600,8 @@ function M.save_buffer()
   if buffer.filename then
     buffer:save()
   else
-    M.save_buffer_as()
+    buffer:save_as()
+    --M.save_buffer_as()
   end
 end
 
