@@ -603,6 +603,7 @@ end
 function M.open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
   M.select_file(open_selected_file, start_directory, filter, 1, io.quick_open_max)
+  ui.statusbar_text = '[/] = jump to filesystem root, [~] = jump to userhome'
 end
 
 
