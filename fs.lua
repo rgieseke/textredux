@@ -444,7 +444,7 @@ local function create_list(directory, filter, depth, max_files)
       end
     end
   end
-  list.keys["ctrl+\n"] = function ()
+  list.keys["right"] = function()
     local search = list:get_current_search()
     if not search then return end
     local found = false
