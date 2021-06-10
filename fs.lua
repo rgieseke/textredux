@@ -23,12 +23,23 @@ the two modes (by default, `Ctrl + S` is assigned for this).
 In traditional browsing mode, you can always select `..` to move up one
 directory level. But a quicker way of doing the same is to press `<backspace>`
 when you have an empty search. This also works when in snapopen mode.
+Additionally, `Alt + Up` will always go up one directory level
+even if the search is not empty.
+While the file selection dialog is active it is also possible to quickly select
+either the filesystem root or user home directory. To do so press `/` or `~`
+respectively.
 
 *Opening a sub directory in snapopen mode*
 
 In contrast with Textadept snapopen, you will in snapopen mode also see sub
 directories in the listing. This is by design - you can select a sub directory
 to snapopen that directory.
+
+*Opening a file forcefully*
+The open function can be used to create new files. However, sometimes
+this will not work because the query matches an existing item.
+In that case it is possible to force the creation of the file
+by using `Ctrl + Enter`.
 
 *Changing the styles used for different file types*
 
