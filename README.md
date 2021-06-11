@@ -4,7 +4,8 @@ functionality.
 
 ![](docs/images/bufferlist.gif)
 
-Current master requires Textadept 11
+Textredux' main branch usually follows Textadept's nightly development and works with
+Textadept 11.
 
 [v1.2.0](https://github.com/rgieseke/textredux/releases/tag/v1.2.0) works with Textadept 10.
 
