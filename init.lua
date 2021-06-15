@@ -79,7 +79,6 @@ end
 -- with a Textredux list for a number of operations.
 function M.hijack()
   local m_file = textadept.menu.menubar[_L['File']]
-  local m_buffer = textadept.menu.menubar[_L['Buffer']]
   local m_tools = textadept.menu.menubar[_L['Tools']]
   local m_bookmark = m_tools[_L['Bookmarks']]
 

@@ -123,11 +123,6 @@ local function dirname(path)
   return dir
 end
 
-local function basename(path)
-  local parts = split_path(path)
-  return parts[#parts]
-end
-
 -- Normalizes the path. This will deconstruct and reconstruct the
 -- path's components, while removing any relative parent references
 local function normalize_path(path)

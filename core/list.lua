@@ -198,7 +198,7 @@ function list:_calculate_column_widths()
   for i, header in ipairs(self.headers or {}) do
     column_widths[i] = #tostring(header)
   end
-  for i, item in ipairs(self.items) do
+  for _, item in ipairs(self.items) do
     if type(item) ~= 'table' then item = {item} end
     for j, field in ipairs(item) do
       column_widths[j] = math.max(column_widths[j] or 0, #tostring(field))
@@ -222,7 +222,7 @@ local function add_column_text(buffer, text, pad_to, style)
 end
 
 -- Highlight matches.
-function highlight_matches(explanations, line_start, buffer, match_style)
+function highlight_matches(explanations, line_start, match_style)
   for _, explanation in ipairs(explanations) do
     for _, range in ipairs(explanation) do
       match_style:apply(
@@ -253,13 +253,12 @@ function list:_add_items(items, start_index, end_index)
 
     if self.match_highlight_style then
       local explanations = data.matcher:explain(search, buffer:get_cur_line())
-      highlight_matches(explanations, line_start, buffer,
-                        self.match_highlight_style)
+      highlight_matches(explanations, line_start, self.match_highlight_style)
     end
 
     buffer:add_text('\n')
     if self.on_selection then
-      local handler = function (buffer, shift, ctrl, alt, meta)
+      local handler = function (shift, ctrl, alt, meta)
         self.on_selection(self, item, shift, ctrl, alt, meta)
       end
       buffer:add_hotspot(line_start, buffer.current_pos, handler)

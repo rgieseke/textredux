@@ -144,7 +144,7 @@ end
 -- Activate Textredux styles in a buffer.
 function M.activate_styles()
   if not buffer._textredux then return end
-  for k, v in pairs(M) do
+  for _, v in pairs(M) do
     if type(v) == 'table' then
       if v.number > STYLE_LASTPREDEFINED then
         set_style_property(buffer.style_size, v.number, v.size)
@@ -227,7 +227,7 @@ end
 local function define_style(t, name, properties)
   local properties = table_copy(properties)
   local count = 0
-  for k, v in pairs(M) do
+  for _, v in pairs(M) do
     if type(v) == 'table' then count = count + 1 end
   end
   local number = STYLE_LASTPREDEFINED + count - #default_styles + 1

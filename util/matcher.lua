@@ -69,7 +69,7 @@ function M:explain(search, text)
     local score, start_pos, end_pos, search = matcher(text)
     if not score then return {} end
     local explanation = { score = score, start_pos = start_pos, end_pos = end_pos }
-    local s_start, s_index = 1, 1
+    local _, s_index = 1, 1
     local l_start, l_index = start_pos, start_pos
     while s_index <= #search do
       repeat
@@ -102,7 +102,7 @@ function M:match(search)
   local matchers = self:_matchers_for_search(search)
 
   local matching_lines = {}
-  for i, line in ipairs(lines) do
+  for _, line in ipairs(lines) do
     local score = match_score(line.text, matchers)
     if score then
       matches[#matches + 1] = { index = line.index, score = score }
