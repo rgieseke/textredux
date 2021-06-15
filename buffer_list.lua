@@ -149,7 +149,7 @@ function M.close_selected(list)
   local current_search = list:get_current_search()
   if not current_search then return end
   while true do
-    local sel_buffer, name = M.currently_selected_buffer(list)
+    local sel_buffer, _ = M.currently_selected_buffer(list)
     if not sel_buffer then break end
     local current_pos = buffer.current_pos
     view:goto_buffer(sel_buffer)
