@@ -242,8 +242,6 @@ function reduxbuffer:show()
 end
 
 function reduxbuffer:attach_to_command_entry()
-  local origin_buffer = buffer
-
   local target = ui.command_entry
   target._textredux = self
   target:set_lexer('text')
@@ -337,7 +335,7 @@ end
 -- @return true if the buffer is showing and false otherwise
 function reduxbuffer:is_showing()
   if not self.target then return false end
-  for i, view in ipairs(_VIEWS) do
+  for _, view in ipairs(_VIEWS) do
     if view.buffer == self.target then return true end
   end
   return false
@@ -569,7 +567,7 @@ local function _on_quit()
 end
 
 -- Mouse support.
-local function _on_indicator_release(position, modifiers)
+local function _on_indicator_release(position)
   local tr_buf = buffer._textredux
   if not tr_buf then return end
 

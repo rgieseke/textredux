@@ -76,7 +76,7 @@ end
 -- Called to set indicator styles in a new buffer or view.
 local function activate_indicators()
   local buffer = buffer
-  for name, properties in pairs(M) do
+  for _, properties in pairs(M) do
     if type(properties) == 'table' then
       local number = properties.number
       if properties.style then buffer.indic_style[number] = properties.style end

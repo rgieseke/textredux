@@ -9,7 +9,6 @@ Filtered list wrapper, hijacking `ui.dialogs.filteredlist`.
 ]]
 
 local list = require 'textredux.core.list'
-local tr_style = require 'textredux.core.style'
 
 local M = {}
 
