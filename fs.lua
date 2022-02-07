@@ -457,6 +457,15 @@ local function create_list(directory, filter, depth, max_files)
       list:on_new_selection(search)
     end
   end
+  list.keys['ctrl+a'] = function()
+    for _, item in ipairs(list.buffer.data.matching_items) do
+      if not item[1]:match('%.%.') then
+        io.open_file(list.data.directory .. separator .. item[1])
+      end
+    end
+    list:close()
+    ui.statusbar_text = 'All displayed files were opened'
+  end
 
   data.directory = directory
   data.filter = filter
@@ -609,7 +618,7 @@ end
 function M.open_file(start_directory)
   local filter = { folders = { separator .. '%.$' } }
   M.select_file(open_selected_file, start_directory, filter, 1, io.quick_open_max)
-  ui.statusbar_text = '[/] = jump to filesystem root, [~] = jump to userhome'
+  ui.statusbar_text = '[/] = jump to filesystem root, [~] = jump to userhome, [ctrl+a] = open all currently displayed files'
 end
 
 
