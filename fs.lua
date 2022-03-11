@@ -310,7 +310,7 @@ local function open_selected_file(path, exists, list)
     {
       title = 'Create new file',
       text = path .. "\ndoes not exist, do you want to create it?",
-      icon = 'gtk-dialog-question',
+      icon = 'dialog-question',
       button1 = 'Cancel',
       button2 = 'Create file'
     }
