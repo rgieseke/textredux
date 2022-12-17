@@ -306,7 +306,7 @@ end
 
 local function open_selected_file(path, exists, list)
   if not exists then
-    local retval = ui.dialogs.msgbox
+    local retval = ui.dialogs.message
     {
       title = 'Create new file',
       text = path .. "\ndoes not exist, do you want to create it?",
