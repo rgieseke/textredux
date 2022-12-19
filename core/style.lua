@@ -191,14 +191,6 @@ local default_styles = {
   calltip = 39
 }
 
--- During Textadept's initialization and loading of Textredux's styles module
--- buffer properties are only available if a custom theme has already been set
--- with  `ui.set_theme`. To have access to these properties with the default
--- themes emit a `BUFFER_NEW` event if necessary.
-if buffer.property['style.keyword'] == '' then
-  events.emit(events.BUFFER_NEW)
-end
-
 -- Set default styles by parsing buffer properties.
 for k, v in pairs(default_styles) do
   M[k] = {number = v, apply = apply}
