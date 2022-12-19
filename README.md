@@ -4,10 +4,7 @@ functionality.
 
 ![](docs/images/bufferlist.gif)
 
-Textredux' main branch usually follows Textadept's nightly development and works with
-Textadept 11.
-
-[v1.2.0](https://github.com/rgieseke/textredux/releases/tag/v1.2.0) works with Textadept 10.
+Textredux' main branch usually follows Textadept's nightly development and started tracking the changes in Textadept 12 alpha.
 
 The API docs are generated with [ldoc](https://stevedonovan.github.io/ldoc/):
 
