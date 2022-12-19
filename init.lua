@@ -80,6 +80,7 @@ end
 function M.hijack()
   local m_file = textadept.menu.menubar[_L['File']]
   local m_tools = textadept.menu.menubar[_L['Tools']]
+  local m_buffer = textadept.menu.menubar[_L['Buffer']]
   local m_bookmark = m_tools[_L['Bookmarks']]
 
   local io_open = m_file[_L['Open']][2]
@@ -109,10 +110,11 @@ function M.hijack()
   replacements[io_open] = open_file_compat
 
   -- Hijack filteredlist for the below functions.
+  local select_lexer = m_buffer[_L['Select Lexer...']][2]
   local select_command = m_tools[_L['Select Command']][2]
   local goto_mark = m_bookmark[_L['Goto Bookmark...']][2]
   local fl_funcs = {
-    textadept.file_types.select_lexer,
+    select_lexer,
     io.open_recent_file,
     select_command,
     goto_mark
