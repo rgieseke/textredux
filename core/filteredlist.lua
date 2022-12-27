@@ -49,9 +49,9 @@ ui.dialogs.list = function(options)
   local l = list.new(title, items)
   if columns then l.headers = columns end
   l.on_selection = function(l, item)
-    local value = not options.string_output and index_of(item, items) or item
+    local value = index_of(item, items)
     l:close()
-    coroutine.resume(co, options.string_output and _L['_OK'] or 1, value)
+    coroutine.resume(co, value)
   end
   l:show()
   return coroutine.yield()
