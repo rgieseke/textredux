@@ -14,5 +14,5 @@ ldoc .
 ```
 
 The Textredux module is released under the MIT license.
-Please visit the [homepage](http://rgieseke.github.com/textredux/) for
+Please visit the [homepage](http://rgieseke.github.io/textredux/) for
 more information.
