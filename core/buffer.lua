@@ -74,11 +74,10 @@ local textreduxbuffers = setmetatable({}, { __mode = 'k' })
 local reduxstyle = require('textredux.core.style')
 local reduxindicator = require('textredux.core.indicator')
 
-local constants = _SCINTILLA.constants
 local huge = math.huge
 
 -- Style for selectable and clickable items.
-reduxindicator.HOTSPOT = {style = constants.INDIC_HIDDEN}
+reduxindicator.HOTSPOT = {style = view.INDIC_HIDDEN}
 
 local reduxbuffer = {}
 local ce_active = nil
@@ -245,7 +244,7 @@ function reduxbuffer:attach_to_command_entry()
   local target = ui.command_entry
   target._textredux = self
   target:set_lexer('text')
-  target.eol_mode = constants.EOL_LF
+  target.eol_mode = buffer.EOL_LF
   target:set_save_point()
   target.undo_collection = false
   self.target = target
@@ -486,7 +485,7 @@ function reduxbuffer:_create_target()
   local target = buffer.new()
   target._textredux = self
   target:set_lexer('text')
-  target.eol_mode = constants.EOL_LF
+  target.eol_mode = buffer.EOL_LF
   target.wrap_mode = target.WRAP_NONE
   target.margin_width_n[2] = not CURSES and target.margin_width_n[1] + 4 or 1
   target.margin_width_n[1] = 0

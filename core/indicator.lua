@@ -66,7 +66,7 @@ end
 -- Called when a new table is added to the indicator module.
 local function define_indicator(t, name, properties)
   if not properties.number then
-    local number = _SCINTILLA.new_indic_number()
+    local number = view.new_indic_number()
     properties.number = number
   end
   properties.apply = apply
