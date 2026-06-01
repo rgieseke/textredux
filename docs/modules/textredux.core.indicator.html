@@ -86,10 +86,10 @@ one of the text insertion functions in <a href="../modules/textredux.core.buffer
 
 <pre>
 <span class="keyword">local</span> text = <span class="string">'Text for a red box indicator\n\n'</span>
-buffer:add_text(text)
-reduxindicator.RED_BOX:apply(<span class="number">0</span>, #text)
+buffer:<span class="function-name">add_text</span>(text)
+reduxindicator.RED_BOX:<span class="function-name">apply</span>(<span class="number">0</span>, #text)
 
-buffer:add_text(text, <span class="keyword">nil</span>, <span class="keyword">nil</span>, reduxindicator.RED_BOX)
+buffer:<span class="function-name">add_text</span>(text, <span class="keyword">nil</span>, <span class="keyword">nil</span>, reduxindicator.RED_BOX)
 </pre>
 
 <p>Please also see the file <code>examples/buffer_indicators.lua</code>.</p>

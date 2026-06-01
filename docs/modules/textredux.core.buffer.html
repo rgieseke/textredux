@@ -69,11 +69,11 @@ and respond to any interactions using the provided callbacks.</p>
 
 <pre>
 <span class="keyword">local</span> textredux = <span class="global">require</span>(<span class="string">'textredux'</span>)
-<span class="keyword">local</span> reduxbuffer = textredux.core.buffer.new(<span class="string">'Example buffer'</span>)
+<span class="keyword">local</span> reduxbuffer = textredux.core.buffer.<span class="function-name">new</span>(<span class="string">'Example buffer'</span>)
 reduxbuffer.on_refresh = <span class="keyword">function</span>(buf)
-  buf:add_text(<span class="string">'Textredux!'</span>)
+  buf:<span class="function-name">add_text</span>(<span class="string">'Textredux!'</span>)
 <span class="keyword">end</span>
-reduxbuffer:show()
+reduxbuffer:<span class="function-name">show</span>()
 </pre>
 
 <p>If you need to test whether a Textadept buffer is used as a Textredux buffer
@@ -81,7 +81,7 @@ you can check for the <code>_textredux</code> field.</p>
 
 
 <pre>
-events.connect(events.BUFFER_AFTER_SWITCH, <span class="keyword">function</span>()
+events.<span class="function-name">connect</span>(events.BUFFER_AFTER_SWITCH, <span class="keyword">function</span>()
   <span class="keyword">local</span> buffer = buffer
   <span class="keyword">if</span> buffer._textredux <span class="keyword">then</span>
     <span class="comment">-- …
