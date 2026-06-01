@@ -214,7 +214,7 @@ events.connect(events.CHAR_ADDED, function(code)
   local _textredux = buffer._textredux
   if not _textredux then return end
   if _textredux.on_char_added then
-    local char = code < 256 and (not CURSES or (code ~= 7 and code ~= 13)) and
+    local char = code < 256 and (not UI == 'terminal' or (code ~= 7 and code ~= 13)) and
         string.char(code) or keys.KEYSYMS[code]
 
     if char ~= nil then
@@ -487,7 +487,7 @@ function reduxbuffer:_create_target()
   target:set_lexer('text')
   target.eol_mode = buffer.EOL_LF
   target.wrap_mode = target.WRAP_NONE
-  target.margin_width_n[2] = not CURSES and target.margin_width_n[1] + 4 or 1
+  target.margin_width_n[2] = not UI == 'terminal' and target.margin_width_n[1] + 4 or 1
   target.margin_width_n[1] = 0
   target:set_save_point()
   target.undo_collection = false

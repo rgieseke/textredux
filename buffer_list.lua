@@ -48,7 +48,7 @@ function for that.
 ]]
 M.keys = {
   ["ctrl+d"] = function(list) M.close_buffer(list) end, -- Default for `close buffer`
-  [CURSES and 'meta+d' or 'ctrl+D'] = function(list) M.close_selected(list) end,
+  [UI == 'terminal' and 'meta+d' or 'ctrl+D'] = function(list) M.close_selected(list) end,
 }
 
 local buffer_source

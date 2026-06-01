@@ -62,8 +62,8 @@ local reduxstyle = require 'textredux.core.style'
 local string_match, string_sub = string.match, string.sub
 
 local user_home = os.getenv('HOME') or os.getenv('UserProfile')
-local fs_attributes = WIN32 and lfs.attributes or lfs.symlinkattributes
-local separator = WIN32 and '\\' or '/'
+local fs_attributes = OS == 'windows' and lfs.attributes or lfs.symlinkattributes
+local separator = OS == 'windows' and '\\' or '/'
 local updir_pattern = '%.%.?$'
 
 local M = {}
@@ -110,7 +110,7 @@ end
 
 -- Joins path components into a path
 local function join_path(components)
-  local start = WIN32 and '' or separator
+  local start = OS == 'windows' and '' or separator
   return start .. table.concat(components, separator)
 end
 
@@ -135,7 +135,7 @@ local function normalize_path(path)
       normalized[#normalized + 1] = part
     end
   end
-  if #normalized == 1 and WIN32 then -- TODO: win hack
+  if #normalized == 1 and OS == 'windows' then -- TODO: win hack
     normalized[#normalized + 1] = ''
   end
   return join_path(normalized)
@@ -252,7 +252,7 @@ local function find_files(directory, filter, depth, max_files)
             else
               if max_files and #files == max_files then return files, false end
               -- Workaround check for top-level (virtual) Windows drive
-              if not (WIN32 and #dir.path == 3 and entry == '..') then
+              if not (OS == 'windows' and #dir.path == 3 and entry == '..') then
                 files[#files + 1] = file
               end
             end
@@ -340,7 +340,7 @@ end
 
 local function toggle_snap(list)
   -- Don't toggle for list of Windows drives
-  if WIN32 and list.data.directory == "" then return end
+  if OS == 'windows' and list.data.directory == "" then return end
   local data = list.data
   local depth = data.depth
   local search = list:get_current_search()
@@ -394,7 +394,7 @@ end
 
 local function updir(list)
   local parent = dirname(list.data.directory)
-    if WIN32 and #list.data.directory == 3 then
+    if OS == 'windows' and #list.data.directory == 3 then
       display_windows_root(list)
       return true
     elseif parent ~= list.data.directory then
@@ -409,7 +409,7 @@ local function create_list(directory, filter, depth, max_files)
   list.column_styles = {get_file_style}
   list.keys["ctrl+s"] = toggle_snap
   list.keys['/'] = function()
-    if WIN32 then
+    if OS == 'windows' then
       display_windows_root(list)
     else
       chdir(list, '/')
