@@ -4,7 +4,7 @@ functionality.
 
 ![](docs/images/bufferlist.gif)
 
-Textredux' main branch usually follows Textadept's nightly development and started tracking the changes in Textadept 12 alpha.
+Textredux has been updated with API changes Textadept 13 beta 3.
 
 The API docs are generated with [ldoc](https://stevedonovan.github.io/ldoc/):
 
